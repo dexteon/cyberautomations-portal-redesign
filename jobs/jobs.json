@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "title": "Lead Security Engineer",
+    "company": "Target",
+    "location": "Remote",
+    "type": "Full-time",
+    "salary": "$165,000 - $195,000",
+    "posted": "2026-07-10",
+    "status": "applied",
+    "url": "https://linkedin.com/jobs/view/1234",
+    "tags": ["remote", "security", "lead"]
+  },
+  {
+    "id": 2,
+    "title": "Staff Engineer, Red Team",
+    "company": "CrowdStrike",
+    "location": "Austin, TX (Hybrid)",
+    "type": "Full-time",
+    "salary": "$180,000 - $220,000",
+    "posted": "2026-07-11",
+    "status": "new",
+    "url": "https://linkedin.com/jobs/view/2345",
+    "tags": ["hybrid", "security", "red-team"]
+  },
+  {
+    "id": 3,
+    "title": "Senior Cloud Security Architect",
+    "company": "Verizon",
+    "location": "Ashburn, VA",
+    "type": "Full-time",
+    "salary": "$155,000 - $185,000",
+    "posted": "2026-07-09",
+    "status": "interested",
+    "url": "https://linkedin.com/jobs/view/3456",
+    "tags": ["onsite", "cloud", "security"]
+  },
+  {
+    "id": 4,
+    "title": "Offensive Security Consultant",
+    "company": "Mandiant (Google)",
+    "location": "Remote",
+    "type": "Contract",
+    "salary": "$95/hr",
+    "posted": "2026-07-12",
+    "status": "new",
+    "url": "https://linkedin.com/jobs/view/4567",
+    "tags": ["remote", "contract", "offensive"]
+  },
+  {
+    "id": 5,
+    "title": "Principal Engineer, Detection & Response",
+    "company": "Palo Alto Networks",
+    "location": "Santa Clara, CA (Remote OK)",
+    "type": "Full-time",
+    "salary": "$200,000 - $250,000",
+    "posted": "2026-07-08",
+    "status": "applied",
+    "url": "https://linkedin.com/jobs/view/5678",
+    "tags": ["remote", "detection", "principal"]
+  }
+]

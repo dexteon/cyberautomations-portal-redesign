@@ -1,0 +1,77 @@
+[
+  {
+    "id": 1,
+    "name": "JSearch",
+    "host": "jsearch.p.rapidapi.com",
+    "category": "Jobs",
+    "description": "Real-time job search engine with salary estimates and company data.",
+    "quota_used": 847,
+    "quota_limit": 1000,
+    "plan": "Pro",
+    "endpoints": [
+      { "method": "GET", "path": "/search", "description": "Search for jobs by query, location, and filters" },
+      { "method": "GET", "path": "/job-details/{job_id}", "description": "Get detailed information about a specific job" },
+      { "method": "GET", "path": "/estimated-salary", "description": "Get estimated salary for a job title and location" }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "LinkedIn Data Scraper",
+    "host": "linkedin-data-scraper.p.rapidapi.com",
+    "category": "Social",
+    "description": "Extract public profile data, company info, and job listings from LinkedIn.",
+    "quota_used": 312,
+    "quota_limit": 500,
+    "plan": "Basic",
+    "endpoints": [
+      { "method": "GET", "path": "/person", "description": "Get person profile by LinkedIn URL" },
+      { "method": "GET", "path": "/company", "description": "Get company details by LinkedIn URL" },
+      { "method": "GET", "path": "/search-jobs", "description": "Search LinkedIn job postings" }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "IP Geolocation",
+    "host": "ip-geo-location.p.rapidapi.com",
+    "category": "Security",
+    "description": "Geolocate IP addresses with ASN, ISP, threat level, and proxy detection.",
+    "quota_used": 2150,
+    "quota_limit": 10000,
+    "plan": "Ultra",
+    "endpoints": [
+      { "method": "GET", "path": "/ip/{ip}", "description": "Get geolocation data for an IP address" },
+      { "method": "GET", "path": "/ip/bulk", "description": "Bulk IP geolocation lookup (up to 100)" },
+      { "method": "GET", "path": "/ip/{ip}/threat", "description": "Threat assessment for an IP" }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "VirusTotal",
+    "host": "virustotal2.p.rapidapi.com",
+    "category": "Security",
+    "description": "Scan files, URLs, domains, and IPs against 70+ antivirus engines.",
+    "quota_used": 95,
+    "quota_limit": 100,
+    "plan": "Basic",
+    "endpoints": [
+      { "method": "POST", "path": "/urls/scan", "description": "Scan a URL for threats" },
+      { "method": "GET", "path": "/urls/{id}/report", "description": "Get scan report for a URL" },
+      { "method": "GET", "path": "/domains/{domain}/report", "description": "Get domain reputation report" },
+      { "method": "POST", "path": "/files/scan", "description": "Upload and scan a file" }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Resume Parser",
+    "host": "resume-parser2.p.rapidapi.com",
+    "category": "Jobs",
+    "description": "Parse resumes and CVs into structured JSON with skills, experience, and education.",
+    "quota_used": 23,
+    "quota_limit": 200,
+    "plan": "Pro",
+    "endpoints": [
+      { "method": "POST", "path": "/parse", "description": "Parse a resume file (PDF, DOCX) into structured data" },
+      { "method": "POST", "path": "/parse-url", "description": "Parse a resume from a URL" }
+    ]
+  }
+]

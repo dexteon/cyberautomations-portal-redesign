@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Job Search · Portal</title>
+<style>
+:root {
+  --bg:        #0d1010;
+  --surface:   #141918;
+  --surface-2: #1b2120;
+  --border:    #263030;
+  --border-2:  #324040;
+  --text:      #dde5e3;
+  --muted:     #8fa89e;
+  --faint:     #5c726a;
+  --accent:    #b8965a;
+  --ok:        #5aab7f;
+  --warn:      #c9924a;
+  --crit:      #c45a5a;
+  --mono:      "SFMono-Regular", Consolas, "Cascadia Mono", Menlo, monospace;
+  --sans:      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(13,16,16,.96); backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; height: 48px;
+}
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+.topbar-brand { font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); }
+.topbar-title { font-size: 13px; font-weight: 600; color: var(--text); }
+.topbar-back { font-size: 11px; color: var(--faint); text-decoration: none; }
+.topbar-back:hover { color: var(--muted); }
+
+.wrap { max-width: 1200px; margin: 0 auto; padding: 28px 24px 60px; }
+
+.stats-bar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.stat-box {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+  padding: 12px 18px; border-left: 3px solid var(--border-2);
+}
+.stat-box .label { color: var(--faint); font-size: 10px; text-transform: uppercase; letter-spacing: .12em; font-weight: 700; }
+.stat-box .value { color: var(--accent); font-size: 22px; font-weight: 700; font-family: var(--mono); margin-top: 2px; }
+
+.controls { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+.controls input[type=search] {
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text); padding: 7px 12px; border-radius: 4px;
+  font-size: 13px; font-family: var(--sans); min-width: 240px; flex: 1 1 240px;
+}
+.controls input::placeholder { color: var(--faint); }
+.controls input:focus { outline: none; border-color: var(--accent); }
+.controls select {
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text); padding: 7px 10px; border-radius: 4px;
+  font-size: 13px; cursor: pointer; font-family: var(--sans);
+}
+.controls select:focus { outline: none; border-color: var(--accent); }
+.tbtn {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+  color: var(--muted); padding: 7px 12px; font-size: 12px; cursor: pointer;
+  font-family: var(--sans); white-space: nowrap;
+}
+.tbtn:hover { border-color: var(--accent); color: var(--accent); }
+
+.chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+.chip {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 3px;
+  padding: 4px 10px; font-size: 11.5px; color: var(--muted); cursor: pointer;
+  user-select: none; transition: border-color .15s, color .15s;
+}
+.chip:hover { border-color: var(--border-2); color: var(--text); }
+.chip.active { border-color: var(--accent); color: var(--accent); }
+
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 4px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead th {
+  background: var(--surface); color: var(--faint);
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+  padding: 9px 12px; text-align: left;
+  cursor: pointer; user-select: none; white-space: nowrap;
+  border-bottom: 1px solid var(--border);
+}
+thead th:hover { color: var(--text); }
+thead th .arrow { font-size: 9px; margin-left: 3px; }
+tbody tr { border-bottom: 1px solid var(--surface-2); transition: background .1s; }
+tbody tr:hover { background: var(--surface); }
+tbody td { padding: 8px 12px; color: var(--muted); vertical-align: top; }
+td.title-cell a { color: var(--text); text-decoration: none; font-weight: 500; }
+td.title-cell a:hover { color: var(--accent); }
+
+.status-badge {
+  display: inline-block; padding: 1px 7px; border-radius: 3px;
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+}
+.status-new { background: rgba(90,171,127,.15); color: var(--ok); border: 1px solid rgba(90,171,127,.3); }
+.status-applied { background: rgba(184,150,90,.15); color: var(--accent); border: 1px solid rgba(184,150,90,.3); }
+.status-interested { background: rgba(107,159,196,.15); color: #7ab4d8; border: 1px solid rgba(107,159,196,.3); }
+
+.tag-chip {
+  display: inline-block; padding: 0 6px; border-radius: 3px; font-size: 10px;
+  background: var(--surface-2); border: 1px solid var(--border); color: var(--faint);
+  margin-right: 4px; margin-top: 3px;
+}
+
+.no-results { padding: 40px; text-align: center; color: var(--faint); font-size: 13px; }
+
+@media (max-width: 800px) {
+  table { font-size: 12px; }
+  td, th { padding: 6px 8px; }
+}
+@media print {
+  body { background: #fff; color: #111; }
+  .topbar, .controls, .chips, .tbtn { display: none; }
+  .wrap { padding: 10px; }
+  table { font-size: 11px; }
+  th { color: #555; }
+  td { color: #333; border-bottom-color: #eee; }
+  .stat-box { border-color: #ccc; background: #f9f9f9; }
+  .stat-box .value { color: #333; }
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="topbar-brand">Portal</span>
+    <span class="topbar-title">Job Search</span>
+  </div>
+  <a href="/" class="topbar-back">&larr; Home</a>
+</div>
+
+<div class="wrap">
+<div class="stats-bar" id="stats-bar"></div>
+
+<div class="controls">
+  <input type="search" id="search" placeholder="Search title, company, location...">
+  <select id="status-filter">
+    <option value="all">All Status</option>
+    <option value="new">New</option>
+    <option value="applied">Applied</option>
+    <option value="interested">Interested</option>
+  </select>
+  <button class="tbtn" id="btn-csv">Export CSV</button>
+  <button class="tbtn" id="btn-print">Print / PDF</button>
+</div>
+
+<div class="chips" id="chips"></div>
+
+<div class="tbl-wrap">
+<table>
+  <thead>
+    <tr>
+      <th data-sort="title">Title <span class="arrow"></span></th>
+      <th data-sort="company">Company <span class="arrow"></span></th>
+      <th data-sort="location">Location <span class="arrow"></span></th>
+      <th data-sort="salary">Salary <span class="arrow"></span></th>
+      <th data-sort="posted">Posted <span class="arrow"></span></th>
+      <th data-sort="status">Status <span class="arrow"></span></th>
+    </tr>
+  </thead>
+  <tbody id="job-table"></tbody>
+</table>
+</div>
+<div class="no-results" id="no-results" style="display:none">No jobs match the current filters.</div>
+</div>
+
+<script>
+let JOBS = [];
+let sortCol = 'posted';
+let sortDir = -1;
+let activeTypes = new Set();
+
+fetch('./jobs.json').then(r => r.json()).then(data => { JOBS = data; render(); })
+  .catch(() => { document.getElementById('no-results').style.display = 'block'; document.getElementById('no-results').textContent = 'Could not load jobs.json'; });
+
+function render() {
+  const search = document.getElementById('search').value.toLowerCase();
+  const statusFilter = document.getElementById('status-filter').value;
+
+  let filtered = JOBS.filter(j => {
+    if (search && !(j.title+' '+j.company+' '+j.location).toLowerCase().includes(search)) return false;
+    if (statusFilter !== 'all' && j.status !== statusFilter) return false;
+    if (activeTypes.size > 0 && !j.tags.some(t => activeTypes.has(t))) return false;
+    return true;
+  });
+
+  filtered.sort((a, b) => {
+    let va, vb;
+    if (sortCol === 'title') return sortDir * a.title.localeCompare(b.title);
+    if (sortCol === 'company') return sortDir * a.company.localeCompare(b.company);
+    if (sortCol === 'location') return sortDir * a.location.localeCompare(b.location);
+    if (sortCol === 'salary') { va = a.salary; vb = b.salary; return sortDir * va.localeCompare(vb); }
+    if (sortCol === 'posted') { va = a.posted; vb = b.posted; return sortDir * va.localeCompare(vb); }
+    if (sortCol === 'status') return sortDir * a.status.localeCompare(b.status);
+    return 0;
+  });
+
+  const now = new Date();
+  const weekAgo = new Date(now - 7 * 864e5);
+  const totalJobs = filtered.length;
+  const newThisWeek = filtered.filter(j => new Date(j.posted) >= weekAgo).length;
+  const remoteCount = filtered.filter(j => j.location.toLowerCase().includes('remote')).length;
+
+  document.getElementById('stats-bar').innerHTML =
+    [{l:'Total Jobs',v:totalJobs},{l:'New This Week',v:newThisWeek},{l:'Remote',v:remoteCount}]
+    .map(s => '<div class="stat-box"><div class="label">'+s.l+'</div><div class="value">'+s.v+'</div></div>').join('');
+
+  const allTags = [...new Set(JOBS.flatMap(j => j.tags))].sort();
+  document.getElementById('chips').innerHTML = allTags.map(t =>
+    '<span class="chip'+(activeTypes.has(t)?' active':'')+'" data-tag="'+t+'">'+t+'</span>').join('');
+  document.querySelectorAll('.chip[data-tag]').forEach(el => {
+    el.addEventListener('click', () => {
+      const tag = el.dataset.tag;
+      if (activeTypes.has(tag)) activeTypes.delete(tag); else activeTypes.add(tag);
+      render();
+    });
+  });
+
+  const tbody = document.getElementById('job-table');
+  document.getElementById('no-results').style.display = filtered.length ? 'none' : 'block';
+
+  tbody.innerHTML = filtered.map(j => {
+    const stCls = 'status-' + j.status;
+    return '<tr>'
+      +'<td class="title-cell"><a href="'+j.url+'" target="_blank">'+j.title+'</a>'
+      +'<div>'+j.tags.map(t=>'<span class="tag-chip">'+t+'</span>').join('')+'</div></td>'
+      +'<td>'+j.company+'</td>'
+      +'<td>'+j.location+'</td>'
+      +'<td style="font-family:var(--mono);white-space:nowrap">'+j.salary+'</td>'
+      +'<td style="font-family:var(--mono);white-space:nowrap">'+j.posted+'</td>'
+      +'<td><span class="status-badge '+stCls+'">'+j.status+'</span></td>'
+      +'</tr>';
+  }).join('');
+
+  document.querySelectorAll('thead th').forEach(th => {
+    const col = th.dataset.sort;
+    const arrow = th.querySelector('.arrow');
+    if (arrow) arrow.textContent = col === sortCol ? (sortDir === 1 ? ' \u25B2' : ' \u25BC') : '';
+  });
+}
+
+document.querySelectorAll('thead th[data-sort]').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.sort;
+    if (sortCol === col) sortDir *= -1;
+    else { sortCol = col; sortDir = col === 'posted' ? -1 : 1; }
+    render();
+  });
+});
+
+document.getElementById('search').addEventListener('input', render);
+document.getElementById('status-filter').addEventListener('change', render);
+document.getElementById('btn-print').addEventListener('click', () => window.print());
+document.getElementById('btn-csv').addEventListener('click', () => {
+  const q = v => '"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+  const csv = ['title,company,location,salary,posted,status,url'].concat(
+    JOBS.map(j => [q(j.title),q(j.company),q(j.location),q(j.salary),j.posted,j.status,q(j.url)].join(','))
+  ).join('\r\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download = 'job-search-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+});
+</script>
+</body>
+</html>

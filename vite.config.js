@@ -21,6 +21,8 @@ export default defineConfig({
         'playgrounds': './playgrounds/index.html',
         'va-claim': './playgrounds/va-claim.html',
         'headache-log': './playgrounds/headache-log.html',
+        'rapidapi-explorer': './playgrounds/rapidapi-explorer.html',
+        'jobs': './jobs/index.html',
       }
     }
   }
