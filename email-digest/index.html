@@ -3,35 +3,87 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow"><title>Email Digest · Portal</title>
 <style>
-:root{--bg:#0f1115;--card:#171a21;--border:#262b36;--text:#e7eaf0;--muted:#98a1b3;--accent:#4c8dff;--ok:#35c88a}
-*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
-.wrap{max-width:1000px;margin:0 auto;padding:48px 24px 80px}
+:root {
+  --bg:        #0d1010;
+  --surface:   #141918;
+  --surface-2: #1b2120;
+  --border:    #263030;
+  --border-2:  #324040;
+  --text:      #dde5e3;
+  --muted:     #8fa89e;
+  --faint:     #5c726a;
+  --accent:    #b8965a;
+  --ok:        #5aab7f;
+  --mono:      "SFMono-Regular", Consolas, "Cascadia Mono", Menlo, monospace;
+  --sans:      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased}
 a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
-.top{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
-h1{font-size:26px;font-weight:650;margin:0}.gen{color:var(--muted);font-size:13px}
-.back{font-size:13px;margin-bottom:4px}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 8px}
-.chip{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--muted)}
-.chip b{color:var(--text)}
-h2{font-size:14px;letter-spacing:.03em;text-transform:uppercase;margin:30px 0 10px;font-weight:600;display:flex;align-items:center;gap:8px}
-.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
-.list{border:1px solid var(--border);border-radius:10px;overflow:hidden}
-.row{display:flex;gap:12px;align-items:baseline;padding:10px 14px;border-bottom:1px solid var(--border)}
+
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:rgba(13,16,16,.96);backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;height:48px;
+}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.topbar-brand{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+.topbar-title{font-size:13px;font-weight:600;color:var(--text)}
+.topbar-back{font-size:11px;color:var(--faint);text-decoration:none}
+.topbar-back:hover{color:var(--muted)}
+
+.wrap{max-width:1000px;margin:0 auto;padding:32px 24px 80px}
+.page-top{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+h1{font-size:20px;font-weight:700;margin:0}
+.gen{color:var(--faint);font-size:12px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.chip{
+  background:var(--surface);border:1px solid var(--border);border-radius:3px;
+  padding:4px 12px;font-size:12px;color:var(--muted)
+}
+.chip b{color:var(--text);font-family:var(--mono)}
+h2{
+  font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--faint);margin:28px 0 10px;
+  display:flex;align-items:center;gap:10px;
+}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+.count-badge{
+  background:var(--surface);border:1px solid var(--border);border-radius:3px;
+  padding:1px 7px;font-size:10.5px;font-weight:700;font-family:var(--mono);
+  color:var(--muted);
+}
+.list{border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.row{display:flex;gap:12px;align-items:baseline;padding:9px 14px;border-bottom:1px solid var(--surface-2)}
 .row:last-child{border-bottom:none}
-.acct{font-size:10px;font-weight:700;color:var(--muted);border:1px solid var(--border);border-radius:5px;padding:1px 6px;min-width:34px;text-align:center;flex:none}
+.row:hover{background:var(--surface)}
+.acct{
+  font-size:10px;font-weight:700;color:var(--faint);
+  border:1px solid var(--border);border-radius:3px;padding:1px 6px;
+  min-width:34px;text-align:center;flex:none;font-family:var(--mono)
+}
 .who{flex:none;width:180px;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.subj{flex:1;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.subj{flex:1;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .subj .snip{color:var(--muted);font-size:12px}
-.t{flex:none;color:var(--muted);font-size:12px;white-space:nowrap}
-.star{color:#e0b341}
-footer{margin-top:40px;font-size:12px;color:var(--muted);border-top:1px solid var(--border);padding-top:14px}
-.lock{color:var(--ok)}
-</style></head><body><div class="wrap">
-<div class="back"><a href="/">← Portal</a></div>
-<div class="top"><h1>Email Digest</h1><span class="gen" id="gen"></span></div>
+.t{flex:none;color:var(--faint);font-size:11.5px;white-space:nowrap;font-family:var(--mono)}
+.star{color:var(--accent)}
+footer{margin-top:40px;font-size:11.5px;color:var(--faint);border-top:1px solid var(--border);padding-top:14px}
+</style></head>
+<body>
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="topbar-brand">Portal</span>
+    <span class="topbar-title">Email Digest</span>
+  </div>
+  <a href="/" class="topbar-back">← Home</a>
+</div>
+<div class="wrap">
+<div class="page-top"><h1>Email Digest</h1><span class="gen" id="gen"></span></div>
 <div class="chips" id="chips"></div>
 <div id="cats"></div>
-<footer><span class="lock">&#128274;</span> Read-only unread view across 4 accounts. Pulled via MCP; no mail content stored in the web root. Behind Cloudflare Access.</footer>
+<footer><span style="color:var(--ok)">&#128274;</span> Read-only unread view across 4 accounts. Pulled via MCP; no mail content stored in the web root. Behind Cloudflare Access.</footer>
 </div>
 <script>
 const D = {"items": [{"account": "jasonfox777@gmail.com", "acctShort": "JF", "fromName": "Digiseller", "fromEmail": "no-reply@digiseller.com", "subject": "Digiseller: the seller has left a message for you", "time": "07-11 19:30", "flagged": false, "cat": "Other", "color": "#98a1b3", "snippet": ""}, {"account": "teonmoore@gmail.com", "acctShort": "TM", "fromName": "New York State Department of Corrections and Community Supervision", "fromEmail": "careers@joindoccs.com", "subject": "Have Questions About a DOCCS Career? Join Us July 14th", "time": "07-11 19:03", "flagged": false, "cat": "Jobs", "color": "#4c8dff", "snippet": ""}, {"account": "teondextermoore@gmail.com", "acctShort": "TD", "fromName": "LinkedIn", "fromEmail": "messages-noreply@linkedin.com", "subject": "Peter Carollo sent you a message 3 days ago", "time": "07-11 18:52", "flagged": false, "cat": "Social", "color": "#b48ce0", "snippet": ""}, {"account": "jasonfox777@gmail.com", "acctShort": "JF", "fromName": "Steam Store", "fromEmail": "noreply@steampowered.com", "subject": "Thank you for your Community Market purchase", "time": "07-11 18:41", "flagged": false, "cat": "Finance", "color": "#35c88a", "snippet": ""}, {"account": "jasonfox777@gmail.com", "acctShort": "JF", "fromName": "Steam Store", "fromEmail": "noreply@steampowered.com", "subject": "Thank you for your Community Market purchase", "time": "07-11 18:37", "flagged": false, "cat": "Finance", "color": "#35c88a", "snippet": ""}, {"account": "jasonfox777@gmail.com", "acctShort": "JF", "fromName": "Steam Store", "fromEmail": "noreply@steampowered.com", "subject": "Thank you for your Community Market purchase", "time": "07-11 18:25", "flagged": false, "cat": "Finance", "color": "#35c88a", "snippet": ""}, {"account": "jasonfox777@gmail.com", "acctShort": "JF", "fromName": "Steam Store", "fromEmail": "noreply@steampowered.com", "subject": "Thank you for your Community Market purchase", "time": "07-11 18:22", "flagged": false, "cat": "Finance", "color": "#35c88a", "snippet": ""}, {"account": "jasonfox777@gmail.com", "acctShort": "JF", "fromName": "Match", "fromEmail": "mailer@value.match.com", "subject": "A gift from Match.", "time": "07-11 18:11", "flagged": false, "cat": "Social", "color": "#b48ce0", "snippet": ""}, {"account": "teonmoore@gmail.com", "acctShort": "TM", "fromName": "Microsoft account team", "fromEmail": "account-security-noreply@accountprotection.microsoft.com", "subject": "Microsoft account security info was added", "time": "07-11 17:31", "flagged": true, "cat": "Security", "color": "#e0b341", "snippet": ""}, {"account": "teonmoore@gmail.com", "acctShort": "TM", "fromName": "Microsoft account team", "fromEmail": "account-security-noreply@accountprotection.microsoft.com", "subject": "Personal Microsoft account security code", "time": "07-11 17:30", "flagged": true, "cat": "Security", "color": "#e0b341", "snippet": ""}, {"account": "teonmoore121691@gmail.com", "acctShort": "T91", "fromName": "support", "fromEmail": "info@releasyee.to", "subject": "[Releasyee]Your Premium subscription has started.", "time": "07-11 17:11", "flagged": false, "cat": "Finance", "color": "#35c88a", "snippet": ""}, {"account": "teondextermoore@gmail.com", "acctShort": "TD", "fromName": "LinkedIn Job Alerts", "fromEmail": "jobalerts-noreply@linkedin.com", "subject": "Lead Engineer - Red Team(Remote Or Hybrid) at Target", "time": "07-11 16:52", "flagged": false, "cat": "Jobs", "color": "#4c8dff", "snippet": ""}, {"account": "teonmoore121691@gmail.com", "acctShort": "T91", "fromName": "PayPal", "fromEmail": "service@paypal.com", "subject": "Valve Corp.: $5.00 USD", "time": "07-11 16:36", "flagged": false, "cat": "Finance", "color": "#35c88a", "snippet": ""}, {"account": "jasonfox777@gmail.com", "acctShort": "JF", "fromName": "Steam Support", "fromEmail": "noreply@steampowered.com", "subject": "You have successfully added funds to your Steam Wallet", "time": "07-11 16:36", "flagged": false, "cat": "Finance", "color": "#35c88a", "snippet": ""}, {"account": "teonmoore@gmail.com", "acctShort": "TM", "fromName": "Devesh Mishra", "fromEmail": "devesh.kumar@excelonsolutions.com", "subject": "L2 DC Technician || Ashburn, VA or Sterling, VA", "time": "07-11 15:20", "flagged": false, "cat": "Jobs", "color": "#4c8dff", "snippet": ""}, {"account": "teonmoore@gmail.com", "acctShort": "TM", "fromName": "SimpleFIN Bridge", "fromEmail": "info@simplefin.org", "subject": "Transaction data accessed from new IP: 198.44.135.72", "time": "07-11 15:08", "flagged": false, "cat": "Finance", "color": "#35c88a", "snippet": ""}, {"account": "teondextermoore@gmail.com", "acctShort": "TD", "fromName": "LinkedIn Job Alerts", "fromEmail": "jobalerts-noreply@linkedin.com", "subject": "Lead Engineer - Red Team(Remote Or Hybrid) at Target", "time": "07-11 14:52", "flagged": false, "cat": "Jobs", "color": "#4c8dff", "snippet": ""}, {"account": "teonmoore121691@gmail.com", "acctShort": "T91", "fromName": "Netflix", "fromEmail": "info@account.netflix.com", "subject": "Netflix: Your sign-in code", "time": "07-11 11:41", "flagged": false, "cat": "Security", "color": "#e0b341", "snippet": ""}, {"account": "teonmoore121691@gmail.com", "acctShort": "T91", "fromName": "Uber Receipts", "fromEmail": "noreply@uber.com", "subject": "Your Friday afternoon order with Uber Eats", "time": "07-11 05:26", "flagged": false, "cat": "Finance", "color": "#35c88a", "snippet": ""}, {"account": "teondextermoore@gmail.com", "acctShort": "TD", "fromName": "Google", "fromEmail": "no-reply@accounts.google.com", "subject": "Security alert", "time": "07-11 02:57", "flagged": false, "cat": "Security", "color": "#e0b341", "snippet": ""}, {"account": "teonmoore121691@gmail.com", "acctShort": "T91", "fromName": "Lyft Receipts", "fromEmail": "no-reply@lyftmail.com", "subject": "Your ride with Sayed on July 9", "time": "07-11 02:47", "flagged": false, "cat": "Finance", "color": "#35c88a", "snippet": ""}, {"account": "teonmoore121691@gmail.com", "acctShort": "T91", "fromName": "PayPal", "fromEmail": "service@paypal.com", "subject": "Your payment to Lyft has been processed", "time": "07-11 02:45", "flagged": false, "cat": "Finance", "color": "#35c88a", "snippet": ""}, {"account": "teonmoore@gmail.com", "acctShort": "TM", "fromName": "Google", "fromEmail": "no-reply@accounts.google.com", "subject": "Security alert for jasonfox777@gmail.com", "time": "07-11 01:56", "flagged": false, "cat": "Security", "color": "#e0b341", "snippet": ""}, {"account": "teondextermoore@gmail.com", "acctShort": "TD", "fromName": "Google", "fromEmail": "no-reply@accounts.google.com", "subject": "Security alert for teonmoore121691@gmail.com", "time": "07-11 01:56", "flagged": false, "cat": "Security", "color": "#e0b341", "snippet": ""}, {"account": "teonmoore121691@gmail.com", "acctShort": "T91", "fromName": "Google", "fromEmail": "no-reply@accounts.google.com", "subject": "Security alert", "time": "07-11 01:56", "flagged": false, "cat": "Security", "color": "#e0b341", "snippet": ""}, {"account": "jasonfox777@gmail.com", "acctShort": "JF", "fromName": "Google", "fromEmail": "no-reply@accounts.google.com", "subject": "Security alert", "time": "07-11 01:56", "flagged": true, "cat": "Security", "color": "#e0b341", "snippet": ""}, {"account": "teondextermoore@gmail.com", "acctShort": "TD", "fromName": "Google", "fromEmail": "no-reply@accounts.google.com", "subject": "Your Google Account was recovered successfully", "time": "07-11 01:55", "flagged": false, "cat": "Security", "color": "#e0b341", "snippet": ""}, {"account": "teondextermoore@gmail.com", "acctShort": "TD", "fromName": "Google", "fromEmail": "no-reply@accounts.google.com", "subject": "Security alert", "time": "07-11 01:55", "flagged": false, "cat": "Security", "color": "#e0b341", "snippet": ""}, {"account": "teonmoore@gmail.com", "acctShort": "TM", "fromName": "Google", "fromEmail": "no-reply@accounts.google.com", "subject": "Security alert", "time": "07-11 01:54", "flagged": false, "cat": "Security", "color": "#e0b341", "snippet": ""}, {"account": "teonmoore121691@gmail.com", "acctShort": "T91", "fromName": "Synchrony for your Prime Store Card", "fromEmail": "statements@mail.synchronybank.com", "subject": "Your Prime Store Card monthly statement is ready to view online", "time": "07-11 01:00", "flagged": false, "cat": "Finance", "color": "#35c88a", "snippet": ""}, {"account": "teondextermoore@gmail.com", "acctShort": "TD", "fromName": "LinkedIn", "fromEmail": "messages-noreply@linkedin.com", "subject": "Stephanie Zavala, Principal Consultant - Cybersecurity, OT/ICS, is popular in your network", "time": "07-11 00:25", "flagged": false, "cat": "Social", "color": "#b48ce0", "snippet": ""}, {"account": "teonmoore@gmail.com", "acctShort": "TM", "fromName": "Ontic Hiring Team", "fromEmail": "no-reply@ashbyhq.com", "subject": "Thank you for your interest in Ontic!", "time": "07-10 21:35", "flagged": false, "cat": "Jobs", "color": "#4c8dff", "snippet": ""}], "catCounts": {"Other": 1, "Jobs": 5, "Social": 3, "Finance": 12, "Security": 11}, "acctCounts": {"jasonfox777@gmail.com": 8, "teonmoore@gmail.com": 8, "teondextermoore@gmail.com": 8, "teonmoore121691@gmail.com": 8}, "pulled": "2026-07-11 12:40", "total": 32, "catOrder": ["Security", "Jobs", "Finance", "Social", "Other"], "generated": "2026-07-11 15:40"};
@@ -48,7 +100,7 @@ document.getElementById("cats").innerHTML = D.catOrder.filter(c=>byCat[c]).map(c
  const rows = byCat[cat];
  const color = rows[0].color;
  return `<h2><span class="dot" style="background:${color}"></span>${esc(cat)} `
-  +`<span class="chip">${rows.length}</span></h2><div class="list">`
+  +`<span class="count-badge">${rows.length}</span></h2><div class="list">`
   + rows.map(it=>`<div class="row">`
     +`<span class="acct">${esc(it.acctShort)}</span>`
     +`<span class="who">${it.flagged?'<span class="star">★</span> ':''}${esc(it.fromName)}</span>`

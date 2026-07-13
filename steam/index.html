@@ -3,111 +3,167 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MurderSheWrites - Steam Library</title>
+<meta name="robots" content="noindex, nofollow">
+<title>Steam Library · Portal</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: #1b2838;
-    color: #c7d5e0;
-    font-family: 'Segoe UI', Arial, sans-serif;
-    padding: 20px;
-  }
-  h1 { color: #66c0f4; font-size: 24px; margin-bottom: 6px; }
-  .subtitle { color: #8f98a0; font-size: 13px; margin-bottom: 20px; }
-  .controls {
-    display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; align-items: center;
-  }
-  .controls input {
-    background: #2a475e; border: 1px solid #4a6a82; color: #c7d5e0;
-    padding: 8px 12px; border-radius: 3px; font-size: 14px; width: 260px;
-  }
-  .controls input::placeholder { color: #6b8a9e; }
-  .controls select {
-    background: #2a475e; border: 1px solid #4a6a82; color: #c7d5e0;
-    padding: 8px 12px; border-radius: 3px; font-size: 14px; cursor: pointer;
-  }
-  .stats-bar { display: flex; gap: 24px; margin-bottom: 20px; flex-wrap: wrap; }
-  .stat-box { background: #2a475e; padding: 12px 18px; border-radius: 4px; }
-  .stat-box .label { color: #8f98a0; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
-  .stat-box .value { color: #66c0f4; font-size: 22px; font-weight: bold; margin-top: 2px; }
-  table { width: 100%; border-collapse: collapse; font-size: 14px; }
-  thead th {
-    background: #2a475e; color: #66c0f4; padding: 10px 12px; text-align: left;
-    cursor: pointer; user-select: none; position: sticky; top: 0; white-space: nowrap;
-  }
-  thead th:hover { background: #3a5a72; }
-  thead th .arrow { font-size: 10px; margin-left: 4px; }
-  tbody tr { border-bottom: 1px solid #2a3a4a; transition: background 0.15s; }
-  tbody tr:hover { background: #2a475e44; }
-  tbody td { padding: 8px 12px; }
-  td.name-cell a { color: #c7d5e0; text-decoration: none; font-weight: 500; }
-  td.name-cell a:hover { color: #66c0f4; text-decoration: underline; }
-  .genre-tags { font-size: 10px; color: #6b8a9e; margin-top: 2px; }
-  .players-cell { font-weight: bold; }
-  .status-badge {
-    display: inline-block; padding: 2px 8px; border-radius: 3px;
-    font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;
-  }
-  .status-massive  { background: #4caf50; color: #fff; }
-  .status-thriving { background: #8bc34a; color: #1b2838; }
-  .status-active   { background: #66c0f4; color: #1b2838; }
-  .status-moderate { background: #ffc107; color: #1b2838; }
-  .status-low      { background: #ff9800; color: #1b2838; }
-  .status-dead     { background: #f44336; color: #fff; }
-  .type-badge {
-    display: inline-block; padding: 2px 8px; border-radius: 3px;
-    font-size: 11px; font-weight: bold; letter-spacing: 0.5px;
-  }
-  .type-mmo        { background: #9c27b0; color: #fff; }
-  .type-pvp        { background: #e53935; color: #fff; }
-  .type-pvpcoop    { background: #e65100; color: #fff; }
-  .type-onlinecoop { background: #2e7d32; color: #fff; }
-  .type-coop       { background: #43a047; color: #fff; }
-  .type-multiplayer{ background: #1565c0; color: #fff; }
-  .type-localmp    { background: #00838f; color: #fff; }
-  .type-singleplayer{ background: #546e7a; color: #fff; }
-  .type-utility    { background: #78909c; color: #fff; }
-  .type-unknown    { background: #37474f; color: #8f98a0; }
-  .hours-bar {
-    display: inline-block; height: 6px; background: #66c0f4;
-    border-radius: 3px; vertical-align: middle; margin-left: 8px; opacity: 0.6;
-  }
-  .play-btn {
-    display: inline-block; background: #5c7e10; color: #d2efa9;
-    padding: 3px 10px; border-radius: 2px; font-size: 11px;
-    font-weight: bold; text-decoration: none; letter-spacing: 0.5px;
-  }
-  .play-btn:hover { background: #6d9612; color: #fff; }
-  .filter-btn {
-    background: none; border: 1px solid #4a6a82; color: #8f98a0;
-    padding: 6px 12px; border-radius: 3px; cursor: pointer; font-size: 12px;
-  }
-  .filter-btn:hover, .filter-btn.active { background: #2a475e; color: #66c0f4; border-color: #66c0f4; }
-  .refresh-btn {
-    background: #4caf50; color: #fff; border: none; padding: 8px 16px;
-    border-radius: 3px; font-size: 13px; font-weight: bold; cursor: pointer;
-    display: inline-flex; align-items: center; gap: 6px;
-  }
-  .refresh-btn:hover { background: #66bb6a; }
-  .refresh-btn:disabled { background: #2a475e; color: #6b8a9e; cursor: not-allowed; }
-  .refresh-btn .spinner {
-    display: none; width: 14px; height: 14px; border: 2px solid #fff;
-    border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite;
-  }
-  .refresh-btn.loading .spinner { display: inline-block; }
-  .refresh-btn.loading .label { display: none; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @media (max-width: 800px) {
-    table { font-size: 12px; }
-    td, th { padding: 6px 8px; }
-    .hours-bar, .genre-tags { display: none; }
-  }
+:root {
+  --bg:        #0d1010;
+  --surface:   #141918;
+  --surface-2: #1b2120;
+  --border:    #263030;
+  --border-2:  #324040;
+  --text:      #dde5e3;
+  --muted:     #8fa89e;
+  --faint:     #5c726a;
+  --accent:    #b8965a;
+  --ok:        #5aab7f;
+  --warn:      #c9924a;
+  --crit:      #c45a5a;
+  --mono:      "SFMono-Regular", Consolas, "Cascadia Mono", Menlo, monospace;
+  --sans:      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: var(--sans); font-size: 14px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* topbar */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(13,16,16,.96); backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; height: 48px;
+}
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+.topbar-brand { font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); }
+.topbar-title { font-size: 13px; font-weight: 600; color: var(--text); }
+.topbar-meta { font-size: 11px; color: var(--faint); }
+.topbar-back { font-size: 11px; color: var(--faint); text-decoration: none; }
+.topbar-back:hover { color: var(--muted); }
+
+.wrap { max-width: 1300px; margin: 0 auto; padding: 28px 24px 60px; }
+
+.stats-bar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.stat-box {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+  padding: 12px 18px; border-left: 3px solid var(--border-2);
+}
+.stat-box .label { color: var(--faint); font-size: 10px; text-transform: uppercase; letter-spacing: .12em; font-weight: 700; }
+.stat-box .value { color: var(--accent); font-size: 22px; font-weight: 700; font-family: var(--mono); margin-top: 2px; }
+
+.controls { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+.controls input, .controls select {
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text); padding: 7px 10px; border-radius: 4px;
+  font-size: 13px; font-family: var(--sans);
+}
+.controls input { width: 240px; }
+.controls input::placeholder { color: var(--faint); }
+.controls select { cursor: pointer; }
+.controls input:focus, .controls select:focus { outline: none; border-color: var(--accent); }
+
+.filter-btn {
+  background: none; border: 1px solid var(--border); color: var(--muted);
+  padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12.5px;
+  font-family: var(--sans);
+}
+.filter-btn:hover, .filter-btn.active { border-color: var(--accent); color: var(--accent); }
+
+.refresh-btn {
+  background: var(--ok); color: #0d1010; border: none; padding: 7px 14px;
+  border-radius: 4px; font-size: 13px; font-weight: 700; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px; font-family: var(--sans);
+}
+.refresh-btn:hover { filter: brightness(1.1); }
+.refresh-btn:disabled { background: var(--surface-2); color: var(--faint); cursor: not-allowed; }
+.refresh-btn .spinner {
+  display: none; width: 13px; height: 13px; border: 2px solid #0d1010;
+  border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite;
+}
+.refresh-btn.loading .spinner { display: inline-block; }
+.refresh-btn.loading .label { display: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 4px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead th {
+  background: var(--surface); color: var(--faint);
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+  padding: 9px 12px; text-align: left;
+  cursor: pointer; user-select: none; position: sticky; top: 48px; white-space: nowrap;
+  border-bottom: 1px solid var(--border);
+}
+thead th:hover { color: var(--text); }
+thead th .arrow { font-size: 9px; margin-left: 3px; }
+tbody tr { border-bottom: 1px solid var(--surface-2); transition: background .1s; }
+tbody tr:hover { background: var(--surface); }
+tbody td { padding: 7px 12px; color: var(--muted); }
+
+td.name-cell a { color: var(--text); text-decoration: none; font-weight: 500; }
+td.name-cell a:hover { color: var(--accent); }
+.genre-tags { font-size: 10px; color: var(--faint); margin-top: 2px; }
+.players-cell { font-weight: 700; font-family: var(--mono); color: var(--text); }
+
+.status-badge {
+  display: inline-block; padding: 1px 7px; border-radius: 3px;
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+}
+.status-massive  { background: rgba(90,171,127,.2);  color: #6fca9e; border: 1px solid rgba(90,171,127,.3); }
+.status-thriving { background: rgba(90,171,127,.12); color: #5aab7f; border: 1px solid rgba(90,171,127,.2); }
+.status-active   { background: rgba(184,150,90,.15); color: var(--accent); border: 1px solid rgba(184,150,90,.3); }
+.status-moderate { background: rgba(201,146,74,.12); color: var(--warn); border: 1px solid rgba(201,146,74,.25); }
+.status-low      { background: rgba(196,90,90,.12);  color: #d4837a; border: 1px solid rgba(196,90,90,.25); }
+.status-dead     { background: rgba(92,114,106,.1);  color: var(--faint); border: 1px solid var(--border); }
+
+.type-badge {
+  display: inline-block; padding: 1px 7px; border-radius: 3px;
+  font-size: 10.5px; font-weight: 700; letter-spacing: .04em;
+}
+.type-mmo        { background: rgba(154,127,196,.15); color: #b09adc; border: 1px solid rgba(154,127,196,.3); }
+.type-pvp        { background: rgba(196,90,90,.15);   color: #d4837a; border: 1px solid rgba(196,90,90,.3); }
+.type-pvpcoop    { background: rgba(201,146,74,.15);  color: var(--warn); border: 1px solid rgba(201,146,74,.3); }
+.type-onlinecoop { background: rgba(90,171,127,.15);  color: var(--ok); border: 1px solid rgba(90,171,127,.3); }
+.type-coop       { background: rgba(90,171,127,.1);   color: #5aab7f; border: 1px solid rgba(90,171,127,.2); }
+.type-multiplayer{ background: rgba(107,159,196,.15); color: #7ab4d8; border: 1px solid rgba(107,159,196,.3); }
+.type-localmp    { background: rgba(107,159,196,.1);  color: #6ba8ce; border: 1px solid rgba(107,159,196,.2); }
+.type-singleplayer{ background: rgba(92,114,106,.12); color: var(--muted); border: 1px solid var(--border); }
+.type-utility    { background: rgba(92,114,106,.08);  color: var(--faint); border: 1px solid var(--border); }
+.type-unknown    { background: transparent; color: var(--faint); border: 1px solid var(--border); }
+
+.hours-bar {
+  display: inline-block; height: 5px; background: var(--accent);
+  border-radius: 2px; vertical-align: middle; margin-left: 8px; opacity: 0.5;
+}
+.play-btn {
+  display: inline-block; background: var(--surface-2); color: var(--ok);
+  border: 1px solid rgba(90,171,127,.3);
+  padding: 2px 9px; border-radius: 3px; font-size: 11px;
+  font-weight: 700; text-decoration: none; letter-spacing: .04em;
+}
+.play-btn:hover { border-color: var(--ok); background: rgba(90,171,127,.1); }
+
+@media (max-width: 800px) {
+  table { font-size: 12px; }
+  td, th { padding: 6px 8px; }
+  .hours-bar, .genre-tags { display: none; }
+}
 </style>
 </head>
 <body>
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="topbar-brand">Portal</span>
+    <span class="topbar-title">Steam Library</span>
+    <span class="topbar-meta">MurderSheWrites · 168 games</span>
+  </div>
+  <a href="/" class="topbar-back">← Home</a>
+</div>
 
-<h1>Steam Library - MurderSheWrites</h1>
-<p class="subtitle">Player counts fetched <span id="fetch-date">July 12, 2026</span>. Click column headers to sort.</p>
+<div class="wrap">
+<p style="font-size:12px;color:var(--faint);margin-bottom:16px">Player counts fetched <span id="fetch-date">July 12, 2026</span> · click column headers to sort</p>
 
 <div class="stats-bar" id="stats-bar"></div>
 
@@ -141,6 +197,7 @@
   </button>
 </div>
 
+<div class="tbl-wrap">
 <table>
   <thead>
     <tr>
@@ -155,6 +212,8 @@
   </thead>
   <tbody id="game-table"></tbody>
 </table>
+</div>
+</div>
 
 <script>
 const GAMES = [{"appid":905370,"name":"Game Migrated to Another Steam Page","hours":6215,"players":0,"type":"MMO","genres":["Action","Massively Multiplayer","Strategy","Free To Play"]},{"appid":835570,"name":"Conqueror's Blade","hours":1194,"players":2506,"type":"MMO","genres":["Action","Massively Multiplayer","RPG","Strategy","Free To Play"]},{"appid":107410,"name":"Arma 3","hours":847,"players":12858,"type":"PvP + Co-op","genres":["Action","Simulation","Strategy"]},{"appid":2767030,"name":"Marvel Rivals","hours":701,"players":141832,"type":"PvP + Co-op","genres":["Action","Free To Play"]},{"appid":1085660,"name":"Destiny 2","hours":586,"players":68161,"type":"PvP + Co-op","genres":["Action","Adventure","Free To Play"]},{"appid":1063730,"name":"New World: Aeternum","hours":509,"players":746,"type":"MMO","genres":["Action","Adventure","Massively Multiplayer","RPG"]},{"appid":1938090,"name":"Call of Duty®","hours":491,"players":44175,"type":"PvP + Co-op","genres":["Action"]},{"appid":346110,"name":"ARK: Survival Evolved","hours":469,"players":23074,"type":"MMO","genres":["Action","Adventure","Indie","Massively Multiplayer","RPG"]},{"appid":270150,"name":"RUNNING WITH RIFLES","hours":400,"players":127,"type":"PvP + Co-op","genres":["Action","Indie"]},{"appid":1151340,"name":"Fallout 76","hours":370,"players":8574,"type":"MMO","genres":["RPG"]},{"appid":553850,"name":"HELLDIVERS™ 2","hours":327,"players":35270,"type":"Online Co-op","genres":["Action"]},{"appid":1237950,"name":"STAR WARS™ Battlefront™ II","hours":316,"players":2479,"type":"PvP","genres":["Action","Adventure"]},{"appid":2437170,"name":"SMITE 2","hours":310,"players":7813,"type":"PvP + Co-op","genres":["Action","Adventure","Casual","Massively Multiplayer","RPG","Strategy","Free To Play","Early Access"]},{"appid":2778610,"name":"Over The Top: WWI","hours":300,"players":249,"type":"PvP + Co-op","genres":["Action","Indie","Massively Multiplayer","Simulation"]},{"appid":232090,"name":"Killing Floor 2","hours":289,"players":4891,"type":"PvP + Co-op","genres":["Action"]},{"appid":671860,"name":"BattleBit Remastered","hours":281,"players":498,"type":"MMO","genres":["Action","Massively Multiplayer","Early Access"]},{"appid":1268750,"name":"Starship Troopers: Extermination","hours":243,"players":426,"type":"Online Co-op","genres":["Action","Indie"]},{"appid":2807960,"name":"Battlefield™ 6","hours":237,"players":53815,"type":"PvP","genres":["Action"]},{"appid":252490,"name":"Rust","hours":217,"players":136211,"type":"MMO","genres":["Action","Adventure","Indie","Massively Multiplayer","RPG"]},{"appid":570,"name":"Dota 2","hours":192,"players":711865,"type":"Co-op","genres":["Action","Strategy","Free To Play"]},{"appid":7940,"name":"Call of Duty 4: Modern Warfare (2007)","hours":182,"players":423,"type":"Multiplayer","genres":["Action"]},{"appid":431960,"name":"Wallpaper Engine","hours":150,"utility":true,"players":65591,"type":"Utility","genres":["Casual","Indie","Animation & Modeling","Design & Illustration","Photo Editing","Utilities"]},{"appid":1716740,"name":"Starfield","hours":135,"players":6358,"type":"Single-Player","genres":["RPG"]},{"appid":648800,"name":"Raft","hours":133,"players":10663,"type":"Online Co-op","genres":["Adventure","Indie","Simulation"]},{"appid":203290,"name":"America's Army: Proving Grounds","hours":126,"players":144,"type":"Multiplayer","genres":["Action","Free To Play"]},{"appid":1824220,"name":"Chivalry 2","hours":106,"players":3506,"type":"PvP","genres":["Action","Massively Multiplayer"]},{"appid":2208920,"name":"Assassin's Creed Valhalla","hours":105,"players":4045,"type":"Single-Player","genres":["Action","Adventure","RPG"]},{"appid":1466860,"name":"Age of Empires IV: Anniversary Edition","hours":102,"players":12239,"type":"PvP + Co-op","genres":["Strategy"]},{"appid":333930,"name":"Dirty Bomb","hours":101,"players":61,"type":"PvP","genres":["Action","Free To Play"]},{"appid":680420,"name":"OUTRIDERS","hours":97,"players":324,"type":"Online Co-op","genres":["Action","Adventure","RPG"]},{"appid":699130,"name":"World War Z","hours":97,"players":1539,"type":"PvP + Co-op","genres":["Action"]},{"appid":433850,"name":"Z1 Battle Royale","hours":93,"players":99,"type":"PvP","genres":["Action","Adventure","Free To Play","Massively Multiplayer"]},{"appid":2051620,"name":"Enlisted","hours":89,"players":4274,"type":"MMO","genres":["Action","Massively Multiplayer","Free To Play"]},{"appid":390100,"name":"9Dragons","hours":85,"players":16,"type":"MMO","genres":["Massively Multiplayer","RPG","Free To Play"]},{"appid":567630,"name":"Blood of Steel","hours":84,"players":54,"type":"MMO","genres":["Action","Massively Multiplayer","Strategy","Free To Play"]},{"appid":686810,"name":"Hell Let Loose","hours":83,"players":6958,"type":"PvP","genres":["Action","Indie","Massively Multiplayer","Simulation","Strategy"]},{"appid":251570,"name":"7 Days to Die","hours":79,"players":48280,"type":"PvP + Co-op","genres":["Action","Adventure","Indie","RPG","Simulation","Strategy"]},{"appid":218230,"name":"PlanetSide 2","hours":76,"players":652,"type":"MMO","genres":["Action","Massively Multiplayer","Free To Play"]},{"appid":500,"name":"Left 4 Dead","hours":74,"players":826,"type":"Co-op","genres":["Action"]},{"appid":212910,"name":"Call of Duty: Black Ops II - Zombies","hours":71,"players":1733,"type":"Unknown","genres":[]},{"appid":1097840,"name":"Gears 5","hours":70,"players":623,"type":"PvP + Co-op","genres":["Action","Adventure"]},{"appid":202990,"name":"Call of Duty: Black Ops II - Multiplayer","hours":68,"players":2146,"type":"Co-op","genres":["Action"]},{"appid":393380,"name":"Squad","hours":62,"players":16717,"type":"PvP + Co-op","genres":["Action","Indie","Massively Multiplayer","Strategy"]},{"appid":3678970,"name":"TBH: Task Bar Hero","hours":60,"players":314407,"type":"Single-Player","genres":["Casual","Indie","RPG","Free To Play"]},{"appid":221100,"name":"DayZ","hours":56,"players":60391,"type":"MMO","genres":["Action","Adventure","Massively Multiplayer"]},{"appid":261550,"name":"Mount & Blade II: Bannerlord","hours":56,"players":31268,"type":"PvP","genres":["Action","Indie","RPG","Simulation","Strategy"]},{"appid":1086940,"name":"Baldur's Gate 3","hours":52,"players":73660,"type":"Online Co-op","genres":["Adventure","RPG","Strategy"]},{"appid":227940,"name":"Heroes & Generals","hours":49,"players":25,"type":"MMO","genres":["Action","Free To Play","Indie","Massively Multiplayer","Strategy"]},{"appid":218620,"name":"PAYDAY 2","hours":48,"players":33914,"type":"Online Co-op","genres":["Action","RPG"]},{"appid":505460,"name":"Foxhole","hours":40,"players":4413,"type":"MMO","genres":["Action","Indie","Massively Multiplayer","RPG","Strategy"]},{"appid":1623730,"name":"Palworld","hours":40,"players":633049,"type":"Online Co-op","genres":["Action","Adventure","Indie","RPG"]},{"appid":2369390,"name":"Far Cry 6","hours":38,"players":2462,"type":"Online Co-op","genres":["Action","Adventure"]},{"appid":361420,"name":"ASTRONEER","hours":37,"players":2091,"type":"Online Co-op","genres":["Adventure","Indie"]},{"appid":2183900,"name":"Warhammer 40,000: Space Marine 2","hours":37,"players":18413,"type":"PvP + Co-op","genres":["Action","Adventure","RPG"]},{"appid":589290,"name":"Holdfast: Nations At War","hours":36,"players":1959,"type":"MMO","genres":["Action","Indie","Massively Multiplayer","RPG","Simulation","Strategy"]},{"appid":826630,"name":"Iron Harvest","hours":36,"players":141,"type":"PvP + Co-op","genres":["Strategy"]},{"appid":323370,"name":"TERA","hours":32,"players":2,"type":"Unknown","genres":[]},{"appid":1284210,"name":"Guild Wars 2®","hours":32,"players":7899,"type":"MMO","genres":["Adventure","Massively Multiplayer","RPG","Free To Play"]},{"appid":1844380,"name":"Warhammer Age of Sigmar: Realms of Ruin","hours":32,"players":13,"type":"PvP","genres":["Action","Strategy"]},{"appid":945360,"name":"Among Us","hours":30,"players":12302,"type":"PvP + Co-op","genres":["Casual"]},{"appid":444090,"name":"Paladins","hours":28,"players":1355,"type":"PvP","genres":["Action","Adventure","Massively Multiplayer","Strategy","Free To Play"]},{"appid":1097150,"name":"Fall Guys","hours":28,"players":645,"type":"MMO","genres":["Action","Casual","Indie","Massively Multiplayer","Sports"]},{"appid":224600,"name":"Defiance","hours":25,"players":2,"type":"MMO","genres":["Action","Free To Play","Massively Multiplayer","RPG"]},{"appid":1172710,"name":"Dune: Awakening","hours":25,"players":9685,"type":"Online Co-op","genres":["Action","Adventure","Massively Multiplayer","RPG"]},{"appid":1313140,"name":"Cult of the Lamb","hours":25,"players":4502,"type":"Co-op","genres":["Action","Adventure","Indie","Strategy"]},{"appid":1691340,"name":"Steel Hunters","hours":25,"players":0,"type":"PvP + Co-op","genres":["Action","Free To Play","Early Access"]},{"appid":588430,"name":"Fallout Shelter","hours":24,"players":1673,"type":"Single-Player","genres":["RPG","Simulation","Free To Play"]},{"appid":644930,"name":"They Are Billions","hours":22,"players":1962,"type":"Single-Player","genres":["Strategy"]},{"appid":548430,"name":"Deep Rock Galactic","hours":21,"players":6306,"type":"Online Co-op","genres":["Action"]},{"appid":2139460,"name":"Once Human","hours":20,"players":15358,"type":"MMO","genres":["Action","Adventure","RPG","Simulation","Strategy","Free To Play"]},{"appid":291480,"name":"Warface: Clutch","hours":17,"players":6,"type":"MMO","genres":["Action","Massively Multiplayer","Free To Play"]},{"appid":1272080,"name":"PAYDAY 3","hours":17,"players":1393,"type":"Online Co-op","genres":["Action","Adventure","RPG"]},{"appid":271590,"name":"Grand Theft Auto V Legacy","hours":16,"players":90900,"type":"PvP + Co-op","genres":["Action","Adventure"]},{"appid":1604030,"name":"V Rising","hours":16,"players":7006,"type":"PvP + Co-op","genres":["Action","Adventure","Massively Multiplayer"]},{"appid":620590,"name":"Ancestors Legacy","hours":15,"players":48,"type":"PvP + Co-op","genres":["Strategy"]},{"appid":1091500,"name":"Cyberpunk 2077","hours":15,"players":72934,"type":"Single-Player","genres":["RPG"]},{"appid":534380,"name":"Dying Light 2: Reloaded Edition","hours":14,"players":6476,"type":"Online Co-op","genres":["Action","Adventure","RPG"]},{"appid":202970,"name":"Call of Duty: Black Ops II","hours":12,"players":488,"type":"Co-op","genres":["Action"]},{"appid":495420,"name":"State of Decay 2","hours":12,"players":3439,"type":"Online Co-op","genres":["Action","RPG","Simulation"]},{"appid":578080,"name":"PUBG: BATTLEGROUNDS","hours":12,"players":244334,"type":"PvP","genres":["Action","Adventure","Massively Multiplayer","Free To Play"]},{"appid":1766060,"name":"HumanitZ","hours":11,"players":2167,"type":"PvP + Co-op","genres":["Action","Adventure","RPG"]},{"appid":1961600,"name":"Darfall","hours":11,"players":11,"type":"Single-Player","genres":["Indie","RPG","Simulation","Strategy"]},{"appid":33900,"name":"Arma 2","hours":10,"players":2,"type":"Co-op","genres":["Action","Simulation","Strategy"]},{"appid":108600,"name":"Project Zomboid","hours":10,"players":40668,"type":"PvP + Co-op","genres":["Indie","RPG","Simulation","Early Access"]},{"appid":239140,"name":"Dying Light","hours":10,"players":6703,"type":"PvP + Co-op","genres":["Action","Adventure","RPG"]},{"appid":534500,"name":"Tiger Knight: Empire War","hours":10,"players":0,"type":"Unknown","genres":[]},{"appid":903950,"name":"Last Oasis","hours":10,"players":82,"type":"MMO","genres":["Action","Adventure","Indie","Massively Multiplayer","RPG","Early Access"]},{"appid":924970,"name":"Back 4 Blood","hours":10,"players":1064,"type":"PvP + Co-op","genres":["Action"]},{"appid":2074920,"name":"The First Descendant","hours":10,"players":4352,"type":"Online Co-op","genres":["Action","Adventure","RPG","Free To Play"]},{"appid":1203220,"name":"NARAKA: BLADEPOINT","hours":9,"players":17242,"type":"PvP","genres":["Action","Adventure","Massively Multiplayer","Free To Play"]},{"appid":299740,"name":"Miscreated","hours":8,"players":145,"type":"MMO","genres":["Action","Adventure","Indie","Massively Multiplayer","RPG","Simulation","Strategy"]},{"appid":962130,"name":"Grounded","hours":8,"players":5242,"type":"Online Co-op","genres":["Action","Adventure"]},{"appid":2065810,"name":"Undead Horde 2: Necropolis","hours":8,"players":8,"type":"Single-Player","genres":["Action","Adventure","RPG","Strategy"]},{"appid":2073850,"name":"THE FINALS","hours":8,"players":23974,"type":"PvP + Co-op","genres":["Action","Free To Play"]},{"appid":976730,"name":"Halo: The Master Chief Collection","hours":7,"players":5568,"type":"PvP + Co-op","genres":["Action"]},{"appid":17480,"name":"Command & Conquer™ Red Alert™ 3","hours":6,"players":481,"type":"Single-Player","genres":["Action","Strategy"]},{"appid":235540,"name":"Warhammer: End Times - Vermintide","hours":6,"players":56,"type":"Online Co-op","genres":["Action","Indie"]},{"appid":394230,"name":"Battleborn","hours":6,"players":2,"type":"PvP + Co-op","genres":["Action"]},{"appid":1465460,"name":"Infection Free Zone","hours":6,"players":1418,"type":"Single-Player","genres":["Action","Indie","Simulation","Strategy","Early Access"]},{"appid":8500,"name":"EVE Online","hours":5,"players":5441,"type":"MMO","genres":["Action","Massively Multiplayer","RPG","Strategy","Free To Play"]},{"appid":242760,"name":"The Forest","hours":5,"players":9316,"type":"Online Co-op","genres":["Action","Adventure","Indie","Simulation"]},{"appid":3164500,"name":"Schedule I","hours":4,"players":19321,"type":"Online Co-op","genres":["Action","Indie","Simulation","Strategy","Early Access"]},{"appid":306130,"name":"The Elder Scrolls Online","hours":3,"players":14754,"type":"MMO","genres":["Action","Adventure","Massively Multiplayer","RPG"]},{"appid":7670,"name":"BioShock","hours":2,"players":102,"type":"Single-Player","genres":["Action","RPG"]},{"appid":208580,"name":"STAR WARS™ Knights of the Old Republic™ II: The Sith Lords™","hours":2,"players":533,"type":"Single-Player","genres":["RPG"]},{"appid":222880,"name":"Insurgency","hours":2,"players":237,"type":"Co-op","genres":["Action","Indie","Strategy"]},{"appid":367500,"name":"Dragon's Dogma: Dark Arisen","hours":2,"players":752,"type":"Single-Player","genres":["Action","Adventure","RPG"]},{"appid":407530,"name":"ARK: Survival Of The Fittest","hours":2,"players":7,"type":"Co-op","genres":["Action","Adventure","Indie","Massively Multiplayer","RPG","Strategy"]},{"appid":431240,"name":"Golf With Your Friends","hours":2,"players":2522,"type":"PvP","genres":["Casual","Indie","Sports"]},{"appid":739630,"name":"Phasmophobia","hours":2,"players":12454,"type":"Online Co-op","genres":["Action","Indie","Early Access"]},{"appid":1172620,"name":"Sea of Thieves","hours":2,"players":10166,"type":"PvP + Co-op","genres":["Action","Adventure"]},{"appid":2429640,"name":"Throne and Liberty","hours":2,"players":8218,"type":"MMO","genres":["Action","Adventure","Massively Multiplayer","RPG","Free To Play"]},{"appid":13140,"name":"America's Army 3","hours":1,"players":1,"type":"Multiplayer","genres":["Action"]},{"appid":212070,"name":"Star Conflict","hours":1,"players":80,"type":"MMO","genres":["Action","Adventure","Massively Multiplayer","RPG","Simulation","Free To Play"]},{"appid":238960,"name":"Path of Exile","hours":1,"players":6126,"type":"MMO","genres":["Action","Adventure","Indie","Massively Multiplayer","RPG","Free To Play"]},{"appid":239840,"name":"Dead State","hours":1,"players":17,"type":"Single-Player","genres":["Indie","RPG","Strategy"]},{"appid":349700,"name":"Aftermath","hours":1,"players":0,"type":"MMO","genres":["Violent","Action","Free To Play","Indie","Massively Multiplayer"]},{"appid":381210,"name":"Dead by Daylight","hours":1,"players":101840,"type":"PvP + Co-op","genres":["Action"]},{"appid":418460,"name":"Rising Storm 2: Vietnam","hours":1,"players":436,"type":"PvP","genres":["Action","Massively Multiplayer","Simulation","Strategy"]},{"appid":496240,"name":"Onward","hours":1,"players":43,"type":"PvP + Co-op","genres":["Action","Indie","Simulation","Strategy"]},{"appid":513710,"name":"SCUM","hours":1,"players":10904,"type":"MMO","genres":["Action","Adventure","Indie","Massively Multiplayer"]},{"appid":533780,"name":"Zombie Defense","hours":1,"players":21,"type":"Single-Player","genres":["Action","Casual","Indie","Strategy","Free To Play"]},{"appid":558100,"name":"Art of War: Red Tides","hours":1,"players":8,"type":"PvP + Co-op","genres":["Violent","Free To Play","Indie","Strategy","Early Access"]},{"appid":707010,"name":"Will To Live Online","hours":1,"players":636,"type":"MMO","genres":["Indie","Massively Multiplayer","RPG","Free To Play","Early Access"]},{"appid":823130,"name":"Totally Accurate Battlegrounds","hours":1,"players":156,"type":"PvP","genres":["Action","Indie","Free To Play"]},{"appid":1105670,"name":"The Last Spell","hours":1,"players":596,"type":"Single-Player","genres":["Action","Indie","RPG","Strategy"]},{"appid":1172470,"name":"Apex Legends","hours":1,"players":82353,"type":"PvP + Co-op","genres":["Action","Adventure","Free To Play"]},{"appid":1266840,"name":"The Last Stand: Aftermath","hours":1,"players":84,"type":"Single-Player","genres":["Action","Adventure","Indie"]},{"appid":1368950,"name":"VTuber Maker","hours":1,"players":32,"type":"Unknown","genres":["Animation & Modeling","Design & Illustration","Video Production","Game Development"]},{"appid":220,"name":"Half-Life 2","hours":0,"players":2639,"type":"Single-Player","genres":["Action"]},{"appid":320,"name":"Half-Life 2: Deathmatch","hours":0,"players":174,"type":"Multiplayer","genres":["Action"]},{"appid":360,"name":"Half-Life Deathmatch: Source","hours":0,"players":23,"type":"Multiplayer","genres":["Action"]},{"appid":10180,"name":"Call of Duty: Modern Warfare 2 (2009)","hours":0,"players":525,"type":"Co-op","genres":["Action"]},{"appid":10190,"name":"Call of Duty: Modern Warfare 2 (2009) - Multiplayer","hours":0,"players":411,"type":"Co-op","genres":["Action"]},{"appid":15120,"name":"Tom Clancy's Rainbow Six: Vegas 2","hours":0,"players":51,"type":"Co-op","genres":["Action"]},{"appid":17080,"name":"Tribes: Ascend","hours":0,"players":0,"type":"Co-op","genres":["Action","Free To Play"]},{"appid":39210,"name":"FINAL FANTASY XIV Online","hours":0,"players":24201,"type":"MMO","genres":["Massively Multiplayer","RPG"]},{"appid":223100,"name":"Homefront: The Revolution","hours":0,"players":142,"type":"Co-op","genres":["Action","Adventure"]},{"appid":233270,"name":"Far Cry® 3 Blood Dragon","hours":0,"players":59,"type":"Single-Player","genres":["Action","Adventure"]},{"appid":304930,"name":"Unturned","hours":0,"players":14436,"type":"PvP + Co-op","genres":["Action","Adventure","Casual","Indie","Free To Play"]},{"appid":316390,"name":"Anomaly Zone","hours":0,"players":0,"type":"Unknown","genres":[]},{"appid":368230,"name":"Kingdom: Classic","hours":0,"players":72,"type":"Single-Player","genres":["Indie","Simulation","Strategy"]},{"appid":407060,"name":"AltspaceVR","hours":0,"players":0,"type":"PvP + Co-op","genres":["Casual","Free To Play","Massively Multiplayer","Simulation"]},{"appid":409710,"name":"BioShock Remastered","hours":0,"players":827,"type":"Single-Player","genres":["Action","RPG"]},{"appid":438480,"name":"Rock 'N' Roll Defense","hours":0,"players":209,"type":"Single-Player","genres":["Action","Adventure","Casual","Strategy"]},{"appid":439700,"name":"H1Z1: Test Server","hours":0,"players":1,"type":"MMO","genres":["Massively Multiplayer"]},{"appid":489630,"name":"Warhammer 40,000: Gladius - Relics of War","hours":0,"players":1631,"type":"PvP + Co-op","genres":["Strategy"]},{"appid":537700,"name":"Octave","hours":0,"players":0,"type":"Single-Player","genres":["Adventure","Indie"]},{"appid":546560,"name":"Half-Life: Alyx","hours":0,"players":527,"type":"Single-Player","genres":["Action","Adventure"]},{"appid":555570,"name":"Infestation: The New Z","hours":0,"players":247,"type":"MMO","genres":["Action","Indie","Massively Multiplayer","RPG","Free To Play"]},{"appid":599140,"name":"Graveyard Keeper","hours":0,"players":3203,"type":"Single-Player","genres":["Adventure","Indie","RPG","Simulation"]},{"appid":700580,"name":"Rust - Staging Branch","hours":0,"players":15,"type":"Unknown","genres":[]},{"appid":774941,"name":"Squad - Public Testing","hours":0,"players":8,"type":"Unknown","genres":[]},{"appid":912290,"name":"Miscreated: Experimental Server","hours":0,"players":0,"type":"Unknown","genres":[]},{"appid":924140,"name":"Hand Simulator: Survival","hours":0,"players":5,"type":"PvP + Co-op","genres":["Action","Adventure","Indie","Massively Multiplayer","RPG","Simulation"]},{"appid":957790,"name":"WAR DUST","hours":0,"players":7,"type":"MMO","genres":["Action","Indie","Massively Multiplayer","Simulation"]},{"appid":1142130,"name":"They Can't Stop All Of Us","hours":0,"players":0,"type":"PvP + Co-op","genres":["Action","Free To Play","Indie","Strategy"]},{"appid":1300700,"name":"Kingdom Wars 4","hours":0,"players":0,"type":"PvP + Co-op","genres":["Action","Indie","RPG","Simulation","Strategy"]},{"appid":1325860,"name":"VTube Studio","hours":0,"players":8147,"type":"Single-Player","genres":["Indie","Animation & Modeling","Video Production"]},{"appid":1330460,"name":"Becastled","hours":0,"players":51,"type":"Single-Player","genres":["Indie","Strategy"]},{"appid":1374490,"name":"RuneScape: Dragonwilds","hours":0,"players":13191,"type":"Online Co-op","genres":["Action","Adventure","RPG","Early Access"]},{"appid":1583230,"name":"High On Life","hours":0,"players":633,"type":"Single-Player","genres":["Action","Adventure"]},{"appid":1836200,"name":"Fallout 76 Public Test Server","hours":0,"players":6,"type":"Unknown","genres":[]},{"appid":2635410,"name":"Holdfast: Nations At War - Testing Branch","hours":0,"players":12,"type":"Unknown","genres":[]},{"appid":3240220,"name":"Grand Theft Auto V Enhanced","hours":0,"players":87966,"type":"PvP + Co-op","genres":["Action","Adventure","Racing"]},{"appid":3595270,"name":"Call of Duty®: Modern Warfare® III","hours":0,"players":3725,"type":"PvP + Co-op","genres":["Action"]},{"appid":3643930,"name":"March of Giants Playtest","hours":0,"players":-1,"type":"Unknown","genres":[]},{"appid":3751950,"name":"Assassin's Creed Black Flag Resynced","hours":0,"players":101244,"type":"Single-Player","genres":["Action","Adventure"]},{"appid":4384550,"name":"Call of Duty®: Black Ops 6","hours":0,"players":1917,"type":"PvP + Co-op","genres":["Action"]}];

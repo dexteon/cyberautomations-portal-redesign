@@ -7,151 +7,287 @@
   <title>Portal · me.cyberautomations.com</title>
   <style>
     :root {
-      --bg: #0f1115;
-      --card: #171a21;
-      --card-hover: #1d212b;
-      --border: #262b36;
-      --text: #e7eaf0;
-      --muted: #98a1b3;
-      --accent: #4c8dff;
-      --ok: #35c88a;
+      --bg:        #0d1010;
+      --surface:   #141918;
+      --surface-2: #1b2120;
+      --border:    #263030;
+      --border-2:  #324040;
+      --text:      #dde5e3;
+      --muted:     #8fa89e;
+      --faint:     #5c726a;
+      --accent:    #b8965a;
+      --accent-2:  rgba(184,150,90,.12);
+      --ok:        #5aab7f;
+      --warn:      #c9924a;
+      --crit:      #c45a5a;
+      --mil:       #8fa06e;
+      --mono:      "SFMono-Regular", Consolas, "Cascadia Mono", Menlo, monospace;
+      --sans:      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: var(--sans);
       background: var(--bg);
       color: var(--text);
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
     }
-    .wrap { max-width: 880px; margin: 0 auto; padding: 64px 24px 80px; }
-    header { margin-bottom: 40px; }
-    .kicker {
-      font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
-      color: var(--muted); margin: 0 0 8px;
+
+    /* ── top bar ── */
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(13,16,16,.96);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; height: 48px;
     }
-    h1 { font-size: 28px; font-weight: 650; margin: 0; }
-    .sub { color: var(--muted); margin: 8px 0 0; font-size: 15px; }
-    .grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 16px; margin-top: 32px;
+    .topbar-left { display: flex; align-items: center; gap: 16px; }
+    .topbar-brand {
+      font-size: 11px; font-weight: 700; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--accent);
     }
-    a.card, div.card {
-      display: block; text-decoration: none; color: inherit;
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 10px; padding: 20px; transition: background .15s, border-color .15s, transform .15s;
+    .topbar-meta { font-size: 11px; color: var(--faint); }
+    .topbar-lock { font-size: 11px; color: var(--ok); }
+
+    /* ── layout ── */
+    .wrap { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    /* ── cover block ── */
+    .cover {
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      background: var(--surface);
+      border-radius: 4px;
+      padding: 22px 24px;
+      margin-bottom: 28px;
     }
-    a.card:hover { background: var(--card-hover); border-color: #333a49; transform: translateY(-1px); }
-    .card .title { font-size: 16px; font-weight: 600; margin: 0 0 6px; display: flex; align-items: center; gap: 8px; }
-    .card .desc { font-size: 13px; color: var(--muted); margin: 0; }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); display: inline-block; }
-    .dot.soon { background: var(--muted); }
-    .card.soon { opacity: .6; cursor: default; }
-    footer { margin-top: 48px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); padding-top: 16px; }
-    footer .lock { color: var(--ok); }
-    .fresh { font-size: 11px; color: #6b7386; margin: 8px 0 0; font-family: 'SFMono-Regular', Consolas, Menlo, monospace; }
-    .alerts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+    .cover-kicker {
+      font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--faint); margin: 0 0 6px;
+    }
+    .cover h1 { font-size: 22px; font-weight: 700; margin: 0 0 4px; letter-spacing: -.01em; }
+    .cover .sub { color: var(--muted); font-size: 13px; margin: 0; }
+
+    /* ── alert chips ── */
+    .alerts { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
     .achip {
-      flex: 1 1 300px; display: block; text-decoration: none; color: inherit;
-      background: var(--card); border: 1px solid var(--border); border-left: 3px solid #e0566b;
-      border-radius: 8px; padding: 10px 14px; font-size: 13px;
+      flex: 1 1 300px;
+      display: block; text-decoration: none; color: inherit;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--crit);
+      border-radius: 4px;
+      padding: 10px 14px;
+      font-size: 13px;
+      transition: background .12s, border-color .12s;
     }
-    .achip:hover { background: var(--card-hover); }
-    .achip.amber { border-left-color: #d9a25c; }
-    .achip .n { font-family: 'SFMono-Regular', Consolas, Menlo, monospace; font-weight: 700; font-size: 16px; color: #e0566b; }
-    .achip.amber .n { color: #d9a25c; }
+    .achip:hover { background: var(--surface-2); border-color: var(--crit); }
+    .achip.amber { border-left-color: var(--warn); }
+    .achip.amber:hover { border-color: var(--warn); }
+    .achip .n {
+      font-family: var(--mono); font-weight: 700; font-size: 15px;
+      color: var(--crit); display: block; margin-bottom: 1px;
+    }
+    .achip.amber .n { color: var(--warn); }
     .achip .t { color: var(--muted); font-size: 12px; }
     .achip .t b { color: var(--text); }
+
+    /* ── section label ── */
+    .section-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--faint); margin: 0 0 12px;
+      padding-bottom: 8px; border-bottom: 1px solid var(--border);
+    }
+
+    /* ── grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
+      gap: 12px;
+    }
+
+    /* ── cards ── */
+    a.card {
+      display: block; text-decoration: none; color: inherit;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 16px 18px;
+      transition: background .12s, border-color .12s, transform .1s;
+      position: relative;
+    }
+    a.card:hover {
+      background: var(--surface-2);
+      border-color: var(--border-2);
+      transform: translateY(-1px);
+    }
+    a.card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; bottom: 0;
+      width: 3px;
+      background: var(--border);
+      border-radius: 4px 0 0 4px;
+      transition: background .12s;
+    }
+    a.card:hover::before { background: var(--accent); }
+
+    .card .title {
+      font-size: 14px; font-weight: 650; margin: 0 0 5px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card .desc { font-size: 12.5px; color: var(--muted); margin: 0; line-height: 1.55; }
+    .card .tag {
+      display: inline-block; margin-top: 8px;
+      font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--faint);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 6px;
+    }
+
+    /* status dot */
+    .dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--ok); display: inline-block; flex-shrink: 0;
+      box-shadow: 0 0 0 2px rgba(90,171,127,.2);
+    }
+    .dot.warn { background: var(--warn); box-shadow: 0 0 0 2px rgba(201,146,74,.2); }
+    .dot.off { background: var(--faint); box-shadow: none; }
+
+    /* freshness */
+    .fresh {
+      font-size: 10.5px; color: var(--faint);
+      font-family: var(--mono);
+      margin: 6px 0 0; display: block;
+    }
+
+    /* ── footer ── */
+    footer {
+      margin-top: 40px;
+      font-size: 11.5px; color: var(--faint);
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .topbar { padding: 0 16px; }
+      .wrap { padding: 24px 16px 60px; }
+      .cover { padding: 18px 16px; }
+    }
   </style>
 </head>
 <body>
+  <div class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-brand">Portal</span>
+      <span class="topbar-meta">me.cyberautomations.com</span>
+    </div>
+    <span class="topbar-lock">&#128274; Cloudflare Access</span>
+  </div>
+
   <div class="wrap">
-    <header>
-      <p class="kicker">Private</p>
-      <h1>Dashboard Portal</h1>
-      <p class="sub">Served locally, tunneled to your domain, gated behind Cloudflare Access.</p>
-    </header>
+    <div class="cover">
+      <p class="cover-kicker">Personal Operations Center · Private</p>
+      <h1>Teon Moore</h1>
+      <p class="sub">Served locally, tunneled to your domain. Medical records, finances, job search, tools.</p>
+    </div>
 
     <div class="alerts" id="alerts"></div>
+
+    <p class="section-label">Sections</p>
 
     <div class="grid">
       <a class="card" href="/medical/">
         <p class="title"><span class="dot"></span> Medical Record</p>
         <p class="desc">Full timeline 2018–2026 — diagnoses, medications, BP evidence, providers, VA claim data.</p>
+        <span class="tag">Health</span>
       </a>
 
       <a class="card" href="/playgrounds/va-claim.html">
-        <p class="title"><span class="dot"></span> VA Claim Playground</p>
+        <p class="title"><span class="dot warn"></span> VA Claim Playground</p>
         <p class="desc">Rating scenarios, 38 CFR tiers, deadline countdowns, evidence checklist.</p>
+        <span class="tag">VA</span>
       </a>
 
       <a class="card" href="/instacart/dashboard.html">
         <p class="title"><span class="dot"></span> Instacart Spend</p>
         <p class="desc">Order history, spend-by-address, product drilldown — live from local data.</p>
+        <span class="tag">Finance</span>
       </a>
 
       <a class="card" href="/finance/">
         <p class="title"><span class="dot"></span> Finance Summary</p>
         <p class="desc">Budget, comp &amp; net worth — receipt-verified groceries. Snapshot as of last build.</p>
+        <span class="tag">Finance</span>
       </a>
 
       <a class="card" href="/email-digest/">
         <p class="title"><span class="dot"></span> Email Digest</p>
         <p class="desc">Unread across all 4 accounts, grouped by category. Read-only. Refreshed 3×/day.</p>
+        <span class="tag">Comms</span>
       </a>
 
       <a class="card" href="/jobs/">
         <p class="title"><span class="dot"></span> Job Search</p>
         <p class="desc">Runner status, ranked roles, applications &amp; API quota — from your local job data.</p>
+        <span class="tag">Career</span>
       </a>
 
       <a class="card" href="/email-agency/">
         <p class="title"><span class="dot"></span> Email Agency</p>
         <p class="desc">Agency run metrics — Run 1 (2026-07-11) snapshot: per-account decisions, filters &amp; review queue.</p>
+        <span class="tag">Comms</span>
       </a>
 
       <a class="card" href="/steam/">
         <p class="title"><span class="dot"></span> Steam Library</p>
         <p class="desc">Your full 168-game library with playtime &amp; player counts — auto-pulled from Steam.</p>
+        <span class="tag">Personal</span>
       </a>
 
       <a class="card" href="/playgrounds/">
         <p class="title"><span class="dot"></span> Playgrounds</p>
-        <p class="desc">Interactive tools &amp; explorers — RapidAPI catalog and more.</p>
+        <p class="desc">Interactive tools &amp; explorers — RapidAPI catalog, headache log, and more.</p>
+        <span class="tag">Tools</span>
       </a>
     </div>
 
     <footer>
-      <span class="lock">&#128274;</span> Data never leaves this machine. Access restricted to teonmoore@gmail.com.
+      <span style="color:var(--ok)">&#128274;</span>
+      Data never leaves this machine. Access restricted to teonmoore@gmail.com.
     </footer>
   </div>
+
 <script>
 (function(){
-  // deadline chips
   var d1 = new Date(2026,6,21), d2 = new Date(2027,1,13), now = new Date();
-  var days = function(d){ return Math.ceil((d - now) / 864e5); };
+  function days(d){ return Math.ceil((d - now) / 864e5); }
   var el = document.getElementById('alerts'), h = '';
   var n1 = days(d1);
   if (n1 >= 0) {
-    h += '<a class="achip" href="/playgrounds/va-claim.html"><span class="n">' + n1 + ' days</span> <span class="t"><b>Post-MI 100% window (DC 7006)</b> closes ~7/21 — file / confirm ITF with Hill &amp; Ponton.</span></a>';
+    h += '<a class="achip" href="/playgrounds/va-claim.html"><span class="n">' + n1 + ' days</span><span class="t"><b>Post-MI 100% window (DC 7006)</b> closes ~7/21 — file / confirm ITF with Hill &amp; Ponton.</span></a>';
   } else {
-    h += '<a class="achip amber" href="/playgrounds/va-claim.html"><span class="n">staged</span> <span class="t"><b>Post-MI window closed ' + (-n1) + 'd ago</b> — pursue staged-rating capture for 4/21–7/21/2026.</span></a>';
+    h += '<a class="achip amber" href="/playgrounds/va-claim.html"><span class="n">staged</span><span class="t"><b>Post-MI window closed ' + (-n1) + 'd ago</b> — pursue staged-rating capture for 4/21–7/21/2026.</span></a>';
   }
-  h += '<a class="achip amber" href="/playgrounds/va-claim.html"><span class="n">' + days(d2) + ' days</span> <span class="t"><b>Form 20-0995 appeal</b> (healthcare enrollment denial) due 2027-02-13.</span></a>';
+  h += '<a class="achip amber" href="/playgrounds/va-claim.html"><span class="n">' + days(d2) + ' days</span><span class="t"><b>Form 20-0995 appeal</b> (healthcare enrollment denial) due 2027-02-13.</span></a>';
   el.innerHTML = h;
-  // freshness strip
+
   fetch('/freshness.json').then(function(r){ return r.json(); }).then(function(f){
-    var map = { '/medical/':'medical', '/playgrounds/va-claim.html':'va-claim', '/instacart/dashboard.html':'instacart',
-      '/finance/':'finance', '/email-digest/':'email-digest', '/jobs/':'jobs', '/email-agency/':'email-agency',
-      '/steam/':'steam', '/playgrounds/':'playgrounds' };
+    var map = {
+      '/medical/':'medical', '/playgrounds/va-claim.html':'va-claim',
+      '/instacart/dashboard.html':'instacart', '/finance/':'finance',
+      '/email-digest/':'email-digest', '/jobs/':'jobs',
+      '/email-agency/':'email-agency', '/steam/':'steam', '/playgrounds/':'playgrounds'
+    };
     document.querySelectorAll('a.card').forEach(function(a){
       var k = map[a.getAttribute('href')], e = k && f[k];
       if (!e) return;
-      var p = document.createElement('p');
-      p.className = 'fresh';
-      p.textContent = 'data as of ' + e.as_of + (e.label ? ' · ' + e.label : '');
-      a.appendChild(p);
+      var s = document.createElement('span');
+      s.className = 'fresh';
+      s.textContent = 'data as of ' + e.as_of + (e.label ? ' · ' + e.label : '');
+      a.appendChild(s);
     });
   }).catch(function(){});
 })();

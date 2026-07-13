@@ -345,9 +345,14 @@
   }
 
   /* ---------- Top bar + tabs ---------- */
-  .topbar { max-width: 760px; margin: 0 auto 0.8rem; }
-  .topbar a { font-size: 0.8rem; color: var(--ink-dim); text-decoration: none; }
+  .topbar {
+    max-width: 760px; margin: 0 auto 0.8rem;
+    display: flex; align-items: center; justify-content: space-between;
+    padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule);
+  }
+  .topbar a { font-size: 0.78rem; color: var(--ink-dim); text-decoration: none; font-weight: 500; }
   .topbar a:hover { color: var(--ink); }
+  .topbar-brand { font-size: 0.68rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--brass); }
   .tabs {
     position: sticky; top: 0; z-index: 10;
     display: flex; flex-wrap: wrap; gap: 0.3rem;
@@ -385,7 +390,7 @@
 
 <div class="sheet">
 
-  <div class="topbar"><a href="/">&larr; Portal</a></div>
+  <div class="topbar"><span class="topbar-brand">Portal</span><a href="/">&larr; Home</a></div>
 
   <div class="masthead">
     <div>

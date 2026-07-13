@@ -2,71 +2,102 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Compensation Playground</title>
+<meta name="robots" content="noindex, nofollow">
+<title>Comp Playground · Portal</title>
 <style>
   :root {
-    --bg: #10120f;
-    --panel: #171a15;
-    --panel-raised: #1e2118;
-    --ink: #ece9e0;
-    --ink-dim: #a5a396;
-    --ink-faint: #6e6c60;
-    --rule: #2c2e24;
-    --accent: #c9a15a;
-    --accent-dim: #5a4a2c;
-    --good: #7fb08a;
-    --bad: #c17a63;
-    --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --bg:        #0d1010;
+    --surface:   #141918;
+    --surface-2: #1b2120;
+    --border:    #263030;
+    --border-2:  #324040;
+    --text:      #dde5e3;
+    --muted:     #8fa89e;
+    --faint:     #5c726a;
+    --accent:    #b8965a;
+    --ok:        #5aab7f;
+    --warn:      #c9924a;
+    --crit:      #c45a5a;
+    --mono:      "SFMono-Regular", Consolas, "Cascadia Mono", Menlo, monospace;
+    --sans:      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    /* legacy names used inline */
+    --ink:       #dde5e3;
+    --ink-dim:   #8fa89e;
+    --ink-faint: #5c726a;
+    --rule:      #263030;
+    --good:      #5aab7f;
+    --bad:       #c45a5a;
   }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 14px; line-height: 1.5; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+
+  /* topbar */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(13,16,16,.96); backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; height: 48px;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 12px; }
+  .topbar-brand { font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); }
+  .topbar-title { font-size: 13px; font-weight: 600; color: var(--text); }
+  .topbar-back { font-size: 11px; color: var(--faint); text-decoration: none; }
+  .topbar-back:hover { color: var(--muted); }
+
   .wrap { max-width: 1180px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
-  h1 { font-size: 1.3rem; font-weight: 600; margin: 0 0 0.3rem; }
-  .sub { color: var(--ink-dim); font-size: 0.85rem; margin: 0 0 1.8rem; max-width: 72ch; }
+  h1 { font-size: 1.2rem; font-weight: 700; margin: 0 0 0.3rem; }
+  .sub { color: var(--muted); font-size: 0.85rem; margin: 0 0 1.8rem; max-width: 72ch; }
 
   .grid { display: grid; grid-template-columns: 1fr 380px; gap: 1.5rem; align-items: start; }
   @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
 
-  .panel { background: #171912; border: 1px solid var(--rule); border-radius: 8px; padding: 1.3rem 1.4rem; }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 1.3rem 1.4rem; }
   .panel + .panel { margin-top: 1.2rem; }
-  .panel h2 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-dim); margin: 0 0 1rem; font-weight: 600; }
+  .panel h2 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: .14em; color: var(--faint); margin: 0 0 1rem; font-weight: 700; }
 
   .field { margin-bottom: 1.2rem; }
   .field:last-child { margin-bottom: 0; }
   .field-label { display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 0.5rem; }
   .field-label .val { font-family: var(--mono); color: var(--accent); }
   input[type=range] { width: 100%; accent-color: var(--accent); }
-  .field-hint { color: var(--ink-faint); font-size: 0.72rem; margin-top: 0.3rem; }
+  .field-hint { color: var(--faint); font-size: 0.72rem; margin-top: 0.3rem; }
 
   .toggle-group { display: flex; gap: 0.5rem; }
-  .toggle-opt { flex: 1; text-align: center; background: var(--panel-raised); border: 1px solid var(--rule); color: var(--ink-dim); padding: 0.55rem; border-radius: 6px; cursor: pointer; font-size: 0.82rem; }
-  .toggle-opt.active { background: var(--accent-dim); color: var(--ink); border-color: var(--accent); }
+  .toggle-opt { flex: 1; text-align: center; background: var(--surface-2); border: 1px solid var(--border); color: var(--muted); padding: 0.55rem; border-radius: 4px; cursor: pointer; font-size: 0.82rem; }
+  .toggle-opt.active { background: rgba(184,150,90,.15); color: var(--text); border-color: var(--accent); }
 
   .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.8rem; }
-  .compare-col { background: var(--panel-raised); border-radius: 6px; padding: 0.9rem 1rem; }
-  .compare-col h3 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-faint); margin: 0 0 0.6rem; }
-  .compare-row { display: flex; justify-content: space-between; font-size: 0.78rem; padding: 0.22rem 0; color: var(--ink-dim); }
-  .compare-row.total { border-top: 1px solid var(--rule); margin-top: 0.4rem; padding-top: 0.5rem; font-weight: 600; color: var(--ink); }
+  .compare-col { background: var(--surface-2); border-radius: 4px; padding: 0.9rem 1rem; }
+  .compare-col h3 { font-size: 0.68rem; text-transform: uppercase; letter-spacing: .12em; color: var(--faint); margin: 0 0 0.6rem; font-weight: 700; }
+  .compare-row { display: flex; justify-content: space-between; font-size: 0.78rem; padding: 0.22rem 0; color: var(--muted); }
+  .compare-row.total { border-top: 1px solid var(--border); margin-top: 0.4rem; padding-top: 0.5rem; font-weight: 600; color: var(--text); }
   .compare-row span:last-child { font-family: var(--mono); }
 
-  .delta-banner { text-align: center; padding: 1rem; border-radius: 6px; margin-top: 1rem; }
-  .delta-banner.good { background: #1c2b20; border: 1px solid var(--good); }
-  .delta-banner.bad { background: #2e1f1a; border: 1px solid var(--bad); }
+  .delta-banner { text-align: center; padding: 1rem; border-radius: 4px; margin-top: 1rem; }
+  .delta-banner.good { background: rgba(90,171,127,.08); border: 1px solid rgba(90,171,127,.3); }
+  .delta-banner.bad  { background: rgba(196,90,90,.08);  border: 1px solid rgba(196,90,90,.3); }
   .delta-banner .amt { font-family: var(--mono); font-size: 1.5rem; font-weight: 600; }
-  .delta-banner.good .amt { color: var(--good); }
-  .delta-banner.bad .amt { color: var(--bad); }
-  .delta-banner .lbl { color: var(--ink-dim); font-size: 0.76rem; margin-top: 0.2rem; }
+  .delta-banner.good .amt { color: var(--ok); }
+  .delta-banner.bad  .amt { color: var(--crit); }
+  .delta-banner .lbl { color: var(--muted); font-size: 0.76rem; margin-top: 0.2rem; }
 
-  textarea#promptOut { width: 100%; min-height: 140px; background: var(--panel-raised); border: 1px solid var(--rule); border-radius: 6px; color: var(--ink); font-family: var(--mono); font-size: 0.76rem; padding: 0.8rem; resize: vertical; line-height: 1.5; }
-  .copy-btn { margin-top: 0.6rem; width: 100%; background: var(--accent-dim); border: 1px solid var(--accent); color: var(--ink); padding: 0.6rem; border-radius: 6px; font-size: 0.82rem; cursor: pointer; font-family: var(--sans); }
-  .copy-btn.copied { background: var(--accent); color: #10120f; }
+  textarea#promptOut { width: 100%; min-height: 140px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: var(--mono); font-size: 0.76rem; padding: 0.8rem; resize: vertical; line-height: 1.5; }
+  .copy-btn { margin-top: 0.6rem; width: 100%; background: rgba(184,150,90,.15); border: 1px solid var(--accent); color: var(--text); padding: 0.6rem; border-radius: 4px; font-size: 0.82rem; cursor: pointer; font-family: var(--sans); }
+  .copy-btn.copied { background: var(--accent); color: #0d1010; }
 
-  footer { margin-top: 2rem; color: var(--ink-faint); font-size: 0.72rem; border-top: 1px solid var(--rule); padding-top: 1rem; }
-  .note-box { background: #2e1f1a; border: 1px solid var(--bad); border-radius: 6px; padding: 0.8rem 1rem; font-size: 0.78rem; color: #dba896; margin-bottom: 1.5rem; }
+  footer { margin-top: 2rem; color: var(--faint); font-size: 0.72rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+  .note-box { background: rgba(196,90,90,.08); border: 1px solid rgba(196,90,90,.3); border-radius: 4px; padding: 0.8rem 1rem; font-size: 0.78rem; color: #d4837a; margin-bottom: 1.5rem; }
 </style>
 </head>
 <body>
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="topbar-brand">Portal</span>
+    <span class="topbar-title">Comp Playground</span>
+  </div>
+  <a href="/finance/" class="topbar-back">← Finance</a>
+</div>
 <div class="wrap">
   <h1>Compensation Playground</h1>
   <p class="sub">Move the sliders to explore C2C rates and a Brooklyn move. Tax math (federal, SE tax, QBI, Virginia) runs live using the real 2025 brackets, calibrated to match the figures in <code>compensation-summary.md</code> exactly.</p>

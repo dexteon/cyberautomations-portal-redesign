@@ -3,101 +3,195 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Email Agency — 4-Account Dashboard</title>
+<meta name="robots" content="noindex, nofollow">
+<title>Email Agency · Portal</title>
 <style>
-  :root {
-    --bg: #0d1117; --panel: #161b22; --panel2: #1c2129; --border: #30363d;
-    --text: #e6edf3; --dim: #8b949e; --accent: #58a6ff; --green: #3fb950;
-    --yellow: #d29922; --red: #f85149; --purple: #bc8cff; --orange: #ffa657;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--bg); color: var(--text); font: 14px/1.5 -apple-system, "Segoe UI", system-ui, sans-serif; }
-  .mono { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; }
-  header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
-  header h1 { font-size: 18px; font-weight: 600; }
-  header .sub { color: var(--dim); font-size: 12px; }
-  .layout { display: grid; grid-template-columns: 280px 1fr; min-height: calc(100vh - 60px); }
-  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
-  aside { border-right: 1px solid var(--border); padding: 16px; background: var(--panel); }
-  main { padding: 20px 24px 120px; overflow-x: hidden; }
-  .ctl-group { margin-bottom: 20px; }
-  .ctl-group h3 { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); margin-bottom: 8px; }
-  .tabs { display: flex; flex-direction: column; gap: 4px; }
-  .tab { text-align: left; padding: 8px 10px; background: none; border: 1px solid transparent; border-radius: 6px; color: var(--text); cursor: pointer; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
-  .tab:hover { background: var(--panel2); }
-  .tab.active { background: var(--panel2); border-color: var(--border); }
-  .tab .badge { font-size: 11px; color: var(--dim); }
-  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 7px; }
-  .toggle-row { display: flex; align-items: center; gap: 8px; padding: 5px 2px; font-size: 13px; cursor: pointer; color: var(--text); }
-  .toggle-row input { accent-color: var(--accent); }
-  .presets { display: flex; flex-wrap: wrap; gap: 6px; }
-  .preset { padding: 5px 9px; font-size: 12px; border: 1px solid var(--border); border-radius: 20px; background: none; color: var(--text); cursor: pointer; }
-  .preset:hover { border-color: var(--accent); color: var(--accent); }
-  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 22px; }
-  .metric { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 14px; overflow: hidden; min-width: 0; cursor: default; }
-  .metric.link { cursor: pointer; }
-  .metric.link:hover { border-color: var(--accent); }
-  .metric .num { font-size: 22px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .metric .lbl { color: var(--dim); font-size: 12px; margin-top: 2px; }
-  section.card, details.card { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 18px; }
-  section.card h2, details.card summary h2 { font-size: 14px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-  details.card summary { cursor: pointer; list-style: none; }
-  details.card summary::-webkit-details-marker { display: none; }
-  details.card summary h2 { margin-bottom: 0; }
-  details.card summary .chev { margin-left: auto; color: var(--dim); font-size: 11px; }
-  details.card[open] > summary { margin-bottom: 10px; }
-  details.inner { margin-top: 14px; }
-  details.inner summary { cursor: pointer; font-size: 12px; color: var(--dim); text-transform: uppercase; letter-spacing: .05em; list-style: none; }
-  details.inner summary::-webkit-details-marker { display: none; }
-  details.inner summary::after { content: " ▸"; }
-  details.inner[open] summary::after { content: " ▾"; }
-  .tbl-wrap { overflow-x: auto; }
-  td.sender { word-break: break-all; }
-  .bar-row { display: grid; grid-template-columns: minmax(120px, 220px) 1fr 52px; gap: 10px; align-items: center; padding: 3px 0; font-size: 12.5px; }
-  .bar-row .name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
-  .bar-track { background: var(--panel2); border-radius: 4px; height: 14px; overflow: hidden; }
-  .bar-fill { height: 100%; border-radius: 4px; }
-  .bar-row .val { text-align: right; color: var(--dim); }
-  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-  th { text-align: left; color: var(--dim); font-weight: 500; padding: 5px 8px; border-bottom: 1px solid var(--border); }
-  td { padding: 6px 8px; border-bottom: 1px solid var(--panel2); vertical-align: top; }
-  .pill { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 11px; border: 1px solid; }
-  .pill.promo { color: var(--yellow); border-color: var(--yellow); }
-  .pill.receipt { color: var(--green); border-color: var(--green); }
-  .pill.finance { color: var(--accent); border-color: var(--accent); }
-  .pill.career { color: var(--purple); border-color: var(--purple); }
-  .pill.bill { color: var(--orange); border-color: var(--orange); }
-  .review-item { border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; background: var(--panel2); }
-  .review-item .ri-head { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
-  .review-item .ri-sender { font-weight: 600; font-size: 13px; }
-  .review-item .ri-issue { color: var(--dim); font-size: 12.5px; margin-bottom: 8px; }
-  .ri-opts { display: flex; flex-wrap: wrap; gap: 6px; }
-  .ri-opt { padding: 4px 10px; font-size: 12px; border: 1px solid var(--border); border-radius: 14px; background: none; color: var(--text); cursor: pointer; }
-  .ri-opt:hover { border-color: var(--accent); }
-  .ri-opt.sel { background: var(--accent); border-color: var(--accent); color: #04121f; font-weight: 600; }
-  .promptbar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--panel); border-top: 1px solid var(--border); padding: 12px 24px; display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: center; }
-  .promptbar pre { white-space: pre-wrap; font-size: 12px; color: var(--text); max-height: 90px; overflow-y: auto; font-family: ui-monospace, Consolas, monospace; }
-  .copy-btn { padding: 9px 18px; background: var(--accent); color: #04121f; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; white-space: nowrap; }
-  .copy-btn:hover { filter: brightness(1.1); }
-  .acct-note { font-size: 12px; color: var(--dim); margin-bottom: 12px; }
-  .flex-wrap-list { display: flex; flex-wrap: wrap; gap: 6px; }
-  .chip { padding: 3px 10px; border-radius: 12px; background: var(--panel2); border: 1px solid var(--border); font-size: 12px; }
-  .hidden { display: none !important; }
+:root {
+  --bg:        #0d1010;
+  --surface:   #141918;
+  --surface-2: #1b2120;
+  --border:    #263030;
+  --border-2:  #324040;
+  --text:      #dde5e3;
+  --muted:     #8fa89e;
+  --faint:     #5c726a;
+  --accent:    #b8965a;
+  --ok:        #5aab7f;
+  --warn:      #c9924a;
+  --crit:      #c45a5a;
+  --c-promo:   #c9924a;
+  --c-receipt: #5aab7f;
+  --c-finance: #6b9fc4;
+  --c-career:  #9a7fc4;
+  --c-bill:    #c48a6b;
+  --mono: "SFMono-Regular", Consolas, "Cascadia Mono", Menlo, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font: 14px/1.5 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); text-decoration: none; }
+.mono { font-family: var(--mono); }
+
+/* topbar */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(13,16,16,.96); backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; height: 48px;
+}
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+.topbar-brand { font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); }
+.topbar-title { font-size: 13px; font-weight: 600; color: var(--text); }
+.topbar-meta { font-size: 11px; color: var(--faint); }
+.topbar-back { font-size: 11px; color: var(--faint); }
+.topbar-back:hover { color: var(--muted); }
+
+/* layout */
+.layout { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 48px); }
+@media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+/* sidebar */
+aside {
+  border-right: 1px solid var(--border);
+  padding: 20px 16px;
+  background: var(--surface);
+  overflow-y: auto;
+}
+.ctl-group { margin-bottom: 24px; }
+.ctl-label {
+  font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--faint); margin-bottom: 10px; display: block;
+}
+.tabs { display: flex; flex-direction: column; gap: 3px; }
+.tab {
+  text-align: left; padding: 7px 10px;
+  background: none; border: 1px solid transparent; border-radius: 4px;
+  color: var(--muted); cursor: pointer; font-size: 13px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--sans);
+}
+.tab:hover { background: var(--surface-2); color: var(--text); }
+.tab.active { background: var(--surface-2); border-color: var(--border); color: var(--text); }
+.tab .badge { font-size: 10.5px; color: var(--faint); font-family: var(--mono); }
+.dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 7px; flex-shrink: 0; }
+.toggle-row { display: flex; align-items: center; gap: 8px; padding: 5px 4px; font-size: 12.5px; cursor: pointer; color: var(--muted); }
+.toggle-row:hover { color: var(--text); }
+.toggle-row input { accent-color: var(--accent); }
+.presets { display: flex; flex-wrap: wrap; gap: 6px; }
+.preset {
+  padding: 5px 10px; font-size: 11.5px;
+  border: 1px solid var(--border); border-radius: 3px;
+  background: none; color: var(--muted); cursor: pointer;
+  font-family: var(--sans);
+}
+.preset:hover { border-color: var(--accent); color: var(--accent); }
+
+/* main */
+main { padding: 20px 24px 140px; overflow-x: hidden; }
+
+/* metrics */
+.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 20px; }
+.metric {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+  padding: 14px 16px; overflow: hidden; min-width: 0;
+  border-left: 3px solid var(--border);
+}
+.metric.link { cursor: pointer; }
+.metric.link:hover { border-color: var(--border-2); }
+.metric .num { font-size: 22px; font-weight: 700; font-family: var(--mono); white-space: nowrap; }
+.metric .lbl { color: var(--muted); font-size: 11.5px; margin-top: 3px; }
+
+/* cards */
+section.card, details.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 4px; padding: 16px; margin-bottom: 14px;
+}
+section.card h2, details.card summary h2 {
+  font-size: 13px; font-weight: 650; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+details.card summary { cursor: pointer; list-style: none; }
+details.card summary::-webkit-details-marker { display: none; }
+details.card summary h2 { margin-bottom: 0; }
+details.card summary .chev { margin-left: auto; color: var(--faint); font-size: 11px; font-weight: 400; }
+details.card[open] > summary { margin-bottom: 12px; }
+details.inner { margin-top: 14px; }
+details.inner summary {
+  cursor: pointer; font-size: 11px; color: var(--faint);
+  text-transform: uppercase; letter-spacing: .1em; list-style: none;
+}
+details.inner summary::-webkit-details-marker { display: none; }
+details.inner summary::after { content: " ▸"; }
+details.inner[open] summary::after { content: " ▾"; }
+.sec-label {
+  font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--faint); margin: 14px 0 8px;
+}
+.tbl-wrap { overflow-x: auto; margin-top: 8px; }
+td.sender { word-break: break-all; }
+.bar-row { display: grid; grid-template-columns: minmax(120px, 210px) 1fr 46px; gap: 10px; align-items: center; padding: 3px 0; font-size: 12.5px; }
+.bar-row .name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
+.bar-track { background: var(--surface-2); border-radius: 3px; height: 12px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 3px; }
+.bar-row .val { text-align: right; color: var(--muted); font-family: var(--mono); font-size: 12px; }
+table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+th { text-align: left; color: var(--faint); font-weight: 600; font-size: 10.5px; text-transform: uppercase; letter-spacing: .1em; padding: 5px 8px; border-bottom: 1px solid var(--border); }
+td { padding: 6px 8px; border-bottom: 1px solid var(--surface-2); vertical-align: top; color: var(--muted); }
+.pill { display: inline-block; padding: 1px 7px; border-radius: 3px; font-size: 10.5px; font-weight: 700; border: 1px solid; letter-spacing: .04em; }
+.pill.promo   { color: var(--c-promo);   border-color: rgba(201,146,74,.4); }
+.pill.receipt { color: var(--c-receipt); border-color: rgba(90,171,127,.4); }
+.pill.finance { color: var(--c-finance); border-color: rgba(107,159,196,.4); }
+.pill.career  { color: var(--c-career);  border-color: rgba(154,127,196,.4); }
+.pill.bill    { color: var(--c-bill);    border-color: rgba(196,138,107,.4); }
+.review-item {
+  border: 1px solid var(--border); border-radius: 4px;
+  padding: 12px 14px; margin-bottom: 10px; background: var(--surface-2);
+}
+.review-item .ri-head { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 4px; flex-wrap: wrap; }
+.review-item .ri-sender { font-weight: 650; font-size: 13px; color: var(--text); }
+.review-item .ri-issue { color: var(--muted); font-size: 12.5px; margin-bottom: 8px; }
+.ri-opts { display: flex; flex-wrap: wrap; gap: 6px; }
+.ri-opt {
+  padding: 4px 10px; font-size: 12px;
+  border: 1px solid var(--border); border-radius: 3px;
+  background: none; color: var(--muted); cursor: pointer;
+  font-family: var(--sans); transition: border-color .1s, color .1s;
+}
+.ri-opt:hover { border-color: var(--accent); color: var(--text); }
+.ri-opt.sel { background: var(--accent); border-color: var(--accent); color: #0d1010; font-weight: 650; }
+.promptbar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--surface); border-top: 1px solid var(--border);
+  padding: 12px 24px; display: grid; grid-template-columns: 1fr auto;
+  gap: 14px; align-items: center;
+}
+.promptbar pre { white-space: pre-wrap; font-size: 12px; color: var(--text); max-height: 80px; overflow-y: auto; font-family: var(--mono); }
+.copy-btn { padding: 9px 18px; background: var(--accent); color: #0d1010; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 13px; white-space: nowrap; font-family: var(--sans); }
+.copy-btn:hover { filter: brightness(1.1); }
+.acct-note { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+.flex-wrap-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { padding: 3px 10px; border-radius: 3px; background: var(--surface-2); border: 1px solid var(--border); font-size: 12px; color: var(--muted); }
+.hidden { display: none !important; }
 </style>
 </head>
 <body>
-<header>
-  <h1>📧 Email Agency — Backlog Run 1</h1>
-  <span class="sub">2026-07-11 · 4 accounts · archive-only (zero deletions) · correspondence starred + important</span>
-</header>
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="topbar-brand">Portal</span>
+    <span class="topbar-title">Email Agency</span>
+    <span class="topbar-meta">Backlog Run 1 · 2026-07-11 · 4 accounts</span>
+  </div>
+  <a href="/" class="topbar-back">← Home</a>
+</div>
 <div class="layout">
 <aside>
   <div class="ctl-group">
-    <h3>Account</h3>
+    <span class="ctl-label">Account</span>
     <div class="tabs" id="tabs"></div>
   </div>
   <div class="ctl-group">
-    <h3>Sections</h3>
+    <span class="ctl-label">Sections</span>
     <label class="toggle-row"><input type="checkbox" data-sec="senders" checked> Archived by sender</label>
     <label class="toggle-row"><input type="checkbox" data-sec="filters" checked> Filters &amp; policies</label>
     <label class="toggle-row"><input type="checkbox" data-sec="trends" checked> Inbox trends</label>
@@ -106,7 +200,7 @@
     <label class="toggle-row"><input type="checkbox" data-sec="review" checked> Review queue</label>
   </div>
   <div class="ctl-group">
-    <h3>Presets</h3>
+    <span class="ctl-label">Presets</span>
     <div class="presets">
       <button class="preset" data-preset="overview">Overview</button>
       <button class="preset" data-preset="cleanup">Cleanup focus</button>
@@ -123,23 +217,23 @@
 </div>
 <script>
 const ACCTS = {
-  tm:  { color:'#58a6ff', email:'teonmoore@gmail.com', role:'Personal · bills · legal · recruiters', starred:71, archived:113,
+  tm:  { color:'#6b9fc4', email:'teonmoore@gmail.com', role:'Personal · bills · legal · recruiters', starred:71, archived:113,
     note:'71 sent messages starred+important. 13 promo senders skip inbox; Amazon order mail labeled Receipt/Order and kept visible.',
     senders:[['LG Electronics',40],['AwardWallet',24],['Glassdoor Jobs',21],['Monarch',21],['Twilio growth',3],['TalentNest',2],['DIRECTV',1],['Frontier Airlines',1]],
     rules:[['reply@email-lge.com','promo',1],['DIRECTV@message.att-mail.com','promo',1],['noreply@glassdoor.com','promo',1],['info@awardwallet.com','promo',1],['flights@emails.flyfrontier.com','promo',1],['product-support@infosecinstitute.com','promo',1],['growth@growth.twilio.com','promo',1],['notifications@talentnest.com','promo',1],['email@email.monarch.com','promo',1],['reply@rs.email.nextdoor.com','promo',1],['hello@mktg.earnbetter.com','promo',1],['clearme@express.medallia.com','promo',1],['no-reply@contact.goodrx.com','promo',1],['order-update@amazon.com','receipt',0],['shipment-tracking@amazon.com','receipt',0]],
     trends:['category:promotions and updates both capped (100+ each)','Inbox older than 6m/1y/2y: Amazon-dominated long tail back to 2018','Unread pile driven by job alerts/notifications','Untouched by design: Amex/Chase/TransUnion fraud alerts, Inova/Rula medical, Google/Bitwarden/GitHub security'] },
-  td:  { color:'#3fb950', email:'teondextermoore@gmail.com', role:'Finance · statements · job pipeline', starred:4, archived:177,
+  td:  { color:'#5aab7f', email:'teondextermoore@gmail.com', role:'Finance · statements · job pipeline', starred:4, archived:177,
     note:'Finance senders (8 institutions) labeled but stay in inbox. LinkedIn career-protected — labeled, never archived (active NYC job campaign).',
     senders:[['EC-Council',100],['CORT Furniture',36],['HelloFresh',23],['G2A.COM',10],['LensCrafters',8],['Hostwinds',3],['Fandango',3],['Coursera',1]],
     rules:[['creditkarma+capitalone+fidelity+schwab+betterment+coinbase+amex+revolut','finance',0],['synchronyfinancial.com','bill',0],['linkedin.com','career',0],['cortfurnitureoutlet.com','promo',1],['e.lenscrafters.com','promo',1],['eccouncil.org','promo',1],['g2a.com','promo',1],['rioscontact.me','promo',1],['fandango.com','promo',1],['hostwinds.com','promo',1],['isemag-email.com','promo',1],['a.hellofresh.com','promo',1],['m.learn.coursera.org','promo',1]],
     trends:['LinkedIn floods every category (job alerts, recommendations, network) — all capped at 100','Promotions: retail marketing + fraternity mail + one spammy sender (rioscontact.me)','Dormant marketing threads back to 2018','EC-Council backlog exceeds 100 — more to sweep in pass 2'] },
-  t91: { color:'#bc8cff', email:'teonmoore121691@gmail.com', role:'Receipts · shopping · subscriptions', starred:0, archived:680,
+  t91: { color:'#9a7fc4', email:'teonmoore121691@gmail.com', role:'Receipts · shopping · subscriptions', starred:0, archived:680,
     note:'Zero sent mail — pure inbound account, so no correspondence risk. Receipts (Uber, PayPal) and bills (Netflix, Spotify, BofA) labeled, never hidden.',
     senders:[['Scott\'s Cheap Flights',222],['Food Lion',149],['Astrology.com (ad ESP)',140],['AB InBev / Shop Beer Gear',68],['Society6',60],['Georgia Aquarium',25],['The Hustle',9],['Circle.so',7],['Honey',0]],
     rules:[['reply.foodlionemail.com','promo',1],['my.joinhoney.com','promo',1],['bc.society6.com','promo',1],['scottscheapflights.com','promo',1],['email.georgiaaquarium.org','promo',1],['thehustle.co','promo',1],['mail.astrology.com','promo',1],['email.ab-inbev.com','promo',1],['circle.so','promo',1],['noreply@uber.com','receipt',0],['service@paypal.com','receipt',0],['netflix.com','bill',0],['spotify.com','bill',0],['ealerts.bankofamerica.com','finance',0]],
     trends:['Every category + age bucket capped at 500 — deepest backlog of the OAuth accounts','Home Depot is the #1 promo sender (94+) but mixes receipts — filter blocked, needs your call','Astrology.com ESP proxies third-party advertisers','Long tail beyond top-15 senders remains for pass 2'],
     subs:['Netflix','Spotify','Google Play','Google One','Disney+','Bank of America statements','Synchrony (Prime Store Card)'] },
-  jf:  { color:'#ffa657', email:'jasonfox777@gmail.com', role:'Alias / persona (IMAP only)', starred:21, archived:1139,
+  jf:  { color:'#c9924a', email:'jasonfox777@gmail.com', role:'Alias / persona (IMAP only)', starred:21, archived:1139,
     note:'21 sent messages flagged; protected-sender list built from all Sent recipients. No server-side filters on IMAP — 15 policy entries applied agent-side each run.',
     senders:[['J.Crew',200],['Steam',199],['Domino\'s',200],['Bahia Principe',113],['LinkedIn messages',94],['Match.com (both mailers)',87],['NoBull',61],['LinkedIn updates',57],['AdultFriendFinder',51],['Digiseller',23],['McDonald\'s',21],['dyad.sh newsletter',13],['oplata.info',11],['Aftershoot',9]],
     rules:[['jcrew@mail.jcrew.com','promo',1],['mailer@connect.match.com','promo',1],['matchmail@connect.match.com','promo',1],['connect@em.nobullproject.com','promo',1],['noreply@steampowered.com','promo',1],['offers@e-offers.dominos.com','promo',1],['no-reply@digiseller.com','promo',1],['McDonalds@m.mcdonalds.com','promo',1],['team@adultfriendfinder.com','promo',1],['bahia-principe@emails...','promo',1],['updates-noreply@linkedin.com','promo',1],['messages-noreply@linkedin.com','promo',1],['newsletter@dyad.sh','promo',1],['no-reply@oplata.info','promo',1],['team@aftershoot.com','promo',1]],
@@ -162,18 +256,17 @@ const REVIEW = [
 ];
 const state = { acct:'all', secs:{senders:1,filters:1,trends:1,subs:1,protected:1,review:1}, decisions:{}, pass2:false };
 REVIEW.forEach(r => state.decisions[r.id] = 'Decide later');
-
 const PILLNAME = {promo:'Newsletter/Promo · skip inbox', receipt:'Receipt/Order · stays', finance:'Finance/Statement · stays', career:'Career/Recruiter · protected', bill:'Bill/Payment · stays'};
 
 function tabs() {
   const el = document.getElementById('tabs');
   const mk = (id, label, count) => `<button class="tab ${state.acct===id?'active':''}" data-acct="${id}"><span>${id!=='all'?`<span class="dot" style="background:${ACCTS[id].color}"></span>`:''}${label}</span><span class="badge">${count}</span></button>`;
-  el.innerHTML = mk('all','All accounts','2,109 archived') + Object.keys(ACCTS).map(k=>mk(k, k+' — '+ACCTS[k].email.split('@')[0], ACCTS[k].archived+' arch.')).join('');
+  el.innerHTML = mk('all','All accounts','2,109 arch.') + Object.keys(ACCTS).map(k=>mk(k, ACCTS[k].email.split('@')[0], ACCTS[k].archived+' arch.')).join('');
   el.querySelectorAll('.tab').forEach(b => b.onclick = () => { state.acct = b.dataset.acct; updateAll(); });
 }
 function bar(name, val, max, color) {
   const w = max ? Math.max(1.5, val/max*100) : 0;
-  return `<div class="bar-row"><span class="name">${name}</span><div class="bar-track"><div class="bar-fill" style="width:${w}%;background:${color}"></div></div><span class="val mono">${val}</span></div>`;
+  return `<div class="bar-row"><span class="name">${name}</span><div class="bar-track"><div class="bar-fill" style="width:${w}%;background:${color}"></div></div><span class="val">${val}</span></div>`;
 }
 function renderPreview() {
   const m = document.getElementById('main');
@@ -183,45 +276,45 @@ function renderPreview() {
   const nFilters = keys.reduce((s,a)=>s+ACCTS[a].rules.length,0);
   const nReview = all ? REVIEW.length : REVIEW.filter(r=>r.acct===state.acct).length;
   let h = `<div class="metrics">
-    <div class="metric"><div class="num" style="color:var(--green)">${tot('starred').toLocaleString()}</div><div class="lbl">correspondence protected (starred + important)</div></div>
-    <div class="metric"><div class="num" style="color:var(--accent)">${nFilters.toLocaleString()}</div><div class="lbl">filters / policies created</div></div>
-    <div class="metric"><div class="num" style="color:var(--yellow)">${tot('archived').toLocaleString()}</div><div class="lbl">messages archived (0 deleted)</div></div>
-    <div class="metric link" id="jump-review"><div class="num" style="color:var(--red)">${nReview}</div><div class="lbl">items needing your decision →</div></div>
+    <div class="metric" style="border-left-color:var(--ok)"><div class="num" style="color:var(--ok)">${tot('starred').toLocaleString()}</div><div class="lbl">correspondence protected</div></div>
+    <div class="metric" style="border-left-color:var(--accent)"><div class="num" style="color:var(--accent)">${nFilters.toLocaleString()}</div><div class="lbl">filters / policies created</div></div>
+    <div class="metric" style="border-left-color:var(--c-finance)"><div class="num" style="color:var(--c-finance)">${tot('archived').toLocaleString()}</div><div class="lbl">archived (0 deleted)</div></div>
+    <div class="metric link" id="jump-review" style="border-left-color:var(--crit)"><div class="num" style="color:var(--crit)">${nReview}</div><div class="lbl">decisions needed →</div></div>
   </div>`;
   if (all && state.secs.senders) {
     const combined = Object.keys(ACCTS).flatMap(k => ACCTS[k].senders.map(s => [s[0], s[1], ACCTS[k].color])).sort((x,y)=>y[1]-x[1]).slice(0,10);
     const cmax = combined[0][1];
-    h += `<section class="card"><h2>🏆 Top 10 archived senders — all accounts</h2>` + combined.map(s=>bar(s[0],s[1],cmax,s[2])).join('') + `</section>`;
+    h += `<section class="card"><h2>Top 10 archived senders — all accounts</h2>` + combined.map(s=>bar(s[0],s[1],cmax,s[2])).join('') + `</section>`;
   }
   for (const k of keys) {
     const a = ACCTS[k];
-    h += `<details class="card" open><summary><h2><span class="dot" style="background:${a.color}"></span>${a.email} <span style="color:var(--dim);font-weight:400;font-size:12px">— ${a.role}</span><span class="chev">${a.archived.toLocaleString()} archived · ${a.rules.length} rules ▾</span></h2></summary><div class="acct-note">${a.note}</div>`;
+    h += `<details class="card" open><summary><h2><span class="dot" style="background:${a.color}"></span>${a.email} <span style="color:var(--faint);font-weight:400;font-size:12px;margin-left:4px">${a.role}</span><span class="chev">${a.archived.toLocaleString()} archived · ${a.rules.length} rules ▾</span></h2></summary><div class="acct-note">${a.note}</div>`;
     if (state.secs.senders) {
       const max = Math.max(...a.senders.map(s=>s[1]));
-      h += `<h2 style="font-size:12px;color:var(--dim)">ARCHIVED BY SENDER</h2>` + a.senders.map(s=>bar(s[0],s[1],max,a.color)).join('');
+      h += `<p class="sec-label">Archived by sender</p>` + a.senders.map(s=>bar(s[0],s[1],max,a.color)).join('');
     }
     if (state.secs.filters) {
       h += `<details class="inner"${all?'':' open'}><summary>Filters / policies (${a.rules.length})</summary><div class="tbl-wrap"><table><tr><th>Sender</th><th>Rule</th></tr>` +
         a.rules.map(f=>`<tr><td class="mono sender" style="font-size:11.5px">${f[0]}</td><td><span class="pill ${f[1]}">${PILLNAME[f[1]]}</span></td></tr>`).join('') + `</table></div></details>`;
     }
     if (state.secs.trends) {
-      h += `<h2 style="font-size:12px;color:var(--dim);margin-top:14px">TRENDS</h2><ul style="padding-left:18px;font-size:12.5px;color:var(--text)">` + a.trends.map(t=>`<li style="margin:3px 0">${t}</li>`).join('') + `</ul>`;
+      h += `<p class="sec-label" style="margin-top:14px">Inbox trends</p><ul style="padding-left:18px;font-size:12.5px;color:var(--text)">` + a.trends.map(t=>`<li style="margin:3px 0;color:var(--muted)">${t}</li>`).join('') + `</ul>`;
     }
     if (state.secs.subs && a.subs) {
-      h += `<h2 style="font-size:12px;color:var(--dim);margin-top:14px">RECURRING SUBSCRIPTIONS DETECTED</h2><div class="flex-wrap-list">` + a.subs.map(s=>`<span class="chip">💳 ${s}</span>`).join('') + `</div>`;
+      h += `<p class="sec-label" style="margin-top:14px">Recurring subscriptions detected</p><div class="flex-wrap-list">` + a.subs.map(s=>`<span class="chip">${s}</span>`).join('') + `</div>`;
     }
     if (state.secs.protected && a.protectedList) {
-      h += `<h2 style="font-size:12px;color:var(--dim);margin-top:14px">PROTECTED SENDERS (never archived)</h2><div class="flex-wrap-list">` + a.protectedList.map(s=>`<span class="chip">🔒 ${s}</span>`).join('') + `</div>`;
+      h += `<p class="sec-label" style="margin-top:14px">Protected senders (never archived)</p><div class="flex-wrap-list">` + a.protectedList.map(s=>`<span class="chip">${s}</span>`).join('') + `</div>`;
     }
     h += `</details>`;
   }
   if (state.secs.review) {
     const items = REVIEW.filter(r => state.acct==='all' || r.acct===state.acct);
     if (items.length) {
-      h += `<section class="card" id="review-sec"><h2>🟡 Review queue — pick decisions, then copy the prompt below</h2>` + items.map(r =>
-        `<div class="review-item"><div class="ri-head"><span class="ri-sender"><span class="dot" style="background:${ACCTS[r.acct].color}"></span>${r.sender}</span><span class="badge mono" style="color:var(--dim)">${r.acct}</span></div><div class="ri-issue">${r.issue}</div><div class="ri-opts">` +
+      h += `<section class="card" id="review-sec"><h2>Review queue — pick decisions, then copy prompt</h2>` + items.map(r =>
+        `<div class="review-item"><div class="ri-head"><span class="ri-sender"><span class="dot" style="background:${ACCTS[r.acct].color}"></span>${r.sender}</span><span style="font-size:11px;color:var(--faint);font-family:var(--mono)">${r.acct}</span></div><div class="ri-issue">${r.issue}</div><div class="ri-opts">` +
         r.opts.map(o=>`<button class="ri-opt ${state.decisions[r.id]===o?'sel':''}" data-rid="${r.id}" data-opt="${o}">${o}</button>`).join('') + `</div></div>`).join('');
-      h += `<label class="toggle-row" style="margin-top:6px"><input type="checkbox" id="pass2" ${state.pass2?'checked':''}> Also run <b>&nbsp;pass 2&nbsp;</b> (next-tier senders + capped leftovers: J.Crew / Steam / Domino's on jf, EC-Council on td, Monarch #2 on tm)</label></section>`;
+      h += `<label class="toggle-row" style="margin-top:6px"><input type="checkbox" id="pass2" ${state.pass2?'checked':''}> Also run <b>&nbsp;pass 2&nbsp;</b> (next-tier senders + capped leftovers)</label></section>`;
     }
   }
   m.innerHTML = h;
