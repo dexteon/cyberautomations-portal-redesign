@@ -145,10 +145,40 @@ td.name-cell a:hover { color: var(--accent); }
 }
 .play-btn:hover { border-color: var(--ok); background: rgba(90,171,127,.1); }
 
+tr.detail-row td { padding: 0; border-bottom: 1px solid var(--surface-2); }
+.detail-panel {
+  display: none; padding: 10px 16px 12px 44px;
+  background: var(--surface); font-size: 12.5px; color: var(--muted);
+}
+.detail-panel.open { display: block; }
+.detail-panel .dl { display: grid; grid-template-columns: auto 1fr; gap: 3px 14px; }
+.detail-panel .dl dt { color: var(--faint); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; }
+.detail-panel .dl dd { margin: 0; }
+.detail-panel .genre-list { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.detail-panel .genre-list span {
+  padding: 1px 7px; border-radius: 3px; font-size: 10.5px;
+  background: var(--surface-2); border: 1px solid var(--border); color: var(--muted);
+}
+tbody tr.expandable { cursor: pointer; }
+tbody tr.expandable:hover { background: var(--surface); }
+tbody tr.expandable.expanded { background: var(--surface); }
+
 @media (max-width: 800px) {
   table { font-size: 12px; }
   td, th { padding: 6px 8px; }
   .hours-bar, .genre-tags { display: none; }
+}
+@media print {
+  body { background: #fff; color: #111; }
+  .topbar, .controls, .refresh-btn, .play-btn, .filter-btn { display: none; }
+  .wrap { padding: 10px; }
+  table { font-size: 11px; }
+  th { color: #555; }
+  td { color: #333; border-bottom-color: #eee; }
+  .stat-box { border-color: #ccc; background: #f9f9f9; }
+  .stat-box .value { color: #333; }
+  .stat-box .label { color: #666; }
+  .status-badge, .type-badge { border-color: #aaa; background: #f0f0f0; color: #333; }
 }
 </style>
 </head>
@@ -191,6 +221,8 @@ td.name-cell a:hover { color: var(--accent); }
     <option value="Utility">Utility</option>
   </select>
   <button class="filter-btn" id="hide-utility-btn">Hide Non-Games</button>
+  <button class="filter-btn" id="btn-csv">Export CSV</button>
+  <button class="filter-btn" id="btn-print">Print / PDF</button>
   <button class="refresh-btn" id="refresh-btn">
     <span class="spinner"></span>
     <span class="label">Refresh Player Counts</span>
@@ -291,6 +323,8 @@ function render() {
     const st = getStatus(g.players);
     const barW = Math.max(2, (g.hours / maxHours) * 120);
     const tr = document.createElement('tr');
+    tr.className = 'expandable';
+    tr.dataset.idx = String(i);
 
     const tdNum = document.createElement('td');
     tdNum.textContent = i + 1;
@@ -346,6 +380,29 @@ function render() {
     tr.appendChild(tdPlay);
 
     tbody.appendChild(tr);
+
+    const detailTr = document.createElement('tr');
+    detailTr.className = 'detail-row';
+    const detailTd = document.createElement('td');
+    detailTd.colSpan = 7;
+    const panel = document.createElement('div');
+    panel.className = 'detail-panel';
+    panel.innerHTML = '<div class="dl">'
+      +'<dt>App ID</dt><dd>'+g.appid+'</dd>'
+      +'<dt>Type</dt><dd>'+(g.type||'Unknown')+'</dd>'
+      +'<dt>Hours</dt><dd>'+g.hours.toLocaleString()+'h</dd>'
+      +'<dt>Players</dt><dd>'+fmt(g.players)+'</dd>'
+      +'</div>'
+      +(g.genres&&g.genres.length?'<div class="genre-list">'+g.genres.map(x=>'<span>'+x+'</span>').join('')+'</div>':'');
+    detailTd.appendChild(panel);
+    detailTr.appendChild(detailTd);
+    tbody.appendChild(detailTr);
+
+    tr.addEventListener('click', () => {
+      const isOpen = tr.classList.contains('expanded');
+      tr.classList.toggle('expanded', !isOpen);
+      panel.classList.toggle('open', !isOpen);
+    });
   });
 
   document.querySelectorAll('thead th').forEach(th => {
@@ -400,6 +457,29 @@ document.getElementById('refresh-btn').addEventListener('click', async () => {
   btn.disabled = false;
   btn.classList.remove('loading');
 });
+
+document.getElementById('btn-csv').addEventListener('click', () => {
+  const search = document.getElementById('search').value.toLowerCase();
+  const statusFilter = document.getElementById('status-filter').value;
+  const typeFilter = document.getElementById('type-filter').value;
+  let filtered = GAMES.filter(g => {
+    if (hideUtility && (g.utility || g.type === 'Utility')) return false;
+    if (search && !g.name.toLowerCase().includes(search)) return false;
+    if (statusFilter !== 'all' && getStatus(g.players).label.toLowerCase() !== statusFilter) return false;
+    if (typeFilter !== 'all' && g.type !== typeFilter) return false;
+    return true;
+  });
+  const q = v => '"'+String(v==null?"":v).replace(/"/g,'""')+'"';
+  const csv = ["name,type,hours,players,status,genres"].concat(
+    filtered.map(g => [q(g.name),q(g.type),g.hours,g.players,q(getStatus(g.players).label),q((g.genres||[]).join('; '))].join(","))
+  ).join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
+  a.download = "steam-library-"+new Date().toISOString().slice(0,10)+".csv";
+  a.click();
+});
+
+document.getElementById('btn-print').addEventListener('click', () => window.print());
 
 render();
 </script>

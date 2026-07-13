@@ -173,6 +173,16 @@ td { padding: 6px 8px; border-bottom: 1px solid var(--surface-2); vertical-align
 .flex-wrap-list { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip { padding: 3px 10px; border-radius: 3px; background: var(--surface-2); border: 1px solid var(--border); font-size: 12px; color: var(--muted); }
 .hidden { display: none !important; }
+@media print {
+  body { background: #fff; color: #111; }
+  .topbar, aside, .promptbar, .presets, .ri-opts, .copy-btn, #global-search, #btn-ea-print { display: none; }
+  .layout { grid-template-columns: 1fr; }
+  main { padding: 16px; }
+  .metric, section.card, details.card { background: #fff; border-color: #ccc; break-inside: avoid; }
+  .metric .num, .metric .lbl { color: #333; }
+  table th { color: #555; }
+  table td { color: #333; border-bottom-color: #eee; }
+}
 </style>
 </head>
 <body>
@@ -182,7 +192,11 @@ td { padding: 6px 8px; border-bottom: 1px solid var(--surface-2); vertical-align
     <span class="topbar-title">Email Agency</span>
     <span class="topbar-meta">Backlog Run 1 · 2026-07-11 · 4 accounts</span>
   </div>
-  <a href="/" class="topbar-back">← Home</a>
+  <div style="display:flex;gap:8px;align-items:center">
+    <input type="search" id="global-search" placeholder="Search senders, rules..." style="background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);padding:5px 10px;font-size:12px;width:180px;font-family:var(--sans)">
+    <button id="btn-ea-print" style="background:none;border:1px solid var(--border);border-radius:4px;color:var(--muted);padding:5px 10px;font-size:11px;cursor:pointer;font-family:var(--sans)">Print / PDF</button>
+    <a href="/" class="topbar-back">&larr; Home</a>
+  </div>
 </div>
 <div class="layout">
 <aside>
@@ -365,6 +379,15 @@ document.getElementById('copy').onclick = () => {
     const b = document.getElementById('copy'); b.textContent='Copied!'; setTimeout(()=>b.textContent='Copy prompt',1200);
   });
 };
+document.getElementById('btn-ea-print').addEventListener('click', () => window.print());
+document.getElementById('global-search').addEventListener('input', e => {
+  const q = e.target.value.toLowerCase();
+  document.querySelectorAll('#main .card, #main details.card').forEach(card => {
+    if (!q) { card.classList.remove('hidden'); return; }
+    const text = card.textContent.toLowerCase();
+    card.classList.toggle('hidden', !text.includes(q));
+  });
+});
 updateAll();
 </script>
 </body>

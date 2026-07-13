@@ -390,7 +390,7 @@
 
 <div class="sheet">
 
-  <div class="topbar"><span class="topbar-brand">Portal</span><a href="/">&larr; Home</a></div>
+  <div class="topbar"><span class="topbar-brand">Portal</span><button id="btn-fin-print" style="background:none;border:1px solid var(--rule);border-radius:3px;color:var(--ink-dim);padding:4px 10px;font-size:0.72rem;cursor:pointer;font-family:'IBM Plex Sans',sans-serif">Print / PDF</button><a href="/">&larr; Home</a></div>
 
   <div class="masthead">
     <div>
@@ -649,6 +649,7 @@
   </footer>
 
   <script>
+  document.getElementById('btn-fin-print').addEventListener('click', function(){ window.print(); });
   (function () {
     var tabLinks = [].slice.call(document.querySelectorAll('.tabs a'));
     var panels = [].slice.call(document.querySelectorAll('.tab-panel'));

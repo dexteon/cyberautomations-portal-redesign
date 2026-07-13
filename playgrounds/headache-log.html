@@ -44,7 +44,9 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 .trow.met{background:rgba(217,162,92,.08);color:var(--text)}
 .trow .pc{font-family:var(--mono);font-weight:700;min-width:34px}
 table{width:100%;border-collapse:collapse;font-size:12.5px}
-th{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);text-align:left;font-weight:600;padding:7px 8px;border-bottom:1px solid var(--border)}
+th{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);text-align:left;font-weight:600;padding:7px 8px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;white-space:nowrap}
+th:hover{color:var(--text)}
+th .arrow{font-size:9px;margin-left:3px}
 td{padding:7px 8px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--muted)}
 td.mono{color:var(--text)}
 tr:last-child td{border-bottom:none}
@@ -71,10 +73,11 @@ footer{margin-top:32px;font-size:11.5px;color:var(--faint);border-top:1px solid 
 </style>
 </head>
 <body>
-<div style="background:rgba(13,16,16,.96);border-bottom:1px solid var(--border);height:36px;display:flex;align-items:center;padding:0 20px;gap:12px;position:sticky;top:0;z-index:51;backdrop-filter:blur(6px)">
-  <span style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)">Portal</span>
-  <span style="font-size:11px;color:var(--faint)">Headache Log · DC 8100</span>
-  <a href="/" style="margin-left:auto;font-size:11px;color:var(--faint);text-decoration:none">← Home</a>
+<div style="background:rgba(13,16,16,.96);border-bottom:1px solid var(--border);height:48px;display:flex;align-items:center;padding:0 20px;gap:12px;position:sticky;top:0;z-index:51;backdrop-filter:blur(6px)">
+  <span style="font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)">Portal</span>
+  <span style="font-size:13px;font-weight:600;color:var(--text)">Headache Log</span>
+  <span style="font-size:11px;color:var(--faint)">DC 8100</span>
+  <a href="/" style="margin-left:auto;font-size:11px;color:var(--faint);text-decoration:none">&larr; Home</a>
 </div>
 <div class="wrap">
   <p class="crumb"><a href="/">portal</a> / <a href="/playgrounds/">playgrounds</a> / headache log</p>
@@ -132,6 +135,7 @@ const esc=s=>s==null?"":String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;"
 const KEY="headache_log_v1";
 let entries=JSON.parse(localStorage.getItem(KEY)||"[]");
 let prost=null, work=null;
+let sortCol='date', sortDir=-1;
 // first run: pre-load documented episodes from the medical records
 if(!localStorage.getItem(KEY)){
   fetch("./headache-log-seed.json").then(r=>r.ok?r.json():[]).then(seed=>{
@@ -182,18 +186,37 @@ function assess(){
 }
 function render(){
   $("#count").textContent=entries.length+" logged";
+  const sorted=[...entries];
+  sorted.sort((a,b)=>{
+    let va,vb;
+    if(sortCol==='date'){va=a.date;vb=b.date;return sortDir*(va<vb?-1:va>vb?1:0);}
+    if(sortCol==='duration'){va=a.duration||0;vb=b.duration||0;}
+    else if(sortCol==='severity'){const o={Mild:1,Moderate:2,Severe:3};va=o[a.severity]||0;vb=o[b.severity]||0;}
+    else if(sortCol==='prostrating'){va=a.prostrating?1:0;vb=b.prostrating?1:0;}
+    else if(sortCol==='work'){va=a.missed_work?1:0;vb=b.missed_work?1:0;}
+    else{va=a.date;vb=b.date;return sortDir*(va<vb?-1:va>vb?1:0);}
+    return sortDir*(va-vb);
+  });
+  const arrowFor=col=>col===sortCol?(sortDir===1?' \u25B2':' \u25BC'):'';
   $("#list").innerHTML=entries.length?
-   '<table><thead><tr><th>Date</th><th>Hrs</th><th>Severity</th><th>Prostrating</th><th>Work</th><th>Notes</th><th></th></tr></thead><tbody>'
-   +[...entries].reverse().map((e,ri)=>{const i=entries.length-1-ri;
-     return '<tr><td class="mono">'+esc(e.date)+'</td><td class="mono">'+(e.duration||"—")+'</td><td>'+esc(e.severity)+'</td>'
+   '<table><thead><tr><th data-sort="date">Date<span class="arrow">'+arrowFor('date')+'</span></th><th data-sort="duration">Hrs<span class="arrow">'+arrowFor('duration')+'</span></th><th data-sort="severity">Severity<span class="arrow">'+arrowFor('severity')+'</span></th><th data-sort="prostrating">Prostrating<span class="arrow">'+arrowFor('prostrating')+'</span></th><th data-sort="work">Work<span class="arrow">'+arrowFor('work')+'</span></th><th>Notes</th><th></th></tr></thead><tbody>'
+   +sorted.map((e)=>{const i=entries.indexOf(e);
+     return '<tr><td class="mono">'+esc(e.date)+'</td><td class="mono">'+(e.duration||"\u2014")+'</td><td>'+esc(e.severity)+'</td>'
      +'<td><span class="pill '+(e.prostrating?"p-yes":"p-no")+'">'+(e.prostrating?"YES":"no")+'</span></td>'
-     +'<td><span class="pill '+(e.missed_work?"p-yes":"p-no")+'">'+(e.missed_work?"missed":"—")+'</span></td>'
-     +'<td>'+esc(e.notes||"")+'</td><td><button class="del" data-i="'+i+'" title="Delete">×</button></td></tr>';}).join("")
+     +'<td><span class="pill '+(e.missed_work?"p-yes":"p-no")+'">'+(e.missed_work?"missed":"\u2014")+'</span></td>'
+     +'<td>'+esc(e.notes||"")+'</td><td><button class="del" data-i="'+i+'" title="Delete">\u00D7</button></td></tr>';}).join("")
    +'</tbody></table>'
-   :'<p class="empty">No entries yet. Log the next headache the day it happens — contemporaneous notes carry the most weight.</p>';
+   :'<p class="empty">No entries yet. Log the next headache the day it happens \u2014 contemporaneous notes carry the most weight.</p>';
   document.querySelectorAll(".del").forEach(b=>b.addEventListener("click",()=>{
     if(confirm("Delete this entry?")){entries.splice(+b.dataset.i,1);save();render();}
   }));
+  document.querySelectorAll("#list th[data-sort]").forEach(th=>{
+    th.addEventListener("click",()=>{
+      const col=th.dataset.sort;
+      if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=-1;}
+      render();
+    });
+  });
   assess();
 }
 $("#exjson").addEventListener("click",()=>{

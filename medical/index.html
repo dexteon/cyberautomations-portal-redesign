@@ -81,7 +81,7 @@ label.fbtn{display:inline-flex;align-items:center;gap:6px}
 .ygroup{position:relative;padding-left:22px}
 .ygroup::before{content:"";position:absolute;left:6px;top:0;bottom:0;width:2px;background:var(--border)}
 .ygroup.mil::before{background:rgba(138,154,91,.4)}
-.yhead{position:sticky;top:96px;z-index:10;display:inline-block;background:var(--bg);font-family:var(--mono);font-size:13px;font-weight:700;color:var(--muted);padding:6px 0;margin-left:-22px}
+.yhead{position:sticky;top:108px;z-index:10;display:inline-block;background:var(--bg);font-family:var(--mono);font-size:13px;font-weight:700;color:var(--muted);padding:6px 0;margin-left:-22px}
 .ev{position:relative;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin:0 0 8px}
 .ev::before{content:"";position:absolute;left:-19.5px;top:16px;width:9px;height:9px;border-radius:50%;background:var(--dot,var(--muted));outline:3px solid var(--bg)}
 .ev.hosp{border-color:rgba(255,92,92,.45);background:linear-gradient(rgba(255,92,92,.05),rgba(255,92,92,.05)) var(--card)}
@@ -148,7 +148,7 @@ footer{margin-top:48px;font-size:12px;color:var(--faint);border-top:1px solid va
 .tt{position:fixed;pointer-events:none;background:var(--card2);border:1px solid var(--border2);border-radius:6px;padding:7px 10px;font-size:12px;z-index:99;display:none;max-width:280px;box-shadow:0 4px 16px rgba(0,0,0,.4)}
 .tt .mono{color:var(--text)}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-@media (max-width:640px){ .ev .d{min-width:auto} .yhead{top:118px} }
+@media (max-width:640px){ .ev .d{min-width:auto} .yhead{top:130px} }
 @media print{
   body{background:#fff;color:#111}
   header.top,.filters,footer .noprint{display:none}
@@ -163,12 +163,12 @@ footer{margin-top:48px;font-size:12px;color:var(--faint);border-top:1px solid va
 </style>
 </head>
 <body>
-<div style="background:rgba(13,16,16,.96);border-bottom:1px solid var(--border);height:36px;display:flex;align-items:center;padding:0 20px;gap:12px;position:sticky;top:0;z-index:51;backdrop-filter:blur(6px)">
-  <span style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)">Portal</span>
-  <span style="font-size:11px;color:var(--faint)">Medical Record · Teon Moore</span>
-  <a href="/" style="margin-left:auto;font-size:11px;color:var(--faint);text-decoration:none">← Home</a>
+<div style="background:rgba(13,16,16,.96);border-bottom:1px solid var(--border);height:48px;display:flex;align-items:center;padding:0 20px;gap:12px;position:sticky;top:0;z-index:51;backdrop-filter:blur(6px)">
+  <span style="font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)">Portal</span>
+  <span style="font-size:13px;font-weight:600;color:var(--text)">Medical Record</span>
+  <a href="/" style="margin-left:auto;font-size:11px;color:var(--faint);text-decoration:none">&larr; Home</a>
 </div>
-<header class="top" style="top:36px"><div class="top-inner">
+<header class="top" style="top:48px"><div class="top-inner">
   <p class="crumb"><a href="/">portal</a> / medical record</p>
   <div class="ptline">
     <h1 id="ptname">Medical Record</h1>
@@ -182,6 +182,7 @@ footer{margin-top:48px;font-size:12px;color:var(--faint);border-top:1px solid va
     <a href="#diagnoses">Diagnoses</a>
     <a href="#providers">Providers</a>
     <a href="#issues">Issues</a>
+    <a href="javascript:void(0)" id="btn-med-print" style="margin-left:auto;color:var(--faint);font-size:11.5px;border:1px solid var(--border);border-radius:4px;padding:4px 10px">Print / PDF</a>
   </nav>
 </div></header>
 
@@ -228,6 +229,7 @@ function init(){
   $("#gen").textContent="Generated "+(D.generated||"");
   rOverview(); rTimeline(); rMeds(); rBP(); rDx(); rProv(); rIssues();
   route(); window.addEventListener("hashchange",route);
+  document.getElementById("btn-med-print").addEventListener("click",()=>window.print());
 }
 function route(){
   const h=(location.hash||"#overview").slice(1).split("/")[0];
@@ -362,6 +364,16 @@ function dGantt(){
 }
 
 /* ---------- blood pressure ---------- */
+function renderBPTable(bps, dir) {
+  const arr = dir==='asc' ? [...bps] : [...bps].reverse();
+  renderBPTableArr(arr);
+}
+function renderBPTableArr(arr) {
+  document.getElementById('bp-table-wrap').innerHTML='<table><thead><tr><th>Date</th><th>Reading</th><th>Context</th><th>Source</th></tr></thead><tbody>'
+    +arr.map(b=>{ const sev=b.systolic>=180?"var(--crit)":b.systolic>=140?"var(--warn)":b.systolic>=130?"#d9c25c":"var(--ok)";
+      return '<tr><td class="mono">'+esc(fmtD(b.date))+'</td><td class="mono" style="color:'+sev+';font-weight:600">'+esc(b.reading_raw||b.systolic+"/"+b.diastolic)+'</td><td style="color:var(--muted)">'+esc(b.context||"")+'</td><td class="mono" style="color:var(--faint);font-size:11px">'+esc(b.source_set||"")+'</td></tr>'; }).join("")
+    +'</tbody></table>';
+}
 function rBP(){
   const bps=(D.bp_readings||[]).map(b=>({...b,d:pd(b.date)})).filter(b=>b.d&&b.systolic).sort((a,b)=>a.d-b.d);
   const W=980,H=380,ML=46,MR=14,MT=16,MB=34;
@@ -387,10 +399,27 @@ function rBP(){
   $("#v-bp").innerHTML=
    '<div class="alert crit"><span class="i">BP</span><span>Earliest documented elevated reading in service: <b class="mono">'+(first?esc(first.reading_raw||first.systolic+"/"+first.diastolic)+'</b> on <b class="mono">'+esc(fmtD(first.date))+'</b>':"—</b>")+' ('+esc(first?first.context||"":"")+'). Continuous record through the April 2026 NSTEMI — central nexus evidence for in-service hypertension onset.</span></div>'
   +'<div class="gwrap" id="bpchart">'+g+'</div>'
-  +'<h2>All readings ('+bps.length+')</h2><div class="tscroll"><table><thead><tr><th>Date</th><th>Reading</th><th>Context</th><th>Source</th></tr></thead><tbody>'
-  +[...bps].reverse().map(b=>{ const sev=b.systolic>=180?"var(--crit)":b.systolic>=140?"var(--warn)":b.systolic>=130?"#d9c25c":"var(--ok)";
-    return '<tr><td class="mono">'+esc(fmtD(b.date))+'</td><td class="mono" style="color:'+sev+';font-weight:600">'+esc(b.reading_raw||b.systolic+"/"+b.diastolic)+'</td><td style="color:var(--muted)">'+esc(b.context||"")+'</td><td class="mono" style="color:var(--faint);font-size:11px">'+esc(b.source_set||"")+'</td></tr>'; }).join("")
-  +'</tbody></table></div>';
+  +'<h2>All readings ('+bps.length+')</h2><div class="filters"><button class="fbtn" id="bp-sort-date">Date \u25BC</button><button class="fbtn" id="bp-sort-sys">Sort by systolic</button><button class="fbtn" id="bp-export">Export CSV</button></div><div class="tscroll" id="bp-table-wrap"></div>';
+  renderBPTable(bps, 'desc');
+  let bpSortCol='date', bpSortDir=-1;
+  document.getElementById('bp-sort-date').addEventListener('click',()=>{
+    bpSortCol='date'; bpSortDir*=-1;
+    document.getElementById('bp-sort-date').textContent='Date '+(bpSortDir<0?'\u25BC':'\u25B2');
+    document.getElementById('bp-sort-sys').textContent='Sort by systolic';
+    renderBPTable(bps,bpSortDir<0?'desc':'asc');
+  });
+  document.getElementById('bp-sort-sys').addEventListener('click',()=>{
+    bpSortCol='sys'; bpSortDir=bpSortCol==='sys'?bpSortDir*-1:-1;
+    document.getElementById('bp-sort-sys').textContent='Systolic '+(bpSortDir<0?'\u25BC':'\u25B2');
+    document.getElementById('bp-sort-date').textContent='Sort by date';
+    const s=[...bps].sort((a,b)=>bpSortDir*(a.systolic-b.systolic));
+    renderBPTableArr(s);
+  });
+  document.getElementById('bp-export').addEventListener('click',()=>{
+    const q=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"';
+    const csv=["date,systolic,diastolic,context,source"].concat(bps.map(b=>[q(fmtD(b.date)),b.systolic,b.diastolic||"",q(b.context||""),q(b.source_set||"")].join(","))).join("\r\n");
+    const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="bp-readings.csv";a.click();
+  });
   // tooltip
   const tt=$("#tt");
   $$("#bpchart .bpp").forEach(c=>{ c.addEventListener("mousemove",e=>{ const b=bps[+c.dataset.i];
@@ -400,6 +429,7 @@ function rBP(){
 }
 
 /* ---------- diagnoses ---------- */
+let dxFilter='all';
 function rDx(){
   const va=D.va||{}, ccs=va.claimed_conditions||[];
   const findRA=cond=>{ const cl=cond.toLowerCase();
@@ -417,21 +447,28 @@ function rDx(){
     +(dx.evidence?'<br><b>Evidence:</b> '+esc(dx.evidence):"")+'</div>'
     +(ra?'<div class="ra">DC <span class="mono">'+esc(ra.diagnostic_code)+'</span> · est. <span class="pc">'+esc(ra.estimated_pct)+'</span><br><span style="color:var(--muted)">'+esc(ra.criteria_basis)+'</span></div>':"")
     +'</div>'; };
+  const filterKeys = dxFilter==='all' ? ['active','suspected','resolved','other'] : [dxFilter];
   $("#v-diagnoses").innerHTML=
-   ['active','suspected','resolved','other'].filter(k=>groups[k].length).map(k=>
+   '<div class="filters"><select class="fbtn" id="dx-status-filter"><option value="all">All statuses</option><option value="active">Active</option><option value="suspected">Suspected</option><option value="resolved">Resolved</option><option value="other">Other</option></select></div>'
+   +filterKeys.filter(k=>groups[k].length).map(k=>
      '<h2>'+(k==="other"?"Other / historical":k[0].toUpperCase()+k.slice(1))+' ('+groups[k].length+')</h2><div class="grid dxgrid">'+groups[k].map(card).join("")+'</div>').join("")
-  +'<p class="note">Rating estimates come from the 38 CFR Part 4 analysis in the claim repo — full scenario math in the <a href="/playgrounds/va-claim.html">VA playground</a>.</p>';
+  +'<p class="note">Rating estimates come from the 38 CFR Part 4 analysis in the claim repo \u2014 full scenario math in the <a href="/playgrounds/va-claim.html">VA playground</a>.</p>';
+  document.getElementById('dx-status-filter').value=dxFilter;
+  document.getElementById('dx-status-filter').addEventListener('change',e=>{dxFilter=e.target.value;rDx();});
 }
 
 /* ---------- providers ---------- */
+let provQ='';
 function rProv(){
-  const ps=[...D.providers].sort((a,b)=>(b.last_seen||"").localeCompare(a.last_seen||""));
-  $("#v-providers").innerHTML='<div class="grid pvgrid">'+ps.map(p=>
+  let ps=[...D.providers].sort((a,b)=>(b.last_seen||"").localeCompare(a.last_seen||""));
+  if(provQ) ps=ps.filter(p=>(p.name+" "+p.specialty+" "+p.role+" "+p.facility).toLowerCase().includes(provQ));
+  $("#v-providers").innerHTML='<div class="filters"><input type="search" id="prov-search" placeholder="Search providers..." value="'+esc(provQ)+'"></div><div class="grid pvgrid">'+ps.map(p=>
    '<div class="pv"><div class="nm">'+esc(p.name)+'</div><div class="sp">'+esc(p.specialty||p.role||"")+'</div>'
   +'<div class="fc">'+esc(p.facility||"")+'</div>'
   +(p.address?'<div class="ad">'+esc(p.address)+'</div>':"")
   +(p.phone?'<div class="ad"><a href="tel:'+esc(String(p.phone).replace(/[^\d+]/g,""))+'" class="mono">'+esc(p.phone)+'</a></div>':"")
-  +'<div class="rng">'+esc(fmtD(p.first_seen))+' → '+esc(fmtD(p.last_seen))+'</div></div>').join("")+'</div>';
+  +'<div class="rng">'+esc(fmtD(p.first_seen))+' \u2192 '+esc(fmtD(p.last_seen))+'</div></div>').join("")+'</div>';
+  document.getElementById('prov-search').addEventListener('input',e=>{provQ=e.target.value.toLowerCase();rProv();});
 }
 
 /* ---------- issues ---------- */
