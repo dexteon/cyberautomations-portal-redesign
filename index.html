@@ -185,6 +185,10 @@
       <span class="topbar-meta">me.cyberautomations.com</span>
     </div>
     <span class="topbar-lock">&#128274; Cloudflare Access</span>
+    <span class="topbar-right" style="display:flex;align-items:center;gap:10px;margin-left:auto">
+      <span id="topbar-updated" style="font-size:11px;color:var(--faint);font-family:var(--mono)"></span>
+      <button id="topbar-refresh" style="background:none;border:1px solid var(--border);border-radius:4px;color:var(--muted);padding:3px 8px;font-size:11px;cursor:pointer;font-family:var(--sans)" title="Refresh data">&#8635;</button>
+    </span>
   </div>
 
   <div class="wrap">
@@ -274,22 +278,35 @@
   h += '<a class="achip amber" href="/playgrounds/va-claim.html"><span class="n">' + days(d2) + ' days</span><span class="t"><b>Form 20-0995 appeal</b> (healthcare enrollment denial) due 2027-02-13.</span></a>';
   el.innerHTML = h;
 
-  fetch('/freshness.json').then(function(r){ return r.json(); }).then(function(f){
-    var map = {
-      '/medical/':'medical', '/playgrounds/va-claim.html':'va-claim',
-      '/instacart/dashboard.html':'instacart', '/finance/':'finance',
-      '/email-digest/':'email-digest', '/jobs/':'jobs',
-      '/email-agency/':'email-agency', '/steam/':'steam', '/playgrounds/':'playgrounds'
-    };
-    document.querySelectorAll('a.card').forEach(function(a){
-      var k = map[a.getAttribute('href')], e = k && f[k];
-      if (!e) return;
-      var s = document.createElement('span');
-      s.className = 'fresh';
-      s.textContent = 'data as of ' + e.as_of + (e.label ? ' · ' + e.label : '');
-      a.appendChild(s);
-    });
-  }).catch(function(){});
+  function loadFreshness(){
+    var upd = document.getElementById('topbar-updated');
+    fetch('/freshness.json?t=' + Date.now()).then(function(r){ return r.json(); }).then(function(f){
+      var map = {
+        '/medical/':'medical', '/playgrounds/va-claim.html':'va-claim',
+        '/instacart/dashboard.html':'instacart', '/finance/':'finance',
+        '/email-digest/':'email-digest', '/jobs/':'jobs',
+        '/email-agency/':'email-agency', '/steam/':'steam', '/playgrounds/':'playgrounds'
+      };
+      document.querySelectorAll('a.card .fresh').forEach(function(s){s.remove();});
+      document.querySelectorAll('a.card').forEach(function(a){
+        var k = map[a.getAttribute('href')], e = k && f[k];
+        if (!e) return;
+        var s = document.createElement('span');
+        s.className = 'fresh';
+        s.textContent = 'data as of ' + e.as_of + (e.label ? ' · ' + e.label : '');
+        a.appendChild(s);
+      });
+      var latest = Object.values(f).map(function(v){return v.as_of;}).sort().pop();
+      upd.textContent = 'Updated ' + (latest || 'unknown');
+    }).catch(function(){ upd.textContent = 'Updated: unknown'; });
+  }
+  loadFreshness();
+  document.getElementById('topbar-refresh').addEventListener('click', function(){
+    this.textContent = '...';
+    var btn = this;
+    loadFreshness();
+    setTimeout(function(){ btn.textContent = '\u21BB'; }, 600);
+  });
 })();
 </script>
 </body>

@@ -390,7 +390,7 @@
 
 <div class="sheet">
 
-  <div class="topbar"><span class="topbar-brand">Portal</span><button id="btn-fin-print" style="background:none;border:1px solid var(--rule);border-radius:3px;color:var(--ink-dim);padding:4px 10px;font-size:0.72rem;cursor:pointer;font-family:'IBM Plex Sans',sans-serif">Print / PDF</button><a href="/">&larr; Home</a></div>
+  <div class="topbar"><span class="topbar-brand">Portal</span><button id="btn-fin-print" style="background:none;border:1px solid var(--rule);border-radius:3px;color:var(--ink-dim);padding:4px 10px;font-size:0.72rem;cursor:pointer;font-family:'IBM Plex Sans',sans-serif">Print / PDF</button><a href="/">&larr; Home</a><span id="topbar-updated" style="font-size:11px;color:var(--ink-faint);font-family:'IBM Plex Mono',monospace"></span><button id="topbar-refresh" style="background:none;border:1px solid var(--rule);border-radius:3px;color:var(--ink-dim);padding:3px 8px;font-size:11px;cursor:pointer;font-family:'IBM Plex Sans',sans-serif" title="Refresh data">&#8635;</button></div>
 
   <div class="masthead">
     <div>
@@ -740,6 +740,21 @@
     rate.addEventListener('input', update);
     scorp.addEventListener('change', update);
     update();
+  })();
+  </script>
+
+  <script>
+  (function(){
+    function loadFreshness(){
+      fetch('/freshness.json?t='+Date.now()).then(function(r){return r.json();}).then(function(f){
+        var e=f['finance'];
+        document.getElementById('topbar-updated').textContent='Updated '+(e?e.as_of:'unknown');
+      }).catch(function(){document.getElementById('topbar-updated').textContent='Updated: unknown';});
+    }
+    loadFreshness();
+    document.getElementById('topbar-refresh').addEventListener('click',function(){
+      this.textContent='...';location.reload();
+    });
   })();
   </script>
 

@@ -135,10 +135,12 @@ td.title-cell a:hover { color: var(--accent); }
     <span class="topbar-brand">Portal</span>
     <span class="topbar-title">Job Search</span>
   </div>
-  <a href="/" class="topbar-back">&larr; Home</a>
+  <div style="display:flex;align-items:center;gap:10px">
+    <a href="/" class="topbar-back">&larr; Home</a>
+    <span id="topbar-updated" style="font-size:11px;color:var(--faint);font-family:var(--mono)"></span>
+    <button id="topbar-refresh" style="background:none;border:1px solid var(--border);border-radius:4px;color:var(--muted);padding:3px 8px;font-size:11px;cursor:pointer;font-family:var(--sans)" title="Refresh data">&#8635;</button>
+  </div>
 </div>
-
-<div class="wrap">
 <div class="stats-bar" id="stats-bar"></div>
 
 <div class="controls">
@@ -270,6 +272,23 @@ document.getElementById('btn-csv').addEventListener('click', () => {
   a.download = 'job-search-'+new Date().toISOString().slice(0,10)+'.csv';
   a.click();
 });
+
+(function(){
+  function loadFreshness(){
+    fetch('/freshness.json?t='+Date.now()).then(r=>r.json()).then(f=>{
+      const e=f['jobs'];
+      document.getElementById('topbar-updated').textContent='Updated '+(e?e.as_of:'unknown');
+    }).catch(()=>{document.getElementById('topbar-updated').textContent='Updated: unknown';});
+  }
+  loadFreshness();
+  document.getElementById('topbar-refresh').addEventListener('click',function(){
+    this.textContent='...';
+    const btn=this;
+    fetch('./jobs.json?t='+Date.now()).then(r=>r.json()).then(data=>{JOBS=data;render();});
+    loadFreshness();
+    setTimeout(()=>{btn.textContent='\u21BB';},600);
+  });
+})();
 </script>
 </body>
 </html>

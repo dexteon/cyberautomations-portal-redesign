@@ -153,7 +153,11 @@ a:hover { text-decoration: underline; }
     <span class="topbar-brand">Portal</span>
     <span class="topbar-title">RapidAPI Explorer</span>
   </div>
-  <a href="/playgrounds/" class="topbar-back">&larr; Playgrounds</a>
+  <div style="display:flex;align-items:center;gap:10px">
+    <a href="/playgrounds/" class="topbar-back">&larr; Playgrounds</a>
+    <span id="topbar-updated" style="font-size:11px;color:var(--faint);font-family:var(--mono)"></span>
+    <button id="topbar-refresh" style="background:none;border:1px solid var(--border);border-radius:4px;color:var(--muted);padding:3px 8px;font-size:11px;cursor:pointer;font-family:var(--sans)" title="Refresh data">&#8635;</button>
+  </div>
 </div>
 
 <div class="wrap">
@@ -242,6 +246,22 @@ function esc(s) { return s == null ? '' : String(s).replace(/[&<>"']/g, c => ({'
 document.getElementById('search').addEventListener('input', render);
 document.getElementById('cat-filter').addEventListener('change', render);
 document.getElementById('btn-print').addEventListener('click', () => window.print());
+
+(function(){
+  function loadFreshness(){
+    fetch('/freshness.json?t='+Date.now()).then(r=>r.json()).then(f=>{
+      const e=f['playgrounds'];
+      document.getElementById('topbar-updated').textContent='Updated '+(e?e.as_of:'unknown');
+    }).catch(()=>{document.getElementById('topbar-updated').textContent='Updated: unknown';});
+  }
+  loadFreshness();
+  document.getElementById('topbar-refresh').addEventListener('click',function(){
+    this.textContent='...';const btn=this;
+    fetch('./rapidapi-catalog.json?t='+Date.now()).then(r=>r.json()).then(data=>{APIS=data;render();});
+    loadFreshness();
+    setTimeout(()=>{btn.textContent='\u21BB';},600);
+  });
+})();
 </script>
 </body>
 </html>

@@ -96,9 +96,12 @@
     <span class="topbar-brand">Portal</span>
     <span class="topbar-title">Comp Playground</span>
   </div>
-  <a href="/finance/" class="topbar-back">← Finance</a>
+  <div style="display:flex;align-items:center;gap:10px">
+    <a href="/finance/" class="topbar-back">← Finance</a>
+    <span id="topbar-updated" style="font-size:11px;color:var(--faint);font-family:var(--mono)"></span>
+    <button id="topbar-refresh" style="background:none;border:1px solid var(--border);border-radius:4px;color:var(--muted);padding:3px 8px;font-size:11px;cursor:pointer;font-family:var(--sans)" title="Refresh data">&#8635;</button>
+  </div>
 </div>
-<div class="wrap">
   <h1>Compensation Playground</h1>
   <p class="sub">Move the sliders to explore C2C rates and a Brooklyn move. Tax math (federal, SE tax, QBI, Virginia) runs live using the real 2025 brackets, calibrated to match the figures in <code>compensation-summary.md</code> exactly.</p>
 
@@ -331,6 +334,19 @@ document.getElementById('copyBtn').addEventListener('click', function () {
 });
 
 updateAll();
+
+(function(){
+  function loadFreshness(){
+    fetch('/freshness.json?t='+Date.now()).then(r=>r.json()).then(f=>{
+      const e=f['finance'];
+      document.getElementById('topbar-updated').textContent='Updated '+(e?e.as_of:'unknown');
+    }).catch(()=>{document.getElementById('topbar-updated').textContent='Updated: unknown';});
+  }
+  loadFreshness();
+  document.getElementById('topbar-refresh').addEventListener('click',function(){
+    this.textContent='...';location.reload();
+  });
+})();
 </script>
 </body>
 </html>
