@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Playgrounds · Portal</title>
+  <style>
+    :root{--bg:#0f1115;--card:#171a21;--card-hover:#1d212b;--border:#262b36;--text:#e7eaf0;--muted:#98a1b3;--ok:#35c88a}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased}
+    .wrap{max-width:880px;margin:0 auto;padding:48px 24px 80px}
+    a{color:inherit;text-decoration:none}
+    .back{font-size:13px;color:var(--muted);margin-bottom:20px;display:inline-block}
+    .back:hover{color:var(--text)}
+    h1{font-size:28px;font-weight:650;margin:0}
+    .sub{color:var(--muted);margin:8px 0 0;font-size:15px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:32px}
+    .card{display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;transition:background .15s,border-color .15s,transform .15s}
+    a.card:hover{background:var(--card-hover);border-color:#333a49;transform:translateY(-1px)}
+    .card .title{font-size:16px;font-weight:600;margin:0 0 6px;display:flex;align-items:center;gap:8px}
+    .card .desc{font-size:13px;color:var(--muted);margin:0}
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block}
+    .dot.soon{background:var(--muted)}
+    .card.soon{opacity:.6;cursor:default}
+    footer{margin-top:44px;font-size:12px;color:var(--muted);border-top:1px solid var(--border);padding-top:16px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="/">&larr; Portal</a>
+    <h1>Playgrounds</h1>
+    <p class="sub">Interactive tools and explorers, collected in one place.</p>
+
+    <div class="grid">
+      <a class="card" href="/playgrounds/va-claim.html">
+        <p class="title"><span class="dot"></span> VA Claim Playground</p>
+        <p class="desc">Rating-tier scenarios per 38 CFR Part 4, combined-rating math, 2026 compensation, deadlines, evidence checklist.</p>
+      </a>
+
+      <a class="card" href="/playgrounds/headache-log.html">
+        <p class="title"><span class="dot"></span> Headache Log</p>
+        <p class="desc">Daily DC 8100 evidence log — prostrating-attack tracking, live tier assessment, CSV/print export.</p>
+      </a>
+
+      <a class="card" href="/playgrounds/rapidapi-explorer.html">
+        <p class="title"><span class="dot"></span> RapidAPI Explorer</p>
+        <p class="desc">Browse and filter your RapidAPI subscription catalog — hosts, endpoints, categories.</p>
+      </a>
+
+      <div class="card soon">
+        <p class="title"><span class="dot soon"></span> Add more</p>
+        <p class="desc">Drop any self-contained tool into this tile — just point me at the file.</p>
+      </div>
+    </div>
+
+    <footer><span style="color:var(--ok)">&#128274;</span> Behind Cloudflare Access. Interactive tools only — no data stored here.</footer>
+  </div>
+</body>
+</html>

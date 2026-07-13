@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Headache Log · Teon Moore</title>
+<style>
+:root{
+  --bg:#0f1115; --card:#171a21; --card2:#1d212b; --border:#262b36; --border2:#333a49;
+  --text:#e7eaf0; --muted:#98a1b3; --faint:#6b7386;
+  --accent:#4c8dff; --ok:#35c88a; --warn:#d9a25c; --crit:#e0566b;
+  --mono:'SFMono-Regular',Consolas,'Cascadia Mono',Menlo,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+.mono{font-family:var(--mono)}
+.wrap{max-width:980px;margin:0 auto;padding:24px 20px 80px}
+.crumb{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin:0 0 4px}
+.crumb a{color:var(--faint)}
+h1{font-size:20px;font-weight:650;margin:0}
+.sub{color:var(--muted);font-size:13px;margin:4px 0 18px;max-width:74ch}
+h2{font-size:14px;font-weight:650;margin:0 0 10px}
+.cols{display:grid;grid-template-columns:minmax(340px,420px) 1fr;gap:16px;align-items:start}
+@media(max-width:860px){.cols{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px}
+label.f{display:block;font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);margin:12px 0 4px}
+label.f:first-of-type{margin-top:0}
+input[type=date],input[type=number],select,textarea{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;font-family:inherit}
+textarea{min-height:56px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+.tog{display:flex;gap:8px;margin-top:2px}
+.tog button{flex:1;background:var(--card2);border:1px solid var(--border);border-radius:6px;color:var(--muted);padding:8px;font-size:13px;cursor:pointer}
+.tog button.on-yes{border-color:var(--crit);color:var(--crit);background:rgba(224,86,107,.09);font-weight:700}
+.tog button.on-no{border-color:var(--ok);color:var(--ok);background:rgba(53,200,138,.08);font-weight:700}
+.add{width:100%;margin-top:16px;background:var(--accent);border:none;border-radius:6px;color:#fff;padding:11px;font-size:14px;font-weight:600;cursor:pointer}
+.add:hover{filter:brightness(1.1)}
+.assess{border-left:3px solid var(--warn)}
+.assess .tier{font-family:var(--mono);font-size:30px;font-weight:700;color:var(--warn)}
+.assess .why{font-size:12.5px;color:var(--muted);margin-top:4px}
+.assess .why b{color:var(--text)}
+.trow{display:flex;gap:8px;align-items:baseline;padding:6px 8px;border-radius:6px;font-size:12px;color:var(--muted)}
+.trow.met{background:rgba(217,162,92,.08);color:var(--text)}
+.trow .pc{font-family:var(--mono);font-weight:700;min-width:34px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);text-align:left;font-weight:600;padding:7px 8px;border-bottom:1px solid var(--border)}
+td{padding:7px 8px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--muted)}
+td.mono{color:var(--text)}
+tr:last-child td{border-bottom:none}
+.pill{display:inline-block;padding:0 7px;border-radius:4px;font-size:10.5px;font-weight:700}
+.p-yes{background:rgba(224,86,107,.14);color:var(--crit)}
+.p-no{background:rgba(152,161,179,.12);color:var(--muted)}
+.del{background:none;border:none;color:var(--faint);cursor:pointer;font-size:14px;padding:2px 6px}
+.del:hover{color:var(--crit)}
+.bar{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.btn{background:var(--card2);border:1px solid var(--border);border-radius:6px;color:var(--muted);padding:7px 12px;font-size:12.5px;cursor:pointer}
+.btn:hover{border-color:var(--border2);color:var(--text)}
+.empty{color:var(--faint);padding:24px;text-align:center;font-size:13px}
+.note{color:var(--faint);font-size:11.5px;margin-top:10px;line-height:1.6}
+footer{margin-top:32px;font-size:11.5px;color:var(--faint);border-top:1px solid var(--border);padding-top:14px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media print{
+  body{background:#fff;color:#111}
+  .crumb,.panel.entry,.bar,.del,footer .noprint{display:none}
+  .panel,.assess{background:#fff;border-color:#bbb;color:#111}
+  td,th{color:#333}
+  .assess .tier{color:#111}
+  .cols{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="crumb"><a href="/">portal</a> / <a href="/playgrounds/">playgrounds</a> / headache log</p>
+  <h1>Headache Log</h1>
+  <p class="sub">Evidence builder for DC 8100 (migraine) — the widest-swing item on the claim (0%→50%). Log every headache the day it happens. "Prostrating" = severe enough that you had to stop what you were doing and lie down. Data stays in this browser (localStorage) — export JSON regularly as backup.</p>
+
+  <div class="cols">
+    <div>
+      <div class="panel entry">
+        <h2>New entry</h2>
+        <label class="f" for="edate">Date</label>
+        <input type="date" id="edate">
+        <label class="f" for="edur">Duration (hours)</label>
+        <input type="number" id="edur" min="0" step="0.5" placeholder="e.g. 3">
+        <label class="f" for="esev">Severity</label>
+        <select id="esev"><option>Mild</option><option selected>Moderate</option><option>Severe</option></select>
+        <label class="f">Prostrating — had to stop activity and lie down?</label>
+        <div class="tog" id="tprost"><button data-v="1">Yes</button><button data-v="0">No</button></div>
+        <label class="f">Missed work / left early?</label>
+        <div class="tog" id="twork"><button data-v="1">Yes</button><button data-v="0">No</button></div>
+        <label class="f" for="enote">Notes (symptoms, triggers, meds taken, BP if known)</label>
+        <textarea id="enote" placeholder="photophobia, nausea, took ibuprofen 800, BP 165/98…"></textarea>
+        <button class="add" id="eadd">Add entry</button>
+      </div>
+      <div class="panel assess" style="margin-top:12px">
+        <h2>DC 8100 — what the log currently supports</h2>
+        <div class="tier" id="atier">—</div>
+        <div class="why" id="awhy"></div>
+        <div style="margin-top:10px" id="atiers"></div>
+        <p class="note">Tier logic: "characteristic prostrating attacks" averaged over the last several months of log data (rolling 3-month window for monthly frequency, 6-month for the 50% pattern). An examiner makes the real call — this shows what the documented pattern argues for.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2 style="display:flex;justify-content:space-between;align-items:baseline">Entries <span class="mono" id="count" style="font-size:12px;color:var(--faint)"></span></h2>
+      <div id="list"></div>
+      <div class="bar">
+        <button class="btn" id="exjson">Export JSON</button>
+        <button class="btn" id="imjson">Import JSON</button>
+        <button class="btn" id="excsv">Export CSV</button>
+        <button class="btn" id="prn">Print summary</button>
+        <input type="file" id="impfile" accept=".json" style="display:none">
+      </div>
+      <p class="note">Print gives a clean monthly summary for the C&amp;P exam or Hill &amp; Ponton. CSV opens in Excel/Sheets.</p>
+    </div>
+  </div>
+
+  <footer>Personal log for Teon D. Moore — contemporaneous symptom documentation. Not medical advice. <span class="noprint"><a href="/playgrounds/va-claim.html">VA claim playground →</a></span></footer>
+</div>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const esc=s=>s==null?"":String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const KEY="headache_log_v1";
+let entries=JSON.parse(localStorage.getItem(KEY)||"[]");
+let prost=null, work=null;
+// first run: pre-load documented episodes from the medical records
+if(!localStorage.getItem(KEY)){
+  fetch("./headache-log-seed.json").then(r=>r.ok?r.json():[]).then(seed=>{
+    if(Array.isArray(seed)&&seed.length&&!localStorage.getItem(KEY)){
+      entries=seed; save(); render();
+    }
+  }).catch(()=>{});
+}
+
+$("#edate").value=new Date().toISOString().slice(0,10);
+function wireTog(id,set){ document.querySelectorAll("#"+id+" button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll("#"+id+" button").forEach(x=>x.className="");
+  b.className=b.dataset.v==="1"?"on-yes":"on-no"; set(+b.dataset.v);
+}));}
+wireTog("tprost",v=>prost=v); wireTog("twork",v=>work=v);
+
+$("#eadd").addEventListener("click",()=>{
+  const d=$("#edate").value;
+  if(!d){alert("Date required");return;}
+  if(prost===null){alert("Answer the prostrating question — it's the one the rating turns on.");return;}
+  entries.push({date:d,duration:+($("#edur").value||0),severity:$("#esev").value,prostrating:!!prost,missed_work:work===null?false:!!work,notes:$("#enote").value.trim(),logged_at:new Date().toISOString()});
+  save();
+  $("#edur").value="";$("#enote").value="";prost=null;work=null;
+  document.querySelectorAll(".tog button").forEach(x=>x.className="");
+  render();
+});
+function save(){entries.sort((a,b)=>a.date.localeCompare(b.date));localStorage.setItem(KEY,JSON.stringify(entries));}
+
+function assess(){
+  const now=new Date();
+  const inWin=(days)=>entries.filter(e=>e.prostrating&&(now-new Date(e.date))<=days*864e5);
+  const p3=inWin(91), p6=inWin(182);
+  const spanDays=entries.length?Math.max(30,(now-new Date(entries[0].date))/864e5):0;
+  const monthsLogged=Math.max(1,spanDays/30.4);
+  const perMonth3=p3.length/3;
+  let tier=0, why="";
+  const sevMissed=p6.filter(e=>e.missed_work).length;
+  if(p6.length>=8&&sevMissed>=3){tier=50;why="<b>"+p6.length+" prostrating attacks in 6 months</b> incl. "+sevMissed+" with missed work — supports 'very frequent, completely prostrating, prolonged attacks productive of severe economic inadaptability'.";}
+  else if(perMonth3>=1&&p3.length>=3){tier=30;why="<b>"+p3.length+" prostrating attacks in the last 3 months</b> (≈"+perMonth3.toFixed(1)+"/month) — supports 'averaging one prostrating attack a month over the last several months'.";}
+  else if(p6.length>=3){tier=10;why="<b>"+p6.length+" prostrating attacks in 6 months</b> — supports 'averaging one prostrating attack in 2 months over the last several months'.";}
+  else if(p6.length>=1){tier=0;why=p6.length+" prostrating attack(s) in 6 months — below the once-per-2-months pace so far. Keep logging.";}
+  else{why=entries.length?"No prostrating attacks logged in the last 6 months.":"No entries yet — the log starts arguing for you with the very first prostrating entry.";}
+  if(monthsLogged<3&&tier>0)why+=" <b>Only "+monthsLogged.toFixed(1)+" months logged</b> — 8100 wants a pattern 'over the last several months'; keep going to make it stick.";
+  $("#atier").textContent=tier+"%";
+  $("#awhy").innerHTML=why;
+  const tiers=[[50,"Very frequent, completely prostrating, prolonged attacks productive of severe economic inadaptability"],[30,"Averaging 1 prostrating attack per month over several months"],[10,"Averaging 1 prostrating attack every 2 months over several months"],[0,"Less frequent attacks"]];
+  $("#atiers").innerHTML=tiers.map(t=>'<div class="trow'+(t[0]===tier?" met":"")+'"><span class="pc">'+t[0]+'%</span><span>'+esc(t[1])+'</span></div>').join("");
+}
+function render(){
+  $("#count").textContent=entries.length+" logged";
+  $("#list").innerHTML=entries.length?
+   '<table><thead><tr><th>Date</th><th>Hrs</th><th>Severity</th><th>Prostrating</th><th>Work</th><th>Notes</th><th></th></tr></thead><tbody>'
+   +[...entries].reverse().map((e,ri)=>{const i=entries.length-1-ri;
+     return '<tr><td class="mono">'+esc(e.date)+'</td><td class="mono">'+(e.duration||"—")+'</td><td>'+esc(e.severity)+'</td>'
+     +'<td><span class="pill '+(e.prostrating?"p-yes":"p-no")+'">'+(e.prostrating?"YES":"no")+'</span></td>'
+     +'<td><span class="pill '+(e.missed_work?"p-yes":"p-no")+'">'+(e.missed_work?"missed":"—")+'</span></td>'
+     +'<td>'+esc(e.notes||"")+'</td><td><button class="del" data-i="'+i+'" title="Delete">×</button></td></tr>';}).join("")
+   +'</tbody></table>'
+   :'<p class="empty">No entries yet. Log the next headache the day it happens — contemporaneous notes carry the most weight.</p>';
+  document.querySelectorAll(".del").forEach(b=>b.addEventListener("click",()=>{
+    if(confirm("Delete this entry?")){entries.splice(+b.dataset.i,1);save();render();}
+  }));
+  assess();
+}
+$("#exjson").addEventListener("click",()=>{
+  const blob=new Blob([JSON.stringify(entries,null,1)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="headache-log-"+new Date().toISOString().slice(0,10)+".json";a.click();
+});
+$("#imjson").addEventListener("click",()=>$("#impfile").click());
+$("#impfile").addEventListener("change",e=>{
+  const f=e.target.files[0]; if(!f)return;
+  f.text().then(t=>{const arr=JSON.parse(t);
+    if(!Array.isArray(arr))throw 0;
+    const seen=new Set(entries.map(x=>x.date+"|"+x.logged_at));
+    arr.forEach(x=>{if(x.date&&!seen.has(x.date+"|"+x.logged_at))entries.push(x);});
+    save();render();alert("Imported. Total: "+entries.length);
+  }).catch(()=>alert("Not a valid log JSON."));
+  e.target.value="";
+});
+$("#excsv").addEventListener("click",()=>{
+  const q=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"';
+  const csv=["date,duration_hours,severity,prostrating,missed_work,notes"].concat(
+    entries.map(e=>[e.date,e.duration||"",e.severity,e.prostrating?"yes":"no",e.missed_work?"yes":"no",q(e.notes||"")].join(","))).join("\r\n");
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="headache-log-"+new Date().toISOString().slice(0,10)+".csv";a.click();
+});
+$("#prn").addEventListener("click",()=>window.print());
+render();
+</script>
+</body>
+</html>

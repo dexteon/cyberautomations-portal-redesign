@@ -1,0 +1,11 @@
+{
+ "medical": {"as_of": "2026-07-11 19:14", "label": "records merge"},
+ "va-claim": {"as_of": "2026-07-11 21:45", "label": "38 CFR 2025 + 2026 rates"},
+ "instacart": {"as_of": "2026-07-11 10:35", "label": "scrape data"},
+ "finance": {"as_of": "2026-07-11 00:00", "label": "build.ps1"},
+ "email-digest": {"as_of": "2026-07-11 17:31", "label": "mail pull"},
+ "jobs": {"as_of": "2026-07-11 15:35", "label": "runner snapshot; quota 07-02"},
+ "email-agency": {"as_of": "2026-07-11 00:00", "label": "Run 1 snapshot"},
+ "steam": {"as_of": "2026-07-11 00:00", "label": "library pull"},
+ "playgrounds": {"as_of": "2026-07-11 22:01", "label": "static tools"}
+}

@@ -1,0 +1,740 @@
+<meta charset="utf-8">
+<title>Teon Moore: Compensation &amp; Budget Statement</title>
+<style>
+  /* @font-face stripped - use Google Fonts: Fraunces, IBM Plex Sans, IBM Plex Mono */
+  /* @font-face stripped - use Google Fonts: Fraunces, IBM Plex Sans, IBM Plex Mono */
+  /* @font-face stripped - use Google Fonts: Fraunces, IBM Plex Sans, IBM Plex Mono */
+
+  :root {
+    --paper: #f6f7f4;
+    --paper-raised: #eef0eb;
+    --ink: #1a211d;
+    --ink-dim: #5b655f;
+    --ink-faint: #8b948c;
+    --rule: #d7dcd3;
+    --brass: #93672a;
+    --brass-soft: #cba86a;
+    --verified: #33604c;
+    --verified-bg: #e4ede8;
+    --caution: #8a3d31;
+    --caution-bg: #f2e6e2;
+    --shadow: 0 1px 2px rgba(26, 33, 29, 0.06);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #14181a;
+      --paper-raised: #1a1f1e;
+      --ink: #e7eae4;
+      --ink-dim: #93a196;
+      --ink-faint: #626e64;
+      --rule: #2c332e;
+      --brass: #d1a75f;
+      --brass-soft: #a3823f;
+      --verified: #6ba888;
+      --verified-bg: #1c2b23;
+      --caution: #cd8a78;
+      --caution-bg: #2e211d;
+      --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #14181a;
+    --paper-raised: #1a1f1e;
+    --ink: #e7eae4;
+    --ink-dim: #93a196;
+    --ink-faint: #626e64;
+    --rule: #2c332e;
+    --brass: #d1a75f;
+    --brass-soft: #a3823f;
+    --verified: #6ba888;
+    --verified-bg: #1c2b23;
+    --caution: #cd8a78;
+    --caution-bg: #2e211d;
+    --shadow: none;
+  }
+  :root[data-theme="light"] {
+    --paper: #f6f7f4;
+    --paper-raised: #eef0eb;
+    --ink: #1a211d;
+    --ink-dim: #5b655f;
+    --ink-faint: #8b948c;
+    --rule: #d7dcd3;
+    --brass: #93672a;
+    --brass-soft: #cba86a;
+    --verified: #33604c;
+    --verified-bg: #e4ede8;
+    --caution: #8a3d31;
+    --caution-bg: #f2e6e2;
+    --shadow: 0 1px 2px rgba(26, 33, 29, 0.06);
+  }
+
+  * { box-sizing: border-box; }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+  html, body {
+    background: var(--paper);
+    color: var(--ink);
+  }
+  body {
+    font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    margin: 0;
+    padding: 4.5rem 1.5rem 6rem;
+  }
+
+  .sheet {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  /* ---------- Masthead ---------- */
+  .masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 0.5rem;
+  }
+  .masthead h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 2.05rem;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.3rem;
+    text-wrap: balance;
+  }
+  .masthead .sub {
+    color: var(--ink-dim);
+    font-size: 0.95rem;
+    max-width: 46ch;
+  }
+  .masthead .meta {
+    text-align: right;
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    line-height: 1.7;
+    white-space: nowrap;
+  }
+  .masthead .meta strong { color: var(--ink-dim); font-weight: 600; }
+
+  /* ---------- Section scaffolding ---------- */
+  section { margin-top: 3.4rem; }
+  .eyebrow {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    margin-bottom: 1.3rem;
+  }
+  .eyebrow .num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--brass);
+    border: 1px solid var(--brass-soft);
+    border-radius: 2px;
+    padding: 0.08rem 0.4rem;
+  }
+  .eyebrow h2 {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.11em;
+    color: var(--ink-dim);
+    margin: 0;
+    white-space: nowrap;
+  }
+  .eyebrow .line { flex: 1; height: 1px; background: var(--rule); }
+
+  h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.3rem;
+    margin: 0 0 0.9rem;
+    text-wrap: balance;
+  }
+  p { margin: 0 0 1rem; max-width: 62ch; }
+  p.lede { color: var(--ink-dim); font-size: 0.98rem; }
+
+  /* ---------- Ledger tables ---------- */
+  .ledger-wrap { overflow-x: auto; }
+  table.ledger {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.93rem;
+  }
+  table.ledger th {
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--ink-faint);
+    padding: 0 0.5rem 0.5rem 0;
+    border-bottom: 1px solid var(--ink);
+  }
+  table.ledger th.num, table.ledger td.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  table.ledger td {
+    padding: 0.5rem 0.5rem 0.5rem 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: baseline;
+  }
+  table.ledger td:first-child { padding-left: 0; }
+  table.ledger tr:last-child td { border-bottom: 1px solid var(--ink); }
+  table.ledger tr.total td {
+    font-weight: 600;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+  table.ledger tr.total td.num { color: var(--brass); font-size: 1.02rem; }
+  table.ledger td.label-dim { color: var(--ink-dim); }
+  table.ledger .indent { padding-left: 1.1rem; color: var(--ink-dim); font-size: 0.89rem; }
+
+  .tag {
+    display: inline-block;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.66rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.1rem 0.4rem;
+    border-radius: 2px;
+    margin-left: 0.5rem;
+  }
+  .tag.verified { background: var(--verified-bg); color: var(--verified); }
+  .tag.caution { background: var(--caution-bg); color: var(--caution); }
+
+  /* ---------- Stat pair ---------- */
+  .statpair {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.6rem;
+    margin: 1.5rem 0 2rem;
+    padding: 1.3rem 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .stat .k {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+    margin-bottom: 0.3rem;
+  }
+  .stat .v {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1.5rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat .v.brass { color: var(--brass); }
+  .stat .d { font-size: 0.82rem; color: var(--ink-dim); margin-top: 0.15rem; }
+
+  /* ---------- Budget bar ---------- */
+  .budgetbar {
+    display: flex;
+    height: 2.1rem;
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 1.2rem 0 0.9rem;
+    border: 1px solid var(--rule);
+  }
+  .budgetbar div { height: 100%; }
+  .seg-fixed { background: var(--ink-dim); }
+  .seg-variable { background: var(--brass-soft); }
+  .seg-savings { background: var(--verified); }
+  .seg-buffer { background: var(--paper-raised); background-image: repeating-linear-gradient(135deg, var(--rule), var(--rule) 4px, transparent 4px, transparent 9px); }
+  .budgetkey {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1.3rem;
+    font-size: 0.82rem;
+    color: var(--ink-dim);
+    margin-bottom: 1.8rem;
+  }
+  .budgetkey span { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .swatch { width: 0.65rem; height: 0.65rem; border-radius: 1px; display: inline-block; }
+
+  /* ---------- Verdict block ---------- */
+  .verdict {
+    margin: 1.8rem 0;
+    padding: 0.2rem 0 0.2rem 1.4rem;
+    border-left: 3px solid var(--brass);
+  }
+  .verdict p {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 1.28rem;
+    line-height: 1.42;
+    color: var(--ink);
+    max-width: 56ch;
+    text-wrap: balance;
+    margin: 0;
+  }
+  .verdict .cite { font-family: 'IBM Plex Sans', sans-serif; font-style: normal; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-faint); margin-top: 0.7rem; }
+
+  /* ---------- Compare columns ---------- */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 1.6rem;
+  }
+  @media (max-width: 620px) { .compare { grid-template-columns: 1fr; } }
+  .col h4 {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.9rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  .col.a h4 { color: var(--verified); border-color: var(--verified); }
+  .col.b h4 { color: var(--caution); border-color: var(--caution); }
+  .col dl {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.45rem 0.8rem;
+    margin: 0;
+    font-size: 0.91rem;
+  }
+  .col dt { color: var(--ink-dim); }
+  .col dd { margin: 0; font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; text-align: right; }
+  .col .final dt, .col .final dd { font-weight: 600; color: var(--ink); font-size: 1rem; padding-top: 0.5rem; border-top: 1px solid var(--rule); margin-top: 0.4rem; }
+
+  /* ---------- Callout / note ---------- */
+  .note {
+    font-size: 0.87rem;
+    color: var(--ink-dim);
+    background: var(--paper-raised);
+    border-radius: 3px;
+    padding: 0.9rem 1.1rem;
+    margin: 1rem 0;
+  }
+  .note strong { color: var(--ink); }
+
+  /* ---------- Assumptions / footer ---------- */
+  .assumptions {
+    font-size: 0.83rem;
+    color: var(--ink-dim);
+  }
+  .assumptions ul { margin: 0; padding-left: 1.2rem; }
+  .assumptions li { margin-bottom: 0.45rem; }
+
+  footer {
+    margin-top: 4rem;
+    padding-top: 1.3rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.76rem;
+    color: var(--ink-faint);
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  /* ---------- Top bar + tabs ---------- */
+  .topbar { max-width: 760px; margin: 0 auto 0.8rem; }
+  .topbar a { font-size: 0.8rem; color: var(--ink-dim); text-decoration: none; }
+  .topbar a:hover { color: var(--ink); }
+  .tabs {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; flex-wrap: wrap; gap: 0.3rem;
+    background: var(--paper); padding: 0.7rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .tabs a {
+    font-family: 'IBM Plex Sans', sans-serif; font-size: 0.78rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-dim);
+    text-decoration: none; padding: 0.4rem 0.7rem; border-radius: 3px; white-space: nowrap;
+    transition: color 0.12s, background 0.12s;
+  }
+  .tabs a:hover { color: var(--ink); background: var(--paper-raised); }
+  .tabs a.active { color: var(--brass); background: var(--paper-raised); }
+  section.tab-panel { display: none; margin-top: 1.7rem; }
+  section.tab-panel.active { display: block; animation: fade 0.2s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+  .playground-frame { width: 100%; height: 78vh; border: 1px solid var(--rule); border-radius: 4px; background: var(--paper); }
+
+  /* ---------- Section 4 inline C2C controls ---------- */
+  .c2c-controls { margin: 0 0 1.7rem; padding: 1.1rem 1.2rem; background: var(--paper-raised); border: 1px solid var(--rule); border-radius: 6px; }
+  .c2c-ctl-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.55rem; }
+  .c2c-rateval { font-family: 'IBM Plex Mono', monospace; color: var(--brass); font-size: 1.05rem; }
+  .c2c-controls input[type=range] { width: 100%; accent-color: var(--brass); cursor: pointer; }
+  .scorp-toggle { display: flex; align-items: center; gap: 0.5rem; font-size: 0.86rem; color: var(--ink-dim); margin-top: 0.9rem; cursor: pointer; }
+  .scorp-toggle input { accent-color: var(--brass); }
+  .scorp-toggle .hint { color: var(--ink-faint); font-size: 0.78rem; }
+  .col.b dd.live { transition: color 0.15s; }
+  .state-seg { display: flex; gap: 0.4rem; margin-top: 0.95rem; }
+  .state-opt { flex: 1; text-align: center; background: var(--paper); border: 1px solid var(--rule); color: var(--ink-dim); padding: 0.5rem 0.4rem; border-radius: 6px; cursor: pointer; font-size: 0.82rem; font-family: inherit; transition: background 0.12s, color 0.12s; }
+  .state-opt:hover { color: var(--ink); }
+  .state-opt.active { background: var(--brass); color: var(--paper); border-color: var(--brass); font-weight: 600; }
+  .state-seg-label { font-size: 0.78rem; color: var(--ink-faint); margin-top: 0.9rem; }
+</style>
+
+<div class="sheet">
+
+  <div class="topbar"><a href="/">&larr; Portal</a></div>
+
+  <div class="masthead">
+    <div>
+      <h1>Compensation &amp; Budget Statement</h1>
+      <div class="sub">Teon Moore · Engr IV, Security Engineering, Band 7V · Verizon Business Ntwk Srvs LLC</div>
+    </div>
+    <div class="meta">
+      Prepared&nbsp;<strong>7&nbsp;Jul&nbsp;2026</strong><br>
+      Source&nbsp;<strong>SimpleFIN&nbsp;+&nbsp;payroll&nbsp;PDFs</strong><br>
+      Filing&nbsp;<strong>Single · Lorton, VA</strong>
+    </div>
+  </div>
+
+  <nav class="tabs" aria-label="Sections">
+    <a href="#paycheck">Paycheck</a>
+    <a href="#comp">Annual Comp</a>
+    <a href="#budget">Monthly Budget</a>
+    <a href="#w2c2c">W2 vs C2C</a>
+    <a href="#relocation">Relocation</a>
+    <a href="#playground">Comp Playground</a>
+  </nav>
+
+  <!-- ================= SECTION 1 — THE PAYCHECK ================= -->
+  <section class="tab-panel" id="paycheck">
+    <div class="eyebrow"><span class="num">01</span><h2>The Paycheck</h2><span class="line"></span></div>
+    <p class="lede">Biweekly stub for the pay period ending 06/06/2026, reconciled exactly against your USAA/BOA/Ally deposit records. <span class="tag verified">Verified against bank data</span></p>
+
+    <div class="ledger-wrap">
+      <table class="ledger">
+        <thead><tr><th>Earnings</th><th class="num">Hours</th><th class="num">Amount</th></tr></thead>
+        <tbody>
+          <tr><td>Regular pay ($57.22355/hr)</td><td class="num">72.00</td><td class="num">4,120.09</td></tr>
+          <tr><td>Holiday pay</td><td class="num">8.00</td><td class="num">457.79</td></tr>
+          <tr class="total"><td>Gross pay</td><td class="num"></td><td class="num">4,577.88</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ledger-wrap" style="margin-top:1.4rem;">
+      <table class="ledger">
+        <thead><tr><th>Taxes &amp; deductions</th><th class="num">Amount</th><th class="num">% of gross</th></tr></thead>
+        <tbody>
+          <tr><td>Federal withholding</td><td class="num">657.06</td><td class="num">14.4%</td></tr>
+          <tr><td>Social Security (OASDI)</td><td class="num">280.89</td><td class="num">6.1%</td></tr>
+          <tr><td>Medicare</td><td class="num">65.69</td><td class="num">1.4%</td></tr>
+          <tr><td>Virginia withholding</td><td class="num">231.24</td><td class="num">5.1%</td></tr>
+          <tr><td class="indent">Medical / dental / vision (pre-tax)</td><td class="num indent">49.56</td><td class="num"></td></tr>
+          <tr><td class="indent">Roth 401(k) (8% elective)</td><td class="num indent">366.23</td><td class="num"></td></tr>
+          <tr><td class="indent">Long-term disability</td><td class="num indent">11.42</td><td class="num"></td></tr>
+          <tr class="total"><td>Net pay</td><td class="num">2,915.79</td><td class="num">63.7%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:1rem;">Net pay splits four ways every two weeks: <strong>$2,478.42</strong> to USAA checking, <strong>$145.79</strong> each to USAA savings, Ally savings, and BOA checking. Those four amounts match the deposits in your bank data exactly.</p>
+    <p class="note"><strong>State tax note:</strong> this period withholds Virginia only, but your YTD taxes also include <strong>$243.54 of Georgia withholding</strong> from earlier in 2026 (a part-year GA period). It doesn't affect the current check; it means you'll file a part-year VA + GA return for 2026. The C2C comparison in Section 4 lets you model VA, NYC, and GA side by side for your job search.</p>
+  </section>
+
+  <!-- ================= SECTION 2 — ANNUAL COMPENSATION ================= -->
+  <section class="tab-panel" id="comp">
+    <div class="eyebrow"><span class="num">02</span><h2>Annual Compensation</h2><span class="line"></span></div>
+
+    <div class="statpair">
+      <div class="stat"><div class="k">Base pay</div><div class="v">$119,025</div><div class="d">$57.22/hr · 2,080 hrs</div></div>
+      <div class="stat"><div class="k">Target bonus (STI)</div><div class="v">$14,283</div><div class="d">performance-based, not guaranteed</div></div>
+      <div class="stat"><div class="k">Net take-home</div><div class="v brass">$75,811</div><div class="d">base only, after tax + 401k + benefits</div></div>
+      <div class="stat"><div class="k">Total Rewards value</div><div class="v">$159,134</div><div class="d">comp + wealth accum + health + tuition</div></div>
+    </div>
+
+    <p>Beyond your paycheck, Verizon funds benefits you never see hit a bank account. That's real compensation a contract role has to either match or go without:</p>
+    <div class="ledger-wrap">
+      <table class="ledger">
+        <thead><tr><th>Employer-funded, off-paycheck</th><th class="num">Annual value</th></tr></thead>
+        <tbody>
+          <tr><td>401(k) company match</td><td class="num">7,998</td></tr>
+          <tr><td>Medical / dental / vision / life / AD&amp;D subsidy</td><td class="num">9,828</td></tr>
+          <tr><td class="label-dim">Tuition assistance (available, unused in 2026)</td><td class="num label-dim">8,000</td></tr>
+          <tr class="total"><td>Free value on top of net pay</td><td class="num">17,826</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Your own cost for full medical, dental, vision, life, and AD&amp;D coverage is just <strong>$1,586/yr</strong>. Verizon covers the other $9,828. Current retirement balance: <strong>$226,345</strong> ($220,414 in the 401(k), $5,931 in vested stock).</p>
+  </section>
+
+  <!-- ================= SECTION 3 — MONTHLY BUDGET ================= -->
+  <section class="tab-panel" id="budget">
+    <div class="eyebrow"><span class="num">03</span><h2>Monthly Budget</h2><span class="line"></span></div>
+    <p class="lede">Built from your net take-home ($6,317.58/mo) and actual recurring charges in your accounts. Two known one-time spikes this period (a ~$1,653 ER/urgent-care event and ~$884 in Amtrak/Frontier travel) are excluded below so the budget reflects a typical month, not this month.</p>
+
+    <div class="budgetbar">
+      <div class="seg-fixed" style="width:36.7%"></div><div class="seg-variable" style="width:24.9%"></div><div class="seg-savings" style="width:3.8%"></div><div class="seg-buffer" style="width:34.6%"></div>
+    </div>
+    <div class="budgetkey">
+      <span><span class="swatch" style="background:var(--ink-dim)"></span>Fixed bills (36.7%)</span>
+      <span><span class="swatch" style="background:var(--brass-soft)"></span>Variable spend (24.9%)</span>
+      <span><span class="swatch" style="background:var(--verified)"></span>Savings / investing (3.8%)</span>
+      <span><span class="swatch" style="background:repeating-linear-gradient(135deg,var(--rule),var(--rule) 2px,transparent 2px,transparent 4px)"></span>Unassigned buffer (34.6%)</span>
+    </div>
+
+    <div class="ledger-wrap">
+      <table class="ledger">
+        <thead><tr><th>Fixed bills</th><th class="num">Monthly</th></tr></thead>
+        <tbody>
+          <tr><td>Mortgage (Rocket Mortgage)</td><td class="num">2,096.54</td></tr>
+          <tr><td>Verizon Wireless</td><td class="num">54.99</td></tr>
+          <tr><td>Utilities (Dominion Energy + Washington Gas)</td><td class="num">164.94</td></tr>
+          <tr class="total"><td>Fixed subtotal</td><td class="num">2,316.47</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ledger-wrap" style="margin-top:1.3rem;">
+      <table class="ledger">
+        <thead><tr><th>Variable spend <span class="tag caution">normalized</span></th><th class="num">Monthly</th></tr></thead>
+        <tbody>
+          <tr><td>Shopping / retail</td><td class="num">559.00</td></tr>
+          <tr><td>Groceries <span class="tag">receipt-verified</span></td><td class="num">291.31</td></tr>
+          <tr><td>Dining / delivery</td><td class="num">267.00</td></tr>
+          <tr><td>Local transit &amp; rideshare</td><td class="num">110.00</td></tr>
+          <tr><td>Subscriptions (Spotify, Steam, etc.)</td><td class="num">85.00</td></tr>
+          <tr><td>Personal</td><td class="num">130.00</td></tr>
+          <tr><td>Routine healthcare (copays)</td><td class="num">130.00</td></tr>
+          <tr class="total"><td>Variable subtotal</td><td class="num">1,572.31</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ledger-wrap" style="margin-top:1.3rem;">
+      <table class="ledger">
+        <thead><tr><th>Savings / investing</th><th class="num">Monthly</th></tr></thead>
+        <tbody>
+          <tr><td>Rocket Money auto-sweep</td><td class="num">90.00</td></tr>
+          <tr><td>Coinbase DCA</td><td class="num">150.00</td></tr>
+          <tr class="total"><td>Savings subtotal</td><td class="num">240.00</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="note"><strong>$2,189/mo currently unassigned.</strong> Your 30-day pull shows this getting absorbed by credit card float and the one-time medical/travel spend. Worth routing on purpose instead: e.g. $1,000 to an emergency fund until it covers 3 months of fixed bills (~$6,950), the rest to a taxable brokerage or extra mortgage principal.</p>
+    <p class="note">The groceries line is no longer an estimate: it's the 12-month average of your Instacart receipts (41 grocery orders delivered to this address, Jul 2025–Jul 2026). Current 6-month run rate is lower, $231.55/mo, so $291 is the conservative figure.</p>
+  </section>
+
+  <!-- ================= SECTION 4 — W2 vs C2C ================= -->
+  <section class="tab-panel" id="w2c2c">
+    <div class="eyebrow"><span class="num">04</span><h2>Verizon W2 vs. $50/hr C2C</h2><span class="line"></span></div>
+    <p class="lede">Modeled as full-time (2,080 hrs/yr), single filer, standard deduction, 2025 federal brackets as the closest reference for 2026. Drag the rate to compare any C2C offer against your current Virginia W2; pick the job's state to swap in Virginia, New York City, or Georgia tax; toggle the S-corp election to shrink the self-employment tax base. Directional, not tax advice.</p>
+
+    <div class="c2c-controls">
+      <div class="c2c-ctl-head"><label for="c2cRate">C2C hourly rate</label><span class="c2c-rateval" id="c2cRateVal">$50.00/hr</span></div>
+      <input type="range" id="c2cRate" min="35" max="150" step="0.50" value="50" aria-label="C2C hourly rate">
+      <div class="state-seg-label">Job location (state tax)</div>
+      <div class="state-seg" id="stateSeg">
+        <button type="button" class="state-opt active" data-st="va">Virginia</button>
+        <button type="button" class="state-opt" data-st="nyc">New York City</button>
+        <button type="button" class="state-opt" data-st="ga">Georgia</button>
+      </div>
+      <label class="scorp-toggle"><input type="checkbox" id="scorpToggle"> Model as S-corp election <span class="hint">(&asymp;60% reasonable salary + distributions; shrinks the SE-tax base, adds ~$1,200/yr overhead)</span></label>
+    </div>
+
+    <div class="compare">
+      <div class="col a">
+        <h4>Verizon W2 (current)</h4>
+        <dl>
+          <dt>Gross (base only)</dt><dd>119,025</dd>
+          <dt>Total tax (27.0%)</dt><dd>&minus;32,107</dd>
+          <dt>401(k) + benefits deducted</dt><dd>&minus;11,107</dd>
+          <div class="final"><dt>Net take-home</dt><dd>75,811</dd></div>
+          <dt style="margin-top:0.6rem;">+ free 401(k) match</dt><dd>7,998</dd>
+          <dt>+ free health/dental/vision/life</dt><dd>9,828</dd>
+          <div class="final"><dt>True total value</dt><dd>93,637</dd></div>
+        </dl>
+      </div>
+      <div class="col b">
+        <h4 id="c2cTitle">C2C ($50/hr, 1099)</h4>
+        <dl>
+          <dt>Gross (2,080 hrs)</dt><dd class="live" id="c2cGross">104,000</dd>
+          <dt id="c2cTaxLabel">Self-employment tax</dt><dd class="live" id="c2cSeTax">&minus;14,695</dd>
+          <dt>Federal income tax</dt><dd class="live" id="c2cFed">&minus;9,285</dd>
+          <dt id="c2cStateLabel">Virginia income tax</dt><dd class="live" id="c2cState">&minus;4,811</dd>
+          <div class="final"><dt>Net after tax</dt><dd class="live" id="c2cNet">75,209</dd></div>
+          <dt style="margin-top:0.6rem;">&minus; replace health coverage</dt><dd>&minus;4,400</dd>
+          <dt>&minus; disability/life + biz overhead</dt><dd>&minus;2,250</dd>
+          <dt id="c2cScorpDt" style="display:none;">&minus; S-corp payroll + accounting</dt><dd class="live" id="c2cScorpDd" style="display:none;">&minus;1,200</dd>
+          <div class="final"><dt>True adjusted net</dt><dd class="live" id="c2cAdj">~68,559</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="verdict">
+      <p id="c2cVerdict">"$50/hr sounds like a raise. After taxes, benefits, and the overhead of running your own contract, it nets roughly $25,000 less a year than the job you already have. And that's before missing a single week of unpaid time off."</p>
+      <div class="cite">Bottom line vs. your $93,637 true total W2 value; target bonus not included</div>
+    </div>
+
+    <div class="note">
+      <strong>What would actually match your current package:</strong> roughly $68–72/hr full-time C2C, once self-employment tax, lost benefits, and contractor overhead are priced in. That still excludes your $14,283 target bonus (you've already banked $17.6K in incentive pay and stock awards YTD, which C2C has no equivalent of). An S-corp election on the C2C side, paying yourself a "reasonable salary" and taking the rest as distributions, could claw back roughly $3,500–4,500/yr of the gap by shrinking the self-employment tax base, at the cost of running payroll and ~$800–1,500/yr in extra accounting.
+    </div>
+
+    <div class="assumptions">
+      <h3 style="font-size:1.05rem;">Assumptions worth checking</h3>
+      <ul>
+        <li>Full-time, all 2,080 hours billed. Real contract work rarely hits 100%; every unpaid week is &minus;$2,000 off the C2C gross.</li>
+        <li>Straight 1099, no entity. Most "C2C" postings assume you already have an LLC; ask whether this one does.</li>
+        <li>Individual health plan estimated at ~$500/mo for a single PPO in Virginia. Get an actual marketplace quote before deciding.</li>
+        <li>No employer match assumed on the C2C side. A Solo 401(k) lets you self-fund up to $70K/yr, but every dollar comes out of your own net, not free money.</li>
+        <li>2025 tax brackets used as a stand-in for 2026. Swap in real numbers once 2026 figures are published.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================= SECTION 5 — RELOCATION TARGETS ================= -->
+  <section class="tab-panel" id="relocation">
+    <div class="eyebrow"><span class="num">05</span><h2>Relocating to Brooklyn</h2><span class="line"></span></div>
+    <p class="lede">Modeled on a $2,800/mo rent and NYC's combined tax load: NY State plus the added NYC resident tax that Virginia simply doesn't have. Same filer profile throughout: single, standard deduction.</p>
+
+    <div class="verdict" style="border-color:var(--caution);">
+      <p>"Move to Brooklyn on your current $119,025 salary, unchanged, and you'd take home about $13,800 a year less than you do today. State and city tax alone cost you $5,400 of it; the rent-over-mortgage gap costs the rest."</p>
+      <div class="cite">Same salary, new city, before any raise</div>
+    </div>
+
+    <div class="ledger-wrap">
+      <table class="ledger">
+        <thead><tr><th>Target</th><th class="num">Base salary</th><th>What it gets you</th></tr></thead>
+        <tbody>
+          <tr><td>Don't go below</td><td class="num">82,000&ndash;88,000</td><td class="label-dim">Covers rent and your current spending habits with a thin savings margin: no bonus, no equity, no cushion</td></tr>
+          <tr><td>Stay exactly the same</td><td class="num">142,000&ndash;150,000</td><td class="label-dim">Same net purchasing power and savings rate you have in Lorton today, rent absorbed</td></tr>
+          <tr><td>NYC market, mid-level</td><td class="num">140,000&ndash;167,000</td><td class="label-dim">Indeed/ZipRecruiter average for "Security Engineer," NYC, 2026</td></tr>
+          <tr class="total"><td>NYC market, senior</td><td class="num">176,000&ndash;266,000</td><td class="label-dim">Glassdoor 25th&ndash;75th pctile, "Senior Security Engineer," NYC, 2026</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="note"><strong>Your parity number ($142&ndash;150K) sits at the floor of the NYC mid-level range.</strong> With a Band 7V title, $226K already accumulated in retirement savings, and real tenure behind you, $150&ndash;175K base (or $165&ndash;190K total comp with bonus/equity) is a realistic ask, not a stretch. Treat anything below $140K as a pay cut dressed up as a move, and anything above $175K as genuine upward mobility rather than a lateral relocation.</p>
+
+    <p class="note"><strong>Georgia runs the opposite direction from NYC.</strong> Atlanta's flat 5.39% state tax (vs. Virginia's 5.75% top rate and NY's State+city stack) and lower typical rent mean your current dollar stretches <em>further</em>, not less &mdash; a GA offer at or even slightly below your $119K base can hold your Lorton lifestyle, where the same move to Brooklyn needs a raise just to break even. Use the <strong>Virginia / New York City / Georgia selector in the W2 vs C2C tab</strong> to price a specific offer; Atlanta market salary ranges (the equivalent of the table above) still need a fresh aggregator pull before I put hard numbers here.</p>
+
+    <div class="assumptions">
+      <h3 style="font-size:1.05rem;">How the parity number was built</h3>
+      <ul>
+        <li>Held your non-housing budget (401k, insurance, groceries, everything else) constant in dollar terms, then solved for the NYC gross salary whose after-tax income covers $2,800 rent and leaves the same monthly surplus your $2,096.54 mortgage leaves today.</li>
+        <li>NY State + NYC resident tax stack on top of federal and FICA. Virginia has no city-level income tax, so this is the single biggest driver of the gap beyond rent itself.</li>
+        <li>Rent vs. mortgage isn't fully apples-to-apples: your mortgage payment builds home equity; rent doesn't. The targets above match cash flow, not net worth.</li>
+        <li>Market figures are 2026 aggregator averages (Indeed, ZipRecruiter, Glassdoor) for "Security Engineer" titles broadly. Actual offers hinge on company tier, so sanity-check against Levels.fyi for specific employers.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================= SECTION 6 — COMP PLAYGROUND ================= -->
+  <section class="tab-panel" id="playground">
+    <div class="eyebrow"><span class="num">06</span><h2>Comp Playground</h2><span class="line"></span></div>
+    <p class="lede">Interactive scenario modeler — adjust rate, hours, and structure to compare take-home live.</p>
+    <iframe class="playground-frame" src="comp-playground.html" title="Compensation Playground" loading="lazy"></iframe>
+  </section>
+
+  <footer>
+    <span>Personal financial statement, not tax or investment advice.</span>
+    <span>Figures sourced from SimpleFIN Bridge, Verizon payroll, Total Rewards, Instacart order receipts, and NYC salary aggregators. Last refreshed July 11, 2026.</span>
+  </footer>
+
+  <script>
+  (function () {
+    var tabLinks = [].slice.call(document.querySelectorAll('.tabs a'));
+    var panels = [].slice.call(document.querySelectorAll('.tab-panel'));
+    function show(id) {
+      if (!id || !document.getElementById(id)) id = panels[0].id;
+      panels.forEach(function (p) { p.classList.toggle('active', p.id === id); });
+      tabLinks.forEach(function (t) { t.classList.toggle('active', t.getAttribute('href') === '#' + id); });
+    }
+    window.addEventListener('hashchange', function () { show(location.hash.slice(1)); window.scrollTo(0, 0); });
+    show(location.hash.slice(1));
+  })();
+  </script>
+
+  <script>
+  // Section 4 — live C2C model across VA / NYC / GA. Ports the calibrated
+  // 2025-bracket math from the Comp Playground; reproduces the verified
+  // $68,559 adjusted net at $50/hr in Virginia.
+  (function () {
+    var HOURS = 2080, SS_WAGE_BASE = 176100, FED_STD = 15000, VA_STD = 8500;
+    var GA_STD = 12000, GA_RATE = 0.0539;      // GA flat rate (2025; phasing toward 4.99%)
+    var NYC_DELTA = 5400, ANCHOR = 119025;      // verified NY State+NYC premium, scaled by income
+    var W2_TOTAL_VALUE = 93637;                 // "True total value" from the W2 column (current VA job)
+    var FED = [[0,11925,0.10],[11925,48475,0.12],[48475,103350,0.22],[103350,197300,0.24],[197300,250525,0.32],[250525,626350,0.35],[626350,Infinity,0.37]];
+    var VA = [[0,3000,0.02],[3000,5000,0.03],[5000,17000,0.05],[17000,Infinity,0.0575]];
+    var ST_LABEL = { va:'Virginia income tax', nyc:'NY State + NYC tax', ga:'Georgia tax (flat 5.39%)' };
+    var ST_NAME = { va:'Virginia', nyc:'New York City', ga:'Georgia' };
+    function ptax(t, br){ if(t<=0) return 0; var x=0; for(var i=0;i<br.length;i++){var lo=br[i][0],hi=br[i][1],r=br[i][2]; if(t>lo) x+=(Math.min(t,hi)-lo)*r;} return x; }
+    function stateTax(agi, gross, st){
+      var vaTax = ptax(Math.max(0, agi - VA_STD), VA);
+      if (st === 'ga') return GA_RATE * Math.max(0, agi - GA_STD);
+      if (st === 'nyc') return vaTax + NYC_DELTA * (gross / ANCHOR);
+      return vaTax;
+    }
+    function calc(rate, scorp, st){
+      var gross = rate*HOURS, seTax, halfDed, overhead=0, qbiBase, salary=0;
+      if(scorp){
+        salary = 0.60*gross;                                   // reasonable salary
+        seTax = Math.min(salary,SS_WAGE_BASE)*0.124 + salary*0.029; // FICA on salary only
+        halfDed = salary*0.0765;                               // employer half deductible
+        overhead = 1200; qbiBase = gross - salary;             // QBI on distributions
+      } else {
+        var netSE = gross*0.9235;
+        seTax = Math.min(netSE,SS_WAGE_BASE)*0.124 + netSE*0.029;
+        halfDed = seTax/2; qbiBase = netSE;
+      }
+      var agi = gross - halfDed;
+      var preQBI = Math.max(0, agi - FED_STD);
+      var qbi = Math.min(0.20*qbiBase, 0.20*preQBI);
+      var fedTax = ptax(Math.max(0, preQBI - qbi), FED);
+      var sTax = stateTax(agi, gross, st);
+      var netAfterTax = gross - seTax - fedTax - sTax;
+      var adj = netAfterTax - (4400 + 2250) - overhead;
+      return { gross:gross, seTax:seTax, fedTax:fedTax, stateTax:sTax, netAfterTax:netAfterTax, overhead:overhead, adj:adj };
+    }
+    function money(n){ return Math.round(n).toLocaleString(); }
+    var rate = document.getElementById('c2cRate'), scorp = document.getElementById('scorpToggle'), seg = document.getElementById('stateSeg');
+    if(!rate) return;
+    var st = 'va';
+    function set(id, v){ var el = document.getElementById(id); if(el) el.textContent = v; }
+    function update(){
+      var r = Number(rate.value), sc = scorp.checked, c = calc(r, sc, st);
+      set('c2cRateVal', '$'+r.toFixed(2)+'/hr');
+      set('c2cTitle', 'C2C ($'+r.toFixed(2)+'/hr, 1099'+(sc?', S-corp':'')+') · '+ST_NAME[st]);
+      set('c2cTaxLabel', sc ? 'Payroll tax (on salary)' : 'Self-employment tax');
+      set('c2cStateLabel', ST_LABEL[st]);
+      set('c2cGross', money(c.gross));
+      set('c2cSeTax', '−'+money(c.seTax));
+      set('c2cFed', '−'+money(c.fedTax));
+      set('c2cState', '−'+money(c.stateTax));
+      set('c2cNet', money(c.netAfterTax));
+      document.getElementById('c2cScorpDt').style.display = sc ? '' : 'none';
+      var sd = document.getElementById('c2cScorpDd'); sd.style.display = sc ? '' : 'none'; sd.textContent = '−'+money(c.overhead);
+      set('c2cAdj', money(c.adj));
+      var diff = W2_TOTAL_VALUE - c.adj, v = document.getElementById('c2cVerdict');
+      if(v){
+        var where = st === 'va' ? '' : ' in '+ST_NAME[st];
+        if(diff > 0) v.textContent = '"At $'+r.toFixed(2)+'/hr'+(sc?' as an S-corp':'')+where+', C2C nets roughly $'+money(diff)+' less a year than your current Virginia W2 package of $93,637 — before missing a single week of unpaid time off."';
+        else v.textContent = '"At $'+r.toFixed(2)+'/hr'+(sc?' as an S-corp':'')+where+', C2C clears your $93,637 Virginia W2 package by about $'+money(-diff)+' a year — but you’d carry benefits, time off, and business overhead yourself."';
+      }
+    }
+    if(seg) seg.addEventListener('click', function(e){
+      var b = e.target.closest('.state-opt'); if(!b) return;
+      st = b.dataset.st;
+      var opts = seg.querySelectorAll('.state-opt');
+      for(var i=0;i<opts.length;i++) opts[i].classList.toggle('active', opts[i]===b);
+      update();
+    });
+    rate.addEventListener('input', update);
+    scorp.addEventListener('change', update);
+    update();
+  })();
+  </script>
+
+</div>

@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>VA Claim Playground · Teon Moore</title>
+<style>
+:root{
+  --bg:#0f1115; --card:#171a21; --card2:#1d212b; --border:#262b36; --border2:#333a49;
+  --text:#e7eaf0; --muted:#98a1b3; --faint:#6b7386;
+  --accent:#4c8dff; --ok:#35c88a; --warn:#d9a25c; --crit:#e0566b;
+  --mono:'SFMono-Regular',Consolas,'Cascadia Mono',Menlo,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+.mono{font-family:var(--mono)}
+.wrap{max-width:1240px;margin:0 auto;padding:24px 20px 80px}
+h1{font-size:20px;font-weight:650;margin:0}
+.sub{color:var(--muted);font-size:13px;margin:4px 0 0;max-width:78ch}
+.crumb{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin:0 0 4px}
+.crumb a{color:var(--faint)}
+h2{font-size:14px;font-weight:650;margin:0 0 10px}
+
+/* deadlines */
+.deadlines{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}
+.dl{flex:1 1 260px;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--warn);border-radius:8px;padding:10px 14px}
+.dl.crit{border-left-color:var(--crit);background:linear-gradient(rgba(224,86,107,.06),rgba(224,86,107,.06)) var(--card)}
+.dl .days{font-family:var(--mono);font-size:20px;font-weight:700}
+.dl.crit .days{color:var(--crit)} .dl .days{color:var(--warn)}
+.dl .what{font-size:12.5px;color:var(--muted);margin-top:2px}
+.dl .what b{color:var(--text)}
+
+/* layout */
+.cols{display:grid;grid-template-columns:minmax(380px,1fr) minmax(320px,420px);gap:16px;align-items:start}
+@media(max-width:900px){.cols{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px}
+.sticky{position:sticky;top:16px}
+
+/* presets */
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 18px}
+.pbtn{background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--muted);padding:7px 12px;font-size:12.5px;cursor:pointer;font-family:var(--sans)}
+.pbtn:hover{border-color:var(--border2);color:var(--text)}
+.pbtn.on{color:var(--text);border-color:var(--accent);background:rgba(76,141,255,.1)}
+
+/* condition cards */
+.cond{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;padding:13px 15px}
+.cond .hd{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline}
+.cond .nm{font-weight:650;font-size:13.5px;flex:1}
+.cond .dc{font-family:var(--mono);font-size:11px;color:var(--faint)}
+.cond .cur{font-family:var(--mono);font-weight:700;font-size:14px;min-width:44px;text-align:right}
+.cond .ev{font-size:12px;color:var(--muted);margin:6px 0 8px}
+.tiers{display:flex;flex-direction:column;gap:4px}
+.tier{display:flex;gap:8px;align-items:flex-start;padding:5px 8px;border-radius:6px;border:1px solid transparent;cursor:pointer;font-size:12px;color:var(--muted)}
+.tier:hover{background:var(--card2)}
+.tier.on{border-color:var(--accent);background:rgba(76,141,255,.08);color:var(--text)}
+.tier .pc{font-family:var(--mono);font-weight:700;min-width:36px}
+.tier input{display:none}
+.gap{margin-top:8px;padding:7px 10px;border-radius:6px;background:rgba(217,162,92,.08);border:1px solid rgba(217,162,92,.22);color:var(--warn);font-size:11.5px}
+.smck{display:flex;gap:8px;align-items:center;padding:6px 8px;font-size:12.5px;color:var(--muted);cursor:pointer}
+.smck input{accent-color:var(--ok)}
+
+/* result */
+.big{display:flex;align-items:baseline;gap:12px}
+.big .pct{font-family:var(--mono);font-size:44px;font-weight:700;color:var(--accent)}
+.big .raw{font-size:12px;color:var(--faint)}
+.money{font-family:var(--mono);font-size:22px;font-weight:650;color:var(--ok);margin-top:2px}
+.money small{font-size:11px;color:var(--faint);font-weight:400;font-family:var(--sans)}
+.steps{width:100%;border-collapse:collapse;font-size:12px;margin-top:12px}
+.steps th{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);text-align:left;padding:5px 8px;border-bottom:1px solid var(--border)}
+.steps td{padding:5px 8px;border-bottom:1px solid var(--border);color:var(--muted)}
+.steps td.mono{color:var(--text)}
+.steps tr:last-child td{border-bottom:none}
+.tdiu{margin-top:12px;padding:8px 11px;border-radius:6px;background:rgba(53,200,138,.07);border:1px solid rgba(53,200,138,.22);font-size:12px;color:var(--muted)}
+.tdiu b{color:var(--ok)}
+
+/* checklist */
+.chk{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:6px;font-size:12.5px;color:var(--muted);cursor:pointer;border:1px solid transparent}
+.chk:hover{background:var(--card2)}
+.chk input{accent-color:var(--ok);margin-top:3px}
+.chk.done{opacity:.5;text-decoration:line-through}
+.chk .pr{font-family:var(--mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-right:2px;white-space:nowrap}
+.pr-high{background:rgba(224,86,107,.15);color:var(--crit)}
+.pr-med{background:rgba(217,162,92,.15);color:var(--warn)}
+.pr-low{background:rgba(152,161,179,.12);color:var(--muted)}
+
+/* tracks + notes */
+.tracks{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+@media(max-width:700px){.tracks{grid-template-columns:1fr}}
+.track{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:11px 13px;font-size:12.5px;color:var(--muted)}
+.track b{color:var(--text)}
+details{margin-top:10px;border:1px solid var(--border);border-radius:8px;background:var(--card)}
+summary{padding:10px 14px;cursor:pointer;font-weight:600;font-size:13px;color:var(--muted)}
+summary:hover{color:var(--text)}
+details .in{padding:0 14px 12px;font-size:12.5px;color:var(--muted)}
+
+/* prompt out */
+.pout{margin-top:16px;background:var(--card);border:1px solid var(--border);border-radius:10px}
+.pout .bar{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border)}
+.pout .bar b{font-size:13px}
+.copy{background:var(--accent);border:none;border-radius:6px;color:#fff;padding:7px 14px;font-size:12.5px;font-weight:600;cursor:pointer}
+.copy:hover{filter:brightness(1.1)}
+#ptext{margin:0;padding:12px 16px;font-family:var(--mono);font-size:12px;line-height:1.6;color:var(--muted);white-space:pre-wrap;max-height:260px;overflow:auto}
+footer{margin-top:32px;font-size:11.5px;color:var(--faint);border-top:1px solid var(--border);padding-top:14px;line-height:1.7}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media print{
+  body{background:#fff;color:#111}
+  .presets,.copy,footer .noprint{display:none}
+  .panel,.cond,.dl,.pout,.track,details{background:#fff;border-color:#bbb;color:#111;break-inside:avoid}
+  .big .pct{color:#111}.money{color:#111}
+  #ptext{color:#333}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="crumb"><a href="/">portal</a> / <a href="/playgrounds/">playgrounds</a> / va claim</p>
+  <h1>VA Claim Playground</h1>
+  <p class="sub">Scenario calculator for the active compensation claim (Hill &amp; Ponton — Brewer / Kickbush). Tier criteria quoted from 38 CFR Part 4 (7-1-2025 edition); dollar figures are the 2026 tables (effective 12/1/2025, 2.8% COLA). Toggle each condition's rating tier and watch the combined rating and monthly compensation update. This is planning math, not a rating decision.</p>
+
+  <div class="deadlines" id="deadlines"></div>
+
+  <div class="presets" id="presets"></div>
+
+  <div class="cols">
+    <div id="conds"></div>
+    <div class="sticky">
+      <div class="panel">
+        <h2>Combined rating — 38 CFR §4.25</h2>
+        <div class="big"><span class="pct" id="rpct">—</span><span class="raw" id="rraw"></span></div>
+        <div class="money" id="rmoney"></div>
+        <table class="steps"><thead><tr><th>Condition</th><th>Rating</th><th>Running</th></tr></thead><tbody id="rsteps"></tbody></table>
+        <div class="tdiu" id="tdiu"></div>
+      </div>
+      <div class="panel" style="margin-top:12px">
+        <h2>Evidence checklist</h2>
+        <div id="checklist"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:16px">
+    <h2>Two separate tracks — don't conflate them</h2>
+    <div class="tracks">
+      <div class="track"><b>Track 1 — Disability compensation (this page).</b> The Hill &amp; Ponton claim for the conditions above. Compensation eligibility is NOT automatically barred by the discharge — character-of-discharge determination applies per benefit. Confirm Intent-to-File is on record; the ITF date is the effective date the back-pay runs from.</div>
+      <div class="track"><b>Track 2 — Healthcare enrollment.</b> Denied 2/13/2026 solely on character of service (court-martial discharge). Appeal path: VA Form 20-0995 supplemental claim with new evidence by <span class="mono">2027-02-13</span>, and/or a discharge-upgrade / 38 CFR §3.12 exception argument. Medical evidence alone will not fix this track — it's a legal-status fight.</div>
+    </div>
+    <details>
+      <summary>Checked against the schedule and found not independently ratable</summary>
+      <div class="in">
+        <b>Dyslipidemia / elevated Lp(a)</b> — lab values aren't disabilities (38 CFR 4.1); they're support evidence for the cardiac claims. ·
+        <b>Elevated DHEA</b> — same; if the pheo workup ever yields a diagnosis, that would be ratable. ·
+        <b>Class 1 obesity</b> — not a "disease or injury" for VA purposes (<i>Walsh v. Wilkie</i>), usable only as a secondary-connection link. ·
+        <b>Hypogonadism</b> — no dedicated DC; its value flows through ED/SMC-K and the secondary-nexus opinion. ·
+        <b>Hyperhidrosis</b> — no standalone DC; strongest angle is as a symptom secondary to the service-connected anxiety disorder.
+      </div>
+    </details>
+    <details>
+      <summary>Method notes &amp; corrections</summary>
+      <div class="in">
+        <b>§4.25 math:</b> ratings sort high→low; each subsequent rating applies to the remaining "whole person" (c = a + b×(100−a)/100); final result rounds to the nearest 10. Bilateral factor (§4.26) doesn't apply to this set — no paired-extremity pair is rated.<br><br>
+        <b>Anti-pyramiding (§4.14):</b> MI residuals (DC 7006 after the window) and hypertensive heart disease/LVH (DC 7007) rate under the SAME General Rating Formula — one heart rating, take the highest tier that fits. Hypertension (DC 7101) IS separately ratable alongside heart disease (7101 Note 3). The heart card below models this correctly.<br><br>
+        <b>Correction vs the repo estimate:</b> rating-estimate.md had cervical flexion 31–40° at 20%. Actual 2025 text: flexion &gt;30–40° (or spasm/tenderness without abnormal gait) = <b>10%</b>; flexion &gt;15–30°, combined ROM ≤170°, or spasm severe enough to distort gait/contour = <b>20%</b>.<br><br>
+        <b>METs caveat:</b> §4.100(b) still requires METs testing before finalizing 10/30% heart tiers unless contraindicated or 100% applies elsewhere — the 30% echo-hypertrophy floor survives that testing requirement.
+      </div>
+    </details>
+  </div>
+
+  <div class="pout">
+    <div class="bar"><b>Scenario brief — copy for Claude, the attorney, or your notes</b><button class="copy" id="copybtn">Copy</button></div>
+    <pre id="ptext"></pre>
+  </div>
+
+  <footer>
+    Personal planning tool for Teon D. Moore — not legal or medical advice, not a VA form, not a rating decision. Real ratings turn on C&amp;P exam findings. Rates: 2026 compensation tables effective 2025-12-01 (verify at va.gov); SMC-K $139.87/mo. Criteria: 38 CFR Part 4, 7-1-2025 edition. <span class="noprint">Data sources: <a href="/medical/">medical dashboard</a> · dexteon/va-disability-claim repo.</span>
+  </footer>
+</div>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const esc=s=>s==null?"":String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const RATES={0:0,10:180.42,20:356.66,30:552.47,40:795.84,50:1132.90,60:1435.02,70:1808.45,80:2102.15,90:2362.30,100:3938.58};
+const SMCK=139.87;
+const MI_WINDOW_END=new Date(2026,6,21), APPEAL_DUE=new Date(2027,1,13);
+
+const CONDS=[
+ {id:"heart",name:"Heart — MI residuals / hypertensive heart disease (LVH)",dc:"7006 / 7007",
+  ev:"NSTEMI 4/21/2026 (troponin 5.9→674.9); LAD myocardial bridge 70%→20% w/ nitro (vasospasm); LVH on echo 11/18/2025 + 4/22/2026. One rating — 7006 and 7007 share the General Rating Formula (§4.14 anti-pyramiding).",
+  gap:"METs testing not yet done — required by §4.100(b) before finalizing, but echo-confirmed hypertrophy is an independent 30% floor.",
+  tiers:[
+   [100,"Post-MI window: flat 100% during + 3 months after lab-confirmed MI (4/21 → ~7/21/2026; staged rating can capture it retroactively)"],
+   [60,"Workload 3.1–5.0 METs results in heart-failure symptoms"],
+   [30,"Workload 5.1–7.0 METs w/ HF symptoms — OR cardiac hypertrophy/dilatation confirmed by echo (documented ✓)"],
+   [10,"Workload 7.1–10.0 METs w/ HF symptoms, or continuous medication required (documented ✓)"],
+   [0,"Not claimed / resolved"]]},
+ {id:"mh",name:"Mental health — combined (depression, GAD w/ panic, bipolar II, ADHD, social phobia)",dc:"§4.130",
+  ev:"PHQ-9 16 (6/26/2025); in-service MDD/GAD/social phobia 2020–2023, PCL-84 (5/17/2023); continuous pharmacotherapy 2019→present (currently lamotrigine + viloxazine via Kemet). ALL MH diagnoses = ONE rating.",
+  gap:"All meds are NP-prescribed — get a psychiatrist/psychologist Mental Disorders DBQ; confirm bipolar II active vs stale; no formal PTSD code despite PCL-84.",
+  tiers:[
+   [100,"Total occupational and social impairment"],
+   [70,"Deficiencies in most areas (work, family, judgment, mood): suicidal ideation, near-continuous panic/depression, difficulty adapting to stress, can't maintain relationships"],
+   [50,"Reduced reliability & productivity: panic attacks >1×/week, motivation/mood disturbance, difficulty maintaining work/social relationships"],
+   [30,"Occasional decrease in efficiency: depressed mood, anxiety, panic attacks weekly or less, sleep impairment"],
+   [10,"Mild/transient symptoms during high stress, or controlled by continuous medication"],
+   [0,"Not claimed"]]},
+ {id:"osa",name:"Obstructive sleep apnea",dc:"6847",
+  ev:"Diagnosed in service 11/16/2020 (Fort Belvoir sleep study); CPAP documented in both eras; Sleep Medicine referral 6/26/2025.",
+  gap:"Last sleep study on file is 2020 — make sure the CPAP prescription is in the rater's file.",
+  tiers:[
+   [100,"Chronic respiratory failure w/ CO2 retention or cor pulmonale, or tracheostomy"],
+   [50,"Requires breathing-assistance device such as CPAP (documented ✓)"],
+   [30,"Persistent daytime hypersomnolence"],
+   [0,"Asymptomatic w/ documented sleep-disordered breathing"]]},
+ {id:"htn",name:"Resistant hypertension",dc:"7101",
+  ev:"3+ drug classes failed; readings 140s–180s / 90s–114 across visits; diastolics 109–114 documented; negative secondary workup; RDN evaluation started 1/2026. Separately ratable from heart disease (7101 Note 3).",
+  gap:"Rated on AVERAGED readings over 2+ visits on 3+ days — nail down which readings the rater pulls; pull DoD STR to anchor in-service onset (earliest elevated: 143/82 on 3/11/2020).",
+  tiers:[
+   [60,"Diastolic predominantly 130+"],
+   [40,"Diastolic predominantly 120+"],
+   [20,"Diastolic predominantly 110+, or systolic predominantly 200+"],
+   [10,"Diastolic predominantly 100+, or systolic predominantly 160+, or continuous meds w/ history of diastolic 100+ (documented ✓)"],
+   [0,"Not claimed"]]},
+ {id:"migraine",name:"Migraines / chronic headache",dc:"8100",
+  ev:"Charted only as 'chronic tension-type headache, not intractable' (6/10/2026); 'migraine' appears informally tied to hypertensive episodes 2025-09→2026-01.",
+  gap:"WIDEST SWING on the sheet (0%→50%). Nothing documents prostrating-attack frequency — use the Headache Log at /playgrounds/headache-log.html: it tracks prostrating attacks and shows live which DC 8100 tier the pattern supports.",
+  tiers:[
+   [50,"Very frequent, completely prostrating, prolonged attacks productive of severe economic inadaptability"],
+   [30,"Averaging 1 prostrating attack per month over several months"],
+   [10,"Averaging 1 prostrating attack every 2 months over several months"],
+   [0,"Less frequent / not established (current state without a log)"]]},
+ {id:"knee",name:"Right knee — medial meniscus tear",dc:"5258 / 5259 / 5260",
+  ev:"In-service onset 5/3/2021; re-documented as current 6/10/2026.",
+  gap:"Most under-documented item — zero ROM/locking/effusion findings on file. Get an orthopedic exam with ROM measurements BEFORE the C&P.",
+  tiers:[
+   [30,"Flexion limited to 15° (5260)"],
+   [20,"Dislocated semilunar cartilage w/ frequent locking, pain, and effusion (5258) — or flexion limited to 30°"],
+   [10,"Symptomatic post-meniscectomy (5259) — or flexion limited to 45°"],
+   [0,"Not established (current state without exam findings)"]]},
+ {id:"cspine",name:"Cervical spine — ligament sprain",dc:"5235–5243",
+  ev:"Current injury noted 6/10/2026; in-service cervical sprain on the DoD problem list.",
+  gap:"No cervical ROM exam on file — same fix as the knee. (Note: repo estimate mis-stated the tiers; corrected here per actual 2025 text.)",
+  tiers:[
+   [30,"Forward flexion ≤15°, or favorable ankylosis of entire cervical spine"],
+   [20,"Flexion >15–30°, or combined ROM ≤170°, or muscle spasm/guarding severe enough to cause abnormal gait or spinal contour"],
+   [10,"Flexion >30–40°, or combined ROM >170–335°, or muscle spasm/guarding/localized tenderness NOT affecting gait"],
+   [0,"Not established (no exam findings yet)"]]},
+ {id:"skin",name:"Pseudofolliculitis barbae / follicular disorders",dc:"7813 → skin formula / 7800",
+  ev:"Oldest condition on file (9/19/2018, in service); extensive derm regimen + laser hair removal + shave profile.",
+  gap:"If visible razor-bump scarring exists: photograph it and raise DC 7800 disfigurement explicitly — rated separately and higher than the itch/area-based skin formula.",
+  tiers:[
+   [30,"20–40% of body/exposed area affected, or systemic therapy ≥6 wks/yr — or 7800 disfigurement w/ 2–3 characteristics"],
+   [10,"5–20% of body or exposed area (face/neck typical for PFB), or intermittent systemic therapy"],
+   [0,"<5% area, topical-only"]]},
+ {id:"thyroid",name:"Hyperthyroidism (workup)",dc:"7900",
+  ev:"Transient low TSH 0.423 (8/8/2025), normalized 1.010 (9/11/2025), negative antibodies.",
+  gap:"DC 7900's flat 30% only covers 6 months post-diagnosis — that window closed ~3/2026. Confirm with endocrinology whether this is still active BEFORE claiming; stale entries hurt credibility.",
+  tiers:[
+   [30,"Within 6 months of initial diagnosis (window closed ~3/2026 — only via staged/retro argument)"],
+   [0,"Resolved / not claimed (recommended unless endo confirms active)"]]}
+];
+// ED / SMC-K modeled as a flat add-on, not a percentage
+const PRESETS={
+ current:  {label:"Current estimate", vals:{heart:30,mh:50,osa:50,htn:10,migraine:10,knee:10,cspine:10,skin:10,thyroid:0}, smck:true},
+ conserv:  {label:"Conservative",     vals:{heart:30,mh:50,osa:50,htn:10,migraine:0, knee:0, cspine:0, skin:10,thyroid:0}, smck:true},
+ best:     {label:"Best supported",   vals:{heart:30,mh:70,osa:50,htn:20,migraine:30,knee:20,cspine:10,skin:30,thyroid:0}, smck:true},
+ miwindow: {label:"Post-MI window (through ~7/21)", vals:{heart:100,mh:50,osa:50,htn:10,migraine:10,knee:10,cspine:10,skin:10,thyroid:0}, smck:true}
+};
+const CHECKS=[
+ ["high","Call Hill & Ponton TODAY about the DC 7006 post-MI 100% window (closes ~7/21/2026) — can the claim/ITF go in before it closes; can a staged rating capture it after?"],
+ ["high","Confirm the Intent-to-File is actually on record at VA.gov and get its date in writing — it sets the effective/back-pay date."],
+ ["high","Start the headache log now: date, duration, prostrating (had to stop & lie down?), missed work. Swings migraine 0%→50%."],
+ ["high","Fix the 10-10EZ service dates before ANY resubmission — form on file says 10/13/2017–2/25/2023; DD214 says 9/18/2018–6/7/2024."],
+ ["med","Get the right knee examined: ROM, locking, effusion, instability — nothing on file supports a percentage yet."],
+ ["med","Get a cervical spine ROM exam — same gap as the knee."],
+ ["med","Establish care with a psychiatrist/psychologist and get a Mental Disorders DBQ; confirm bipolar II is an active diagnosis with Brooks (Kemet Health)."],
+ ["med","Request records not in the Inova export: District Endocrine (Dr. Rehman), Kemet Health (Brooks), Fort Belvoir 2020 sleep study, 2021 24-hr urine workup, Inova Alexandria NSTEMI cath report + discharge summary."],
+ ["med","Pull DoD STR / GENESIS / NPRC records to anchor in-service HTN onset (earliest documented elevated reading: 143/82 on 3/11/2020; telmisartan started in service)."],
+ ["low","Photograph any visible PFB scarring and raise DC 7800 disfigurement explicitly at the exam."],
+ ["low","Raise ED / SMC-K explicitly so it isn't dropped for reading 0% — it's a flat $139.87/mo add-on."],
+ ["low","Ask endocrinology whether hyperthyroidism is still an active diagnosis before including it — stale entries cost credibility."]
+];
+
+const state={vals:{},smck:true,preset:"current"};
+Object.entries(PRESETS.current.vals).forEach(([k,v])=>state.vals[k]=v);
+
+function combine(ratings){
+  const sorted=[...ratings].filter(r=>r>0).sort((a,b)=>b-a);
+  let c=0; const steps=[];
+  for(const r of sorted){ const before=c; c=c+r*(100-c)/100; steps.push({r,before,after:c}); }
+  return {raw:c, rounded:Math.min(100,Math.round(c/10)*10), steps};
+}
+function money(n){return n.toLocaleString("en-US",{style:"currency",currency:"USD"});}
+function daysLeft(d){return Math.ceil((d-new Date())/(1000*60*60*24));}
+
+function render(){
+  // deadlines
+  const dl1=daysLeft(MI_WINDOW_END), dl2=daysLeft(APPEAL_DUE);
+  $("#deadlines").innerHTML=
+   '<div class="dl crit"><div class="days">'+(dl1>=0?dl1+" days":"CLOSED "+(-dl1)+"d ago")+'</div><div class="what"><b>Post-MI 100% window (DC 7006)</b> — flat 100% through ~2026-07-21. File / ITF before it closes, or pursue a staged rating to capture it retroactively.</div></div>'
+  +'<div class="dl"><div class="days">'+dl2+' days</div><div class="what"><b>Form 20-0995 appeal deadline</b> — healthcare-enrollment denial (character of service), due 2027-02-13. Separate track from this compensation claim.</div></div>'
+  +'<div class="dl"><div class="days">ASAP</div><div class="what"><b>Hill &amp; Ponton follow-up</b> — unresponsive since retainer; send the drafted email, confirm the Intent-to-File date in writing.</div></div>';
+  // presets
+  $("#presets").innerHTML=Object.entries(PRESETS).map(([k,p])=>'<button class="pbtn'+(state.preset===k?" on":"")+'" data-p="'+k+'">'+esc(p.label)+'</button>').join("")
+   +'<button class="pbtn" data-p="zero">Clear all</button>';
+  document.querySelectorAll(".pbtn").forEach(b=>b.addEventListener("click",()=>{
+    const k=b.dataset.p;
+    if(k==="zero"){ CONDS.forEach(c=>state.vals[c.id]=0); state.smck=false; state.preset=""; }
+    else { Object.entries(PRESETS[k].vals).forEach(([id,v])=>state.vals[id]=v); state.smck=PRESETS[k].smck; state.preset=k; }
+    render();
+  }));
+  // condition cards
+  $("#conds").innerHTML=CONDS.map(c=>{
+    const v=state.vals[c.id]??0;
+    return '<div class="cond"><div class="hd"><span class="nm">'+esc(c.name)+'</span><span class="dc">DC '+esc(c.dc)+'</span><span class="cur" style="color:'+(v>0?"var(--accent)":"var(--faint)")+'">'+v+'%</span></div>'
+    +'<div class="ev">'+esc(c.ev)+'</div>'
+    +'<div class="tiers">'+c.tiers.map(t=>'<label class="tier'+(t[0]===v?" on":"")+'"><input type="radio" name="'+c.id+'" value="'+t[0]+'"'+(t[0]===v?" checked":"")+'><span class="pc">'+t[0]+'%</span><span>'+esc(t[1])+'</span></label>').join("")+'</div>'
+    +(c.gap?'<div class="gap">'+esc(c.gap)+'</div>':"")
+    +'</div>';
+  }).join("")
+  +'<div class="cond"><div class="hd"><span class="nm">Erectile dysfunction (w/ hypogonadism)</span><span class="dc">DC 7522 + SMC-K</span><span class="cur" style="color:var(--ok)">'+(state.smck?"+$":"—")+'</span></div>'
+  +'<div class="ev">DoD-coded F52.21 linked to depression/antihypertensive side effects; T 256→718 on therapy; clinically tied to HTN/vascular disease. 0% schedular but qualifies for SMC-K — a flat monthly add-on at ANY combined rating.</div>'
+  +'<label class="smck"><input type="checkbox" id="smck"'+(state.smck?" checked":"")+'> Include SMC-K (+'+money(SMCK)+'/mo) — do not let this get dropped for reading 0%</label></div>';
+  document.querySelectorAll('.tier input').forEach(i=>i.addEventListener("change",()=>{
+    state.vals[i.name]=+i.value; state.preset=""; render();
+  }));
+  $("#smck").addEventListener("change",e=>{state.smck=e.target.checked; state.preset=""; render();});
+  // result
+  const active=CONDS.map(c=>({name:c.name.split("—")[0].trim(),v:state.vals[c.id]??0})).filter(x=>x.v>0);
+  const res=combine(active.map(a=>a.v));
+  $("#rpct").textContent=res.rounded+"%";
+  $("#rraw").textContent="raw "+res.raw.toFixed(1)+"% → rounds to "+res.rounded+"%";
+  const comp=(RATES[res.rounded]||0)+(state.smck?SMCK:0);
+  $("#rmoney").innerHTML=money(comp)+"/mo <small>"+money(RATES[res.rounded]||0)+" base"+(state.smck?" + "+money(SMCK)+" SMC-K":"")+" · "+money(comp*12)+"/yr · 2026 table, veteran alone</small>";
+  const sorted=[...active].sort((a,b)=>b.v-a.v);
+  $("#rsteps").innerHTML=res.steps.map((s,i)=>'<tr><td>'+esc(sorted[i].name)+'</td><td class="mono">'+s.r+'%</td><td class="mono">'+s.after.toFixed(1)+'%</td></tr>').join("")||'<tr><td colspan="3" style="color:var(--faint)">No conditions selected.</td></tr>';
+  const maxSingle=Math.max(0,...active.map(a=>a.v));
+  $("#tdiu").innerHTML=(res.rounded>=70&&maxSingle>=40)
+    ?'<b>TDIU eligible profile:</b> combined ≥70% with one condition ≥40%. If any condition prevents substantially gainful employment, TDIU pays at the 100% rate ('+money(RATES[100]+(state.smck?SMCK:0))+'/mo) even at this schedular level. Raise it with the attorney/VSO.'
+    :'<b>TDIU note:</b> at combined ≥70% w/ one condition ≥40% (or ≥60% single), unemployability pays at the 100% rate. Current scenario: '+res.rounded+'% / highest single '+maxSingle+'%.';
+  renderChecklist(); updatePrompt(res,comp,active);
+}
+function renderChecklist(){
+  const saved=JSON.parse(localStorage.getItem("va_checks")||"{}");
+  $("#checklist").innerHTML=CHECKS.map((c,i)=>'<label class="chk'+(saved[i]?" done":"")+'"><input type="checkbox" data-i="'+i+'"'+(saved[i]?" checked":"")+'><span><span class="pr pr-'+c[0]+'">'+c[0].toUpperCase()+'</span>'+esc(c[1])+'</span></label>').join("");
+  document.querySelectorAll("#checklist input").forEach(i=>i.addEventListener("change",()=>{
+    const s=JSON.parse(localStorage.getItem("va_checks")||"{}"); s[i.dataset.i]=i.checked;
+    localStorage.setItem("va_checks",JSON.stringify(s)); renderChecklist();
+  }));
+}
+function updatePrompt(res,comp,active){
+  const dl1=daysLeft(MI_WINDOW_END);
+  const lines=[];
+  lines.push("VA claim scenario — "+new Date().toISOString().slice(0,10)+(state.preset?" (preset: "+PRESETS[state.preset].label+")":" (custom)"));
+  lines.push("");
+  active.sort((a,b)=>b.v-a.v).forEach(a=>{ const c=CONDS.find(x=>x.name.startsWith(a.name)); lines.push("- "+a.name+" (DC "+(c?c.dc:"")+"): "+a.v+"%"); });
+  if(state.smck) lines.push("- ED / SMC-K add-on: +$139.87/mo (flat, any rating)");
+  lines.push("");
+  lines.push("Combined per 38 CFR 4.25: raw "+res.raw.toFixed(1)+"% -> "+res.rounded+"% = "+money(comp)+"/mo (2026 table, veteran alone"+(state.smck?", incl SMC-K":"")+").");
+  lines.push("");
+  lines.push("Time-critical: DC 7006 post-MI 100% window closes ~2026-07-21 ("+(dl1>=0?dl1+" days left":"closed "+(-dl1)+" days ago")+") — confirm filing/ITF or staged-rating capture with Hill & Ponton. Headache log is the widest-swing evidence item (migraine 0-50%). Knee + cervical spine need ROM exams before the C&P. MH needs a psychiatrist DBQ.");
+  lines.push("");
+  lines.push("Separate track: healthcare-enrollment denial (character of service) — 20-0995 due 2027-02-13; not affected by this compensation math.");
+  $("#ptext").textContent=lines.join("\n");
+}
+$("#copybtn").addEventListener("click",()=>{
+  navigator.clipboard.writeText($("#ptext").textContent).then(()=>{
+    $("#copybtn").textContent="Copied!"; setTimeout(()=>$("#copybtn").textContent="Copy",1400);
+  });
+});
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>InstacartFlation Dashboard</title>
+<style>
+  :root {
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink-2: #c3c2b7;
+    --muted: #898781; --grid: #2c2c2a; --baseline: #383835;
+    --series: #3987e5; --series-dim: #1c5cab;
+    --good: #0ca30c; --warning: #fab219; --serious: #ec835a; --critical: #d03b3b;
+    --ring: rgba(255,255,255,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--page); color: var(--ink); font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; padding: 20px; }
+  h1 { font-size: 17px; font-weight: 650; }
+  h2 { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+  .sub { color: var(--muted); font-size: 12px; margin-top: 2px; }
+  header { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+  .card { background: var(--surface); border: 1px solid var(--ring); border-radius: 10px; padding: 14px 16px; }
+  /* progress */
+  #progressCard { min-width: 300px; flex: 1; max-width: 460px; }
+  .bar { height: 8px; background: var(--baseline); border-radius: 4px; overflow: hidden; margin-top: 8px; }
+  .bar > div { height: 100%; background: var(--series); border-radius: 4px; transition: width .6s ease; }
+  .progRow { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-2); }
+  /* controls */
+  .controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+  select, input[type=search] { background: var(--surface); color: var(--ink); border: 1px solid var(--ring); border-radius: 8px; padding: 7px 10px; font: inherit; }
+  input[type=search] { min-width: 240px; }
+  select:focus, input:focus { outline: 1px solid var(--series); }
+  label { color: var(--ink-2); font-size: 12px; }
+  /* address include/exclude panel */
+  .addrDD { position: relative; }
+  .addrDD summary { list-style: none; cursor: pointer; background: var(--surface); border: 1px solid var(--ring); border-radius: 8px; padding: 7px 12px; color: var(--ink); font-size: 13px; user-select: none; }
+  .addrDD[open] summary { outline: 1px solid var(--series); }
+  .addrPanel { position: absolute; z-index: 20; top: calc(100% + 6px); left: 0; min-width: 340px; background: var(--surface); border: 1px solid var(--ring); border-radius: 10px; padding: 12px; box-shadow: 0 8px 30px rgba(0,0,0,.5); }
+  .addrRow { display: flex; align-items: center; gap: 8px; padding: 5px 6px; border-radius: 6px; cursor: pointer; font-size: 12.5px; color: var(--ink-2); }
+  .addrRow:hover { background: rgba(255,255,255,.05); }
+  .addrRow .st { width: 18px; text-align: center; font-weight: 700; }
+  .addrRow.inc { color: var(--ink); } .addrRow.inc .st { color: var(--good); }
+  .addrRow.exc { text-decoration: line-through; } .addrRow.exc .st { color: var(--critical); }
+  .groupSave { display: flex; gap: 6px; margin-top: 10px; }
+  .groupSave input { flex: 1; min-width: 0; background: var(--page); border: 1px solid var(--grid); border-radius: 6px; color: var(--ink); padding: 6px 8px; font: inherit; font-size: 12px; }
+  .groupSave button, .chip { background: var(--series-dim); border: 0; color: #fff; border-radius: 6px; padding: 6px 10px; font-size: 12px; cursor: pointer; }
+  .chip { background: var(--surface); border: 1px solid var(--ring); color: var(--ink-2); margin-right: 4px; }
+  .chip:hover { border-color: var(--series); color: var(--ink); }
+  .chip .x { color: var(--muted); margin-left: 6px; }
+  #exportBtn { margin-left: auto; background: var(--surface); border: 1px solid var(--ring); color: var(--ink-2); border-radius: 8px; padding: 7px 12px; font: inherit; font-size: 13px; cursor: pointer; }
+  #exportBtn:hover { border-color: var(--series); color: var(--ink); }
+  /* tiles */
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .tile .v { font-size: 24px; font-weight: 650; margin-top: 2px; }
+  .tile .k { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+  .tile .d { font-size: 11px; color: var(--ink-2); margin-top: 2px; }
+  /* layout */
+  .row2 { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin-bottom: 16px; }
+  @media (max-width: 900px) { .row2 { grid-template-columns: 1fr; } }
+  /* chart */
+  #chart { width: 100%; height: 200px; display: block; }
+  .tip { position: fixed; pointer-events: none; background: #242423; border: 1px solid var(--ring); border-radius: 8px; padding: 6px 10px; font-size: 12px; color: var(--ink); display: none; z-index: 10; box-shadow: 0 4px 16px rgba(0,0,0,.5); }
+  .tip b { display: block; }
+  /* favorites */
+  .fav { display: flex; flex-direction: column; gap: 6px; }
+  .fav .fi { display: flex; justify-content: space-between; gap: 10px; font-size: 12.5px; border-bottom: 1px solid var(--grid); padding-bottom: 5px; }
+  .fav .fi:last-child { border-bottom: 0; }
+  .fav .n { color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .fav .m { color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .favToggle { display: flex; gap: 4px; margin-bottom: 10px; }
+  .favToggle button { background: none; border: 1px solid var(--ring); color: var(--ink-2); border-radius: 6px; padding: 3px 10px; font-size: 11px; cursor: pointer; }
+  .favToggle button.on { background: var(--series-dim); color: #fff; border-color: transparent; }
+  /* table */
+  .tableWrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th { text-align: left; color: var(--muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .04em;
+       padding: 8px 10px; border-bottom: 1px solid var(--baseline); cursor: pointer; user-select: none; white-space: nowrap; position: sticky; top: 0; background: var(--surface); }
+  th .arr { color: var(--series); }
+  td { padding: 7px 10px; border-bottom: 1px solid var(--grid); color: var(--ink-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td.name { color: var(--ink); max-width: 380px; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: normal; }
+  tr:hover td { background: rgba(255,255,255,0.03); }
+  tbody tr.rowBtn { cursor: pointer; }
+  tr.open td { background: rgba(57,135,229,0.08); }
+  .cartsCell { padding: 12px 14px !important; background: var(--page); }
+  .carts { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+  .cartCard { background: var(--surface); border: 1px solid var(--ring); border-radius: 8px; padding: 10px 12px; }
+  .cartHead { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink); margin-bottom: 6px; }
+  .cartHead .meta { color: var(--muted); }
+  .cartItems { font-size: 11.5px; color: var(--ink-2); line-height: 1.6; max-height: 180px; overflow-y: auto; }
+  .cartItems .hit { color: #5598e7; font-weight: 600; }
+  .cartItems .st { color: var(--muted); }
+  .cartsTitle { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 8px; }
+  .pill { font-size: 11px; border-radius: 10px; padding: 1px 7px; }
+  .pill.r { background: rgba(208,59,59,.15); color: #e66767; }
+  .pill.p { background: rgba(250,178,25,.12); color: var(--warning); }
+  .count { color: var(--muted); font-size: 12px; margin: 6px 2px; }
+  /* prompt */
+  #promptCard { margin-top: 16px; }
+  #promptOut { font: 12.5px/1.5 ui-monospace, Consolas, monospace; color: var(--ink-2); background: var(--page); border: 1px solid var(--grid); border-radius: 8px; padding: 10px 12px; margin-top: 8px; white-space: pre-wrap; }
+  #copyBtn { background: var(--series-dim); border: 0; color: #fff; border-radius: 8px; padding: 7px 14px; font: inherit; cursor: pointer; margin-top: 10px; }
+  #copyBtn:hover { background: var(--series); }
+  .err { color: var(--serious); padding: 30px; text-align: center; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>InstacartFlation</h1>
+    <div class="sub" id="rangeSub">loading…</div>
+  </div>
+  <div class="card" id="progressCard">
+    <div class="progRow"><span id="progLabel">Scrape progress</span><span id="progPct"></span></div>
+    <div class="bar"><div id="progBar" style="width:0%"></div></div>
+    <div class="progRow" style="margin-top:6px"><span id="progDetail"></span><span id="refreshNote"></span></div>
+  </div>
+</header>
+
+<div class="controls">
+  <details class="addrDD" id="addrDD">
+    <summary id="addrSummary">Addresses: all</summary>
+    <div class="addrPanel">
+      <div class="sub" style="margin-bottom:6px">Click to include (✓), again to exclude (✗), again to clear.</div>
+      <div id="addrList"></div>
+      <div class="groupSave">
+        <input type="text" id="groupName" placeholder="Save selection as group…">
+        <button id="groupSaveBtn">Save</button>
+      </div>
+    </div>
+  </details>
+  <span id="groupChips"></span>
+  <label>Year <select id="yearSel"><option value="">All years</option></select></label>
+  <label>Store <select id="storeSel"><option value="">All stores</option></select></label>
+  <label>Bought at least <select id="minSel"><option>1</option><option selected>2</option><option>3</option><option>5</option></select>× </label>
+  <input type="search" id="q" placeholder="Search products…">
+  <button id="exportBtn" title="Download the whole page as one tall PNG">⤓ Export PNG</button>
+</div>
+
+<div class="tiles" id="tiles"></div>
+
+<div class="row2">
+  <div class="card">
+    <h2>Monthly spend (order totals)</h2>
+    <svg id="chart" role="img" aria-label="Monthly spend bar chart"></svg>
+  </div>
+  <div class="card">
+    <div class="favToggle">
+      <button id="favFreq" class="on">Most bought</button>
+      <button id="favSpend">Top spend</button>
+    </div>
+    <div class="fav" id="favList"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Everything you buy</h2>
+  <div class="count" id="rowCount"></div>
+  <div class="count" style="font-style:italic">*Store comes from the order's receipt where scraped; older orders without it fall back to brand-name inference (Kirkland → Costco, Great Value → Walmart, …). Run backfill_stores.py to make them all ground truth.</div>
+  <div class="tableWrap">
+    <table>
+      <thead><tr id="headRow"></tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card" id="promptCard">
+  <h2>Ask Claude about this view</h2>
+  <div id="promptOut"></div>
+  <button id="copyBtn">Copy prompt</button>
+</div>
+
+<div class="tip" id="tip"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const money = s => { const n = parseFloat(String(s ?? '').replace(/[$,]/g, '')); return isNaN(n) ? null : n; };
+const fmt$ = n => '$' + n.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+const state = { orders: [], addrInclude: new Set(), addrExclude: new Set(), year: '', store: '', min: 2, q: '', sortKey: 'times', sortDir: -1, fav: 'freq', progress: null };
+const loadGroups = () => { try { return JSON.parse(localStorage.getItem('icf_addr_groups') || '{}'); } catch (e) { return {}; } };
+const saveGroups = g => localStorage.setItem('icf_addr_groups', JSON.stringify(g));
+
+const COLS = [
+  ['name', 'Product'], ['store', 'Store*'], ['times', 'Times'], ['qty', 'Total qty'], ['spent', 'Total spent'],
+  ['avg', 'Avg price'], ['latest', 'Latest'], ['first', 'First'], ['last', 'Last'], ['flags', 'Refund/Repl'],
+];
+
+// Group address variants ("Boulevard" vs "Blvd", with/without unit or instructions)
+// under one key: street number + first street word.
+function addrKey(o) {
+  const street = (o.deliveryAddress || '').split('•')[0].trim();
+  // "9020", "9020f", "9020-F" are the same building: key on digits + street name,
+  // ignoring any unit letter stuck to the number.
+  const m = street.toLowerCase().match(/^(\d+)[\s\-]*[a-z]?\s+([a-z]+)/);
+  return m ? m[1] + ' ' + m[2] : street.toLowerCase();
+}
+
+// Store is NOT in the scraped data — infer per order from brand signatures and
+// charge-line hints (e.g. "Costco Discount"), majority vote across the order.
+const BRAND_STORE = [
+  [/kirkland/i, 'Costco'],
+  [/great value|marketside|equate|mainstays|freshness guaranteed|parent's choice|sam's choice|bettergoods/i, 'Walmart'],
+  [/food lion|taste of inspirations|cha-?ching/i, 'Food Lion'],
+  [/nature's promise/i, 'Food Lion / Giant'],   // Ahold Delhaize house brand, shared banners
+  [/member's mark/i, "Sam's Club"], [/wellsley farms|berkley jensen/i, "BJ's"],
+  [/\b365\b/i, 'Whole Foods'],
+  [/simple truth|private selection|kroger/i, 'Kroger'],
+  [/good\s*&\s*gather|market pantry|up\s*&\s*up/i, 'Target'],
+  [/simply nature|clancy'?s|millville|friendly farms/i, 'Aldi'],
+  [/signature select|o organics|lucerne/i, 'Safeway'],
+  [/publix/i, 'Publix'], [/wegmans/i, 'Wegmans'], [/harris teeter/i, 'Harris Teeter'],
+  [/gold emblem|cvs/i, 'CVS'], [/lidl/i, 'Lidl'],
+];
+function inferStore(o) {
+  const votes = {};
+  for (const label of Object.keys(o.charges || {})) {
+    const m = label.match(/costco|publix|cvs|kroger|walmart|target|wegmans|safeway|aldi|harris teeter/i);
+    if (m) votes[m[0][0].toUpperCase() + m[0].slice(1).toLowerCase()] = (votes[m[0]] || 0) + 5; // charge hints are strong
+  }
+  for (const it of (o.items || []))
+    for (const [re, store] of BRAND_STORE) if (re.test(it.name)) { votes[store] = (votes[store] || 0) + 1; break; }
+  const best = Object.entries(votes).sort((a, b) => b[1] - a[1])[0];
+  return best ? best[0] : 'Unknown';
+}
+
+async function loadData() {
+  const files = ['orders-full.json', 'orders.json', 'orders-2024-archive.json'];
+  const seen = new Set(); const merged = [];
+  for (const f of files) {
+    try {
+      const r = await fetch(f + '?t=' + Date.now());
+      if (!r.ok) continue;
+      for (const o of await r.json()) if (o.url && !seen.has(o.url)) { seen.add(o.url); merged.push(o); }
+    } catch (e) { /* file absent or mid-write; skip */ }
+  }
+  merged.sort((a, b) => a.dateTime < b.dateTime ? -1 : 1);
+  for (const o of merged) { o._addrKey = addrKey(o); o._store = o.store || inferStore(o); o._year = o.dateTime.slice(0, 4); }
+  if (merged.length) state.orders = merged;   // keep last good data if a refresh catches a partial write
+  try {
+    const r = await fetch('run.log?t=' + Date.now());
+    if (r.ok) {
+      const log = await r.text();
+      const m = [...log.matchAll(/^\[(\d+)\/(\d+)\]/gm)].pop();
+      const found = log.match(/^Found (\d+) orders/m);
+      const dead = /Traceback/.test(log);
+      state.progress = m ? { n: +m[1], total: +m[2], dead } : (found ? { n: 0, total: +found[1], dead } : null);
+    }
+  } catch (e) { state.progress = null; }
+  updateAll();
+}
+
+function aggregate() {
+  let orders = state.orders.filter(o => !o.cancelled);
+  if (state.addrInclude.size) orders = orders.filter(o => state.addrInclude.has(o._addrKey));
+  if (state.addrExclude.size) orders = orders.filter(o => !state.addrExclude.has(o._addrKey));
+  if (state.year) orders = orders.filter(o => o._year === state.year);
+  if (state.store) orders = orders.filter(o => o._store === state.store);
+  const items = {};
+  for (const o of orders) for (const it of (o.items || [])) {
+    const h = items[it.name] ??= { name: it.name, dates: [], qty: 0, spent: 0, prices: [], refunds: 0, repl: 0, stores: {} };
+    h.dates.push(o.dateTime);
+    h.stores[o._store] = (h.stores[o._store] || 0) + 1;
+    const q = parseFloat(it.quantity) || 1; h.qty += q;
+    const line = money(it.currentPrice); const unit = money(it.unitPrice);
+    h.spent += line !== null ? line : (unit || 0) * q;
+    if (unit !== null) h.prices.push(unit);
+    if (it.status === 'refunded') h.refunds++;
+    if (it.status === 'replaced') h.repl++;
+  }
+  const rows = Object.values(items).map(h => ({
+    name: h.name, store: Object.entries(h.stores).sort((a, b) => b[1] - a[1]).map(e => e[0]).join(' + '),
+    times: new Set(h.dates).size, qty: Math.round(h.qty * 10) / 10, spent: h.spent,
+    avg: h.prices.length ? h.prices.reduce((a, b) => a + b) / h.prices.length : null,
+    latest: h.prices.at(-1), first: h.dates[0].slice(0, 10), last: h.dates.at(-1).slice(0, 10),
+    refunds: h.refunds, repl: h.repl,
+  }));
+  return { orders, rows };
+}
+
+function updateAll() {
+  const { orders, rows } = aggregate();
+  state._orders = orders;            // current filtered order set, for cart expansion
+  state.openItem = null;             // collapse any open cart view on filter change
+  renderProgress(); renderTiles(orders, rows); renderChart(orders); renderFavs(rows); renderTable(rows); updatePrompt(orders, rows);
+}
+
+function renderProgress() {
+  const p = state.progress;
+  if (!p) { $('progLabel').textContent = 'Scrape idle / log unavailable'; $('progBar').style.width = '0%'; $('progPct').textContent = ''; $('progDetail').textContent = ''; return; }
+  const pct = Math.round(p.n / p.total * 100);
+  $('progBar').style.width = pct + '%';
+  $('progBar').style.background = p.dead ? 'var(--critical)' : (pct >= 100 ? 'var(--good)' : 'var(--series)');
+  $('progPct').textContent = pct + '%';
+  $('progLabel').textContent = p.dead ? '⚠ Scrape stopped (see run.log)' : (pct >= 100 ? '✓ Scrape complete' : 'Scrape running');
+  $('progDetail').textContent = `${p.n} / ${p.total} orders scraped`;
+}
+
+function renderTiles(orders, rows) {
+  const spent = orders.reduce((s, o) => s + (money(o.total) || 0), 0);
+  const itemSpend = rows.reduce((s, r) => s + r.spent, 0);
+  const nItems = orders.reduce((s, o) => s + (o.items || []).length, 0);
+  const refunded = orders.reduce((s, o) => s + (o.items || []).filter(i => i.status === 'refunded').length, 0);
+  // Tips live in the charges map; fees = everything else that isn't items, tax, or tip.
+  const tips = orders.reduce((s, o) => s + (money((o.charges || {})['Tip']) || 0), 0);
+  const tipped = orders.filter(o => money((o.charges || {})['Tip'])).length;
+  const t = [
+    ['Orders', orders.length, orders.length ? orders[0].dateTime.slice(0,10) + ' → ' + orders.at(-1).dateTime.slice(0,10) : ''],
+    ['Total spent', fmt$(spent), 'incl. tax, fees, tips'],
+    ['Item spend', fmt$(itemSpend), 'charged line totals'],
+    ['Tips', fmt$(tips), tipped ? `${tipped} orders · avg ${fmt$(tips / tipped)} · ${spent ? (tips / spent * 100).toFixed(1) : 0}% of total` : 'no tips found'],
+    ['Avg order', orders.length ? fmt$(spent / orders.length) : '—', ''],
+    ['Unique products', rows.length, rows.filter(r => r.times >= state.min).length + ' recurring'],
+    ['Refund rate', nItems ? (refunded / nItems * 100).toFixed(1) + '%' : '—', refunded + ' of ' + nItems + ' items'],
+  ];
+  $('tiles').innerHTML = t.map(([k, v, d]) => `<div class="card tile"><div class="k">${k}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join('');
+  const addrDesc = state.addrInclude.size ? [...state.addrInclude].map(k => ADDR_LABELS[k] || k).join(' + ')
+    : state.addrExclude.size ? 'all except ' + [...state.addrExclude].map(k => ADDR_LABELS[k] || k).join(', ') : 'All addresses';
+  $('rangeSub').textContent = addrDesc + ' · ' + orders.length + ' orders loaded';
+}
+
+function renderChart(orders) {
+  const byMonth = {};
+  for (const o of orders) byMonth[o.dateTime.slice(0, 7)] = (byMonth[o.dateTime.slice(0, 7)] || 0) + (money(o.total) || 0);
+  const keys = Object.keys(byMonth).sort();
+  const svg = $('chart'); svg.innerHTML = '';
+  if (!keys.length) return;
+  const W = svg.clientWidth || 600, H = 200, padL = 44, padB = 22, padT = 8;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  const max = Math.max(...keys.map(k => byMonth[k]));
+  const step = (W - padL - 6) / keys.length;
+  const bw = Math.max(3, Math.min(28, step - 2));           // 2px surface gap between bars
+  let g = '';
+  const gridN = 3;
+  for (let i = 1; i <= gridN; i++) {                         // recessive hairline grid + muted labels
+    const y = padT + (H - padB - padT) * (1 - i / gridN);
+    g += `<line x1="${padL}" x2="${W}" y1="${y}" y2="${y}" stroke="var(--grid)" stroke-width="1"/>`;
+    g += `<text x="${padL - 6}" y="${y + 4}" text-anchor="end" font-size="10" fill="var(--muted)">$${Math.round(max * i / gridN)}</text>`;
+  }
+  g += `<line x1="${padL}" x2="${W}" y1="${H - padB}" y2="${H - padB}" stroke="var(--baseline)" stroke-width="1"/>`;
+  keys.forEach((k, i) => {
+    const v = byMonth[k];
+    const h = Math.max(2, (H - padB - padT) * v / max);
+    const x = padL + i * step + (step - bw) / 2, y = H - padB - h;
+    g += `<path d="M${x},${H - padB} L${x},${y + 4} Q${x},${y} ${x + 4},${y} L${x + bw - 4},${y} Q${x + bw},${y} ${x + bw},${y + 4} L${x + bw},${H - padB} Z"
+          fill="var(--series)" data-k="${k}" data-v="${v.toFixed(2)}"/>`;
+    if (i % Math.ceil(keys.length / 8) === 0) g += `<text x="${x + bw / 2}" y="${H - 7}" text-anchor="middle" font-size="10" fill="var(--muted)">${k.slice(2).replace('-', '/')}</text>`;
+  });
+  svg.innerHTML = g;
+  svg.querySelectorAll('path').forEach(p => {
+    p.addEventListener('mousemove', e => { const t = $('tip'); t.style.display = 'block'; t.style.left = (e.clientX + 12) + 'px'; t.style.top = (e.clientY - 10) + 'px';
+      t.innerHTML = `<b>${p.dataset.k}</b>${fmt$(+p.dataset.v)}`; p.setAttribute('fill', '#5598e7'); });
+    p.addEventListener('mouseleave', () => { $('tip').style.display = 'none'; p.setAttribute('fill', 'var(--series)'); });
+  });
+}
+
+function renderFavs(rows) {
+  const list = [...rows].sort((a, b) => state.fav === 'freq' ? b.times - a.times || b.spent - a.spent : b.spent - a.spent).slice(0, 8);
+  $('favList').innerHTML = list.map(r =>
+    `<div class="fi"><span class="n" title="${r.name}">${r.name}</span><span class="m">${state.fav === 'freq' ? r.times + '×' : fmt$(r.spent)}</span></div>`).join('') || '<div class="sub">no data</div>';
+}
+
+function renderTable(rows) {
+  let view = rows.filter(r => r.times >= state.min);
+  if (state.q) view = view.filter(r => r.name.toLowerCase().includes(state.q.toLowerCase()));
+  const k = state.sortKey, d = state.sortDir;
+  view.sort((a, b) => { const va = a[k] ?? -1, vb = b[k] ?? -1; return (typeof va === 'string' ? va.localeCompare(vb) : va - vb) * d; });
+  $('headRow').innerHTML = COLS.map(([key, label]) =>
+    `<th data-k="${key}">${label} ${key === k ? `<span class="arr">${d < 0 ? '▼' : '▲'}</span>` : ''}</th>`).join('');
+  $('headRow').querySelectorAll('th').forEach(th => th.onclick = () => {
+    const key = th.dataset.k; if (key === 'flags') return;
+    if (state.sortKey === key) state.sortDir *= -1; else { state.sortKey = key; state.sortDir = -1; }
+    renderTable(rows); updatePrompt();
+  });
+  const esc = s => s.replace(/"/g, '&quot;');
+  $('tbody').innerHTML = view.slice(0, 500).map(r => {
+    const open = state.openItem === r.name;
+    let html = `<tr class="rowBtn ${open ? 'open' : ''}" data-name="${esc(r.name)}">
+    <td class="name" title="${esc(r.name)}">${r.name}</td>
+    <td>${r.store}</td>
+    <td>${r.times}×</td><td>${r.qty}</td><td>${fmt$(r.spent)}</td>
+    <td>${r.avg != null ? fmt$(r.avg) : '—'}</td><td>${r.latest != null ? fmt$(r.latest) : '—'}</td>
+    <td>${r.first}</td><td>${r.last}</td>
+    <td>${r.refunds ? `<span class="pill r">↩ ${r.refunds}</span>` : ''} ${r.repl ? `<span class="pill p">⇄ ${r.repl}</span>` : ''}</td>
+  </tr>`;
+    if (open) html += cartsRow(r.name);
+    return html;
+  }).join('');
+  $('tbody').querySelectorAll('tr.rowBtn').forEach(tr => tr.onclick = () => {
+    state.openItem = state.openItem === tr.dataset.name ? null : tr.dataset.name;
+    renderTable(rows);
+  });
+  const viewSum = view.reduce((s, r) => s + r.spent, 0);
+  const allSum = rows.reduce((s, r) => s + r.spent, 0);
+  const hidden = allSum - viewSum;
+  $('rowCount').textContent = `${view.length} of ${rows.length} products (${fmt$(viewSum)})` +
+    (state.q ? ` matching "${state.q}"` : '') + (state.min > 1 ? ` bought ≥${state.min}×` : '') +
+    (hidden > 0.005 ? ` — ${fmt$(hidden)} more is in filtered-out products` : '') + ' — click a row to see its carts';
+}
+
+// The carts a product appeared in: every matching order, newest first, full item list.
+function cartsRow(name) {
+  const carts = (state._orders || []).filter(o => (o.items || []).some(i => i.name === name)).reverse();
+  const cards = carts.slice(0, 12).map(o => {
+    const items = (o.items || []).map(i => {
+      const hit = i.name === name;
+      const st = i.status && i.status !== 'found' ? ` <span class="st">(${i.status})</span>` : '';
+      return `<div class="${hit ? 'hit' : ''}">${i.quantity && +i.quantity > 1 ? i.quantity + '× ' : ''}${i.name}${st} — ${i.currentPrice != null ? '$' + i.currentPrice : '$' + (i.unitPrice ?? '?')}</div>`;
+    }).join('');
+    return `<div class="cartCard">
+      <div class="cartHead"><span>${o.dateTime.slice(0, 10)}</span><span class="meta">${o._store} · ${(o.items || []).length} items · $${o.total}</span></div>
+      <div class="cartItems">${items}</div></div>`;
+  }).join('');
+  const more = carts.length > 12 ? `<div class="sub" style="margin-top:8px">…and ${carts.length - 12} more orders</div>` : '';
+  return `<tr><td class="cartsCell" colspan="${COLS.length}">
+    <div class="cartsTitle">${carts.length} cart${carts.length === 1 ? '' : 's'} containing this item</div>
+    <div class="carts">${cards}</div>${more}</td></tr>`;
+}
+
+function updatePrompt(orders, rows) {
+  const parts = [];
+  if (state.addrInclude.size) parts.push(`only orders delivered to: ${[...state.addrInclude].map(k => ADDR_LABELS[k] || k).join(', ')} (merge spelling variants of each)`);
+  if (state.addrExclude.size) parts.push(`excluding orders delivered to: ${[...state.addrExclude].map(k => ADDR_LABELS[k] || k).join(', ')}`);
+  if (state.year) parts.push(`only ${state.year}`);
+  if (state.store) parts.push(`only orders inferred to be from ${state.store} (store isn't in the data; infer from brand names like Kirkland=Costco, Great Value=Walmart, plus charge-line hints)`);
+  if (state.min > 2) parts.push(`items bought at least ${state.min} times`);
+  if (state.min === 1) parts.push('including one-off purchases');
+  if (state.q) parts.push(`products matching "${state.q}"`);
+  const sortLabel = { times: 'purchase frequency', spent: 'total spend', avg: 'average price', latest: 'latest price', qty: 'quantity', name: 'name', store: 'store', first: 'first purchase', last: 'last purchase' }[state.sortKey];
+  const scope = parts.length ? ` Scope: ${parts.join('; ')}.` : '';
+  $('promptOut').textContent =
+`Using the Instacart data in D:\\DexProjects\\InstacartFlation (orders-full.json merged with orders.json and orders-2024-archive.json, deduped by order URL, cancelled orders skipped; an item's charged cost is currentPrice, falling back to unitPrice x quantity).${scope} I'm looking at products ranked by ${sortLabel}. Question: `;
+}
+
+$('copyBtn').onclick = async () => {
+  await navigator.clipboard.writeText($('promptOut').textContent);
+  $('copyBtn').textContent = 'Copied!'; setTimeout(() => $('copyBtn').textContent = 'Copy prompt', 1200);
+};
+
+let ADDR_LABELS = {};   // addrKey -> display label, rebuilt from data each refresh
+
+function buildAddrOptions() {
+  // Group variants under one key; label with the shortest street-only spelling.
+  const groups = {};
+  for (const o of state.orders) {
+    const k = o._addrKey; if (!k) continue;
+    const g = groups[k] ??= { n: 0, labels: {} };
+    g.n++;
+    const street = (o.deliveryAddress || '').split('•')[0].split(',')[0].trim();
+    if (street) g.labels[street] = (g.labels[street] || 0) + 1;
+  }
+  const label = g => Object.entries(g.labels).sort((a, b) => b[1] - a[1] || a[0].length - b[0].length)[0][0];
+  ADDR_LABELS = Object.fromEntries(Object.entries(groups).map(([k, g]) => [k, label(g)]));
+  // 3-state rows: neutral -> include -> exclude -> neutral
+  $('addrList').innerHTML = Object.entries(groups).sort((a, b) => b[1].n - a[1].n).map(([k, g]) => {
+    const st = state.addrInclude.has(k) ? 'inc' : state.addrExclude.has(k) ? 'exc' : '';
+    const mark = st === 'inc' ? '✓' : st === 'exc' ? '✗' : '·';
+    return `<div class="addrRow ${st}" data-k="${k}"><span class="st">${mark}</span><span>${label(g)}</span><span class="sub" style="margin-left:auto">${g.n}</span></div>`;
+  }).join('');
+  $('addrList').querySelectorAll('.addrRow').forEach(row => row.onclick = () => {
+    const k = row.dataset.k;
+    if (state.addrInclude.has(k)) { state.addrInclude.delete(k); state.addrExclude.add(k); }
+    else if (state.addrExclude.has(k)) { state.addrExclude.delete(k); }
+    else { state.addrInclude.add(k); }
+    updateAll();
+  });
+  const inc = [...state.addrInclude].map(k => ADDR_LABELS[k] || k);
+  const exc = [...state.addrExclude].map(k => ADDR_LABELS[k] || k);
+  $('addrSummary').textContent = 'Addresses: ' + (inc.length ? inc.join(', ') : exc.length ? 'all except ' + exc.join(', ') : 'all');
+  // saved group chips
+  const saved = loadGroups();
+  $('groupChips').innerHTML = Object.keys(saved).map(name =>
+    `<button class="chip" data-g="${name}">${name}<span class="x" title="delete group">✗</span></button>`).join('');
+  $('groupChips').querySelectorAll('.chip').forEach(ch => ch.onclick = e => {
+    const g = loadGroups();
+    if (e.target.classList.contains('x')) { delete g[ch.dataset.g]; saveGroups(g); }
+    else { state.addrInclude = new Set(g[ch.dataset.g] || []); state.addrExclude.clear(); }
+    updateAll();
+  });
+  const years = [...new Set(state.orders.map(o => o._year))].sort().reverse();
+  $('yearSel').innerHTML = '<option value="">All years</option>' +
+    years.map(y => `<option ${y === state.year ? 'selected' : ''}>${y}</option>`).join('');
+  const stores = {};
+  for (const o of state.orders) stores[o._store] = (stores[o._store] || 0) + 1;
+  $('storeSel').innerHTML = '<option value="">All stores</option>' +
+    Object.entries(stores).sort((a, b) => b[1] - a[1])
+      .map(([s, n]) => `<option value="${s}" ${s === state.store ? 'selected' : ''}>${s} (${n})</option>`).join('');
+}
+
+// Close the address panel on click-away or Escape (clicks inside keep it open
+// so multi-select works).
+document.addEventListener('click', e => {
+  const dd = $('addrDD');
+  if (dd.open && !dd.contains(e.target)) dd.open = false;
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $('addrDD').open = false; });
+
+$('groupSaveBtn').onclick = () => {
+  const name = $('groupName').value.trim();
+  if (!name || !state.addrInclude.size) return;
+  const g = loadGroups(); g[name] = [...state.addrInclude]; saveGroups(g);
+  $('groupName').value = ''; updateAll();
+};
+$('yearSel').onchange = e => { state.year = e.target.value; updateAll(); };
+$('storeSel').onchange = e => { state.store = e.target.value; updateAll(); };
+$('minSel').onchange = e => { state.min = +e.target.value; updateAll(); };
+$('q').oninput = e => { state.q = e.target.value; updateAll(); };
+$('favFreq').onclick = () => { state.fav = 'freq'; $('favFreq').classList.add('on'); $('favSpend').classList.remove('on'); updateAll(); };
+$('favSpend').onclick = () => { state.fav = 'spend'; $('favSpend').classList.add('on'); $('favFreq').classList.remove('on'); updateAll(); };
+
+// Full-page PNG export: serialize the live DOM into an SVG foreignObject and
+// rasterize at the page's full scroll height (2x for crispness). Works offline,
+// no libraries - the page has no external images, so the SVG raster is clean.
+$('exportBtn').onclick = async () => {
+  const btn = $('exportBtn'); btn.textContent = 'Rendering…';
+  try {
+    const w = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth);
+    const h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+    const clone = document.documentElement.cloneNode(true);
+    clone.querySelector('#tip')?.remove();
+    clone.querySelector('#exportBtn')?.remove();
+    const xml = new XMLSerializer().serializeToString(clone);
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><foreignObject width="100%" height="100%">${xml}</foreignObject></svg>`;
+    const url = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml;charset=utf-8' }));
+    const img = new Image();
+    await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
+    const canvas = document.createElement('canvas');
+    canvas.width = w * 2; canvas.height = h * 2;
+    const ctx = canvas.getContext('2d'); ctx.scale(2, 2);
+    ctx.fillStyle = '#0d0d0d'; ctx.fillRect(0, 0, w, h);
+    ctx.drawImage(img, 0, 0);
+    URL.revokeObjectURL(url);
+    canvas.toBlob(b => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(b);
+      a.download = `instacart-dashboard-${new Date().toISOString().slice(0, 10)}.png`;
+      a.click();
+      btn.textContent = '⤓ Export PNG';
+    }, 'image/png');
+  } catch (e) {
+    btn.textContent = 'Export failed - see console';
+    console.error('export:', e);
+    setTimeout(() => btn.textContent = '⤓ Export PNG', 2500);
+  }
+};
+
+const _origUpdateAll = updateAll;
+updateAll = function() { buildAddrOptions(); _origUpdateAll(); };
+
+loadData();
+setInterval(loadData, 30000);
+$('refreshNote').textContent = 'auto-refreshes every 30s';
+window.addEventListener('resize', () => updateAll());
+</script>
+</body>
+</html>

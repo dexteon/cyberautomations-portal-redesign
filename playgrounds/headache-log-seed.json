@@ -1,0 +1,20 @@
+[
+ {
+  "date": "2025-10-09",
+  "duration": 72,
+  "severity": "Moderate",
+  "prostrating": false,
+  "missed_work": false,
+  "notes": "FROM RECORDS: 3-day headache managed with Excedrin; BP 152/99 at HTN follow-up. Prostrating status not documented.",
+  "logged_at": "seed"
+ },
+ {
+  "date": "2026-06-10",
+  "duration": 0,
+  "severity": "Moderate",
+  "prostrating": false,
+  "missed_work": false,
+  "notes": "FROM RECORDS: chronic tension-type headache formally charted at comprehensive visit. Prostrating status not documented.",
+  "logged_at": "seed"
+ }
+]
